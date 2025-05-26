@@ -1,8 +1,7 @@
 {
-  "manifest_version": 3,
-  "name": "Hand Tracking Cursor Control",
-  "version": "1.0",
-  "description": "Control cursor with hand gestures using webcam",
+  "manifest_version": 3,  "name": "Wavi - Hand Gesture Cursor Control",
+  "version": "1.1.1",
+  "description": "Control your cursor with intuitive hand gestures using your webcam. Wave goodbye to traditional mouse controls!",
   "permissions": [
     "activeTab",
     "scripting"
