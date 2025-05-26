@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Hand Tracking Cursor Control",
+  "version": "1.0",
+  "description": "Control cursor with hand gestures using webcam",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; default-src 'self' blob: data:"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "lib/*",
+        "tracking-worker.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+} 

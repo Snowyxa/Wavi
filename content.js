@@ -1,0 +1,189 @@
+// Create cursor element
+let cursor = null;
+
+function createCursor() {
+  if (!cursor) {
+    cursor = document.createElement('div');
+    cursor.id = 'handtracking-cursor';
+    cursor.style.position = 'fixed';
+    cursor.style.width = '20px';
+    cursor.style.height = '20px';
+    cursor.style.backgroundColor = 'rgba(0, 255, 0, 0.5)';
+    cursor.style.borderRadius = '50%';
+    cursor.style.pointerEvents = 'none';
+    cursor.style.zIndex = '99999'; // Higher z-index for YouTube
+    cursor.style.transform = 'translate(-50%, -50%)';
+    cursor.style.transition = 'transform 0.1s ease-out, background-color 0.2s ease-out';
+    document.body.appendChild(cursor);
+    initializeCursor();
+  }
+}
+
+// Initialize cursor position to center of viewport
+function initializeCursor() {
+  if (!cursor) return;
+  const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
+  const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+  cursor.style.left = `${viewportWidth / 2}px`;
+  cursor.style.top = `${viewportHeight / 2}px`;
+  cursor.style.opacity = '0.8';
+}
+
+// Call initialization
+createCursor();
+
+// Update cursor position relative to viewport and scroll
+function updateCursorPosition(x, y) {
+  if (!cursor) return;
+  
+  // For YouTube and similar sites, use viewport-relative positioning
+  // since they have complex layouts that can interfere with absolute positioning
+  const isYouTube = window.location.hostname.includes('youtube.com');
+  
+  if (isYouTube) {
+    // Use fixed positioning relative to viewport for YouTube
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Clamp to viewport bounds
+    const finalX = Math.max(0, Math.min(x, viewportWidth - 20));
+    const finalY = Math.max(0, Math.min(y, viewportHeight - 20));
+    
+    cursor.style.left = `${finalX}px`;
+    cursor.style.top = `${finalY}px`;
+    
+    console.log(`YouTube cursor position: x=${x}, y=${y}, finalX=${finalX}, finalY=${finalY}, viewport=${viewportWidth}x${viewportHeight}`);
+  } else {
+    // Standard positioning for other sites
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    let finalX = x + scrollX;
+    let finalY = y + scrollY;
+
+    // Clamp cursor position to document bounds
+    const maxWidth = Math.max(document.body.scrollWidth, document.documentElement.scrollWidth);
+    const maxHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    
+    finalX = Math.max(0, Math.min(finalX, maxWidth - 20));
+    finalY = Math.max(0, Math.min(finalY, maxHeight - 20));
+
+    cursor.style.left = `${finalX}px`;
+    cursor.style.top = `${finalY}px`;
+    
+    console.log(`Standard cursor position: x=${x}, y=${y}, finalX=${finalX}, finalY=${finalY}`);
+  }
+}
+
+// Function to simulate click at position
+function simulateClick(x, y) {
+  // Create and dispatch mouse events
+  const events = [
+    new MouseEvent('mousedown', {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      clientX: x,
+      clientY: y
+    }),
+    new MouseEvent('mouseup', {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      clientX: x,
+      clientY: y
+    }),
+    new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      clientX: x,
+      clientY: y
+    })
+  ];
+
+  // Find element at position
+  const element = document.elementFromPoint(x, y);
+  if (element) {
+    events.forEach(event => element.dispatchEvent(event));
+  }
+}
+
+// Function to show click feedback
+function showClickFeedback() {
+  if (!cursor) return;
+  cursor.style.backgroundColor = 'rgba(255, 0, 0, 0.5)';
+  setTimeout(() => {
+    if (cursor) cursor.style.backgroundColor = 'rgba(0, 255, 0, 0.5)';
+  }, 200);
+}
+
+// Listen for messages from the popup
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'ping') {
+    sendResponse({ status: 'ready' });
+    return true;
+  }  if (message.action === 'getDimensions') {
+    const isYouTube = window.location.hostname.includes('youtube.com');
+    
+    if (isYouTube) {
+      // For YouTube, use viewport dimensions
+      sendResponse({ width: window.innerWidth, height: window.innerHeight });
+    } else {
+      // For other sites, use the larger of viewport or document dimensions
+      const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
+      const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+      sendResponse({ width: viewportWidth, height: viewportHeight });
+    }
+    return true;
+  }
+  if (message.action === 'removeCursor') {
+    if (cursor && cursor.parentNode) {
+      cursor.parentNode.removeChild(cursor);
+      cursor = null;
+    }
+    sendResponse({ status: 'success' });
+    return true;
+  }
+  if (message.action === 'moveCursor') {
+    try {
+      if (!cursor) createCursor();
+      const { x, y, isHandVisible, isFist } = message;
+      updateCursorPosition(x, y);
+      cursor.style.opacity = isHandVisible ? '0.8' : '0.3';
+      
+      // Update cursor appearance based on fist state
+      if (isFist) {
+        cursor.style.transform = 'translate(-50%, -50%) scale(0.8)';
+      } else {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+      }
+      
+      sendResponse({ status: 'success' });
+    } catch (error) {
+      sendResponse({ status: 'error', message: error.message });
+    }
+    return true;
+  }
+  if (message.action === 'click') {
+    try {
+      if (!cursor) createCursor();
+      const { x, y } = message;
+      simulateClick(x, y);
+      showClickFeedback();
+      sendResponse({ status: 'success' });
+    } catch (error) {
+      sendResponse({ status: 'error', message: error.message });
+    }
+    return true;
+  }
+});
+
+// Handle window resize
+window.addEventListener('resize', () => {
+  if (cursor && cursor.style.opacity === '0') {
+    initializeCursor();
+  }
+});
+
+// Notify that content script is loaded
+console.log('Hand tracking cursor control content script loaded'); 
