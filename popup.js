@@ -1,5 +1,5 @@
 // popup.js - Main hand tracking extension popup
-// Simplified and modular version using organized components
+// Auto-starting version with modern UI
 
 // DOM elements
 let video;
@@ -10,11 +10,33 @@ let ctx;
 let lastClickPosition = null;
 let currentStream = null;
 let currentCamera = null;
+let isTrackingStarted = false;
 
 // Initialize popup when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   initializePopup();
-  setupEventListeners();
+  // Auto-start tracking after initialization
+  setTimeout(() => {
+    if (!isTrackingStarted) {
+      startTracking();
+    }
+  }, 1000);
+});
+
+// Handle window resize to maintain canvas dimensions
+window.addEventListener('resize', function() {
+  if (canvas) {
+    const videoContainer = document.querySelector('.video-container');
+    if (videoContainer) {
+      const containerWidth = videoContainer.offsetWidth;
+      const containerHeight = videoContainer.offsetHeight;
+      
+      canvas.width = containerWidth;
+      canvas.height = containerHeight;
+      
+      console.log(`Canvas resized on window resize: ${containerWidth}x${containerHeight}`);
+    }
+  }
 });
 
 /**
@@ -25,7 +47,21 @@ function initializePopup() {
   video = document.getElementById('video');
   canvas = document.getElementById('output');
   ctx = canvas.getContext('2d');
-    // Configure video element
+  
+  // Set canvas dimensions to match container for ultra-wide layout
+  const videoContainer = document.querySelector('.video-container');
+  if (videoContainer && canvas) {
+    // Force canvas to match container size
+    const containerWidth = videoContainer.offsetWidth;
+    const containerHeight = videoContainer.offsetHeight;
+    
+    canvas.width = containerWidth;
+    canvas.height = containerHeight;
+    
+    console.log(`Canvas dimensions set: ${containerWidth}x${containerHeight}`);
+  }
+  
+  // Configure video element
   if (video) {
     window.CameraUtils.configureVideoElement(video);
   }
@@ -33,23 +69,7 @@ function initializePopup() {
   // Initialize MediaPipe Hands (async)
   initializeHandTracking();
   
-  console.log('Popup initialized');
-}
-
-/**
- * Set up event listeners for UI controls
- */
-function setupEventListeners() {
-  const startButton = document.getElementById('startTracking');
-  const stopButton = document.getElementById('stopTracking');
-  
-  if (startButton) {
-    startButton.addEventListener('click', startTracking);
-  }
-  
-  if (stopButton) {
-    stopButton.addEventListener('click', stopTracking);
-  }
+  console.log('Popup initialized - Auto-starting tracking...');
 }
 
 /**
@@ -89,9 +109,11 @@ async function initializeHandTracking() {
 }
 
 /**
- * Start hand tracking
+ * Start hand tracking automatically
  */
 async function startTracking() {
+  if (isTrackingStarted) return;
+  
   try {
     updateUI('starting');
     
@@ -110,13 +132,25 @@ async function startTracking() {
     // Get tab dimensions
     const dimensions = await window.Communication.getTabDimensions();
     window.HandTracking.updateTabDimensions(dimensions);
-    
-    // Initialize video stream
+      // Initialize video stream
     currentStream = await window.CameraUtils.initializeVideoStream(video);
+    
+    // Ensure canvas dimensions match container after video loads
+    const videoContainer = document.querySelector('.video-container');
+    if (videoContainer && canvas) {
+      const containerWidth = videoContainer.offsetWidth;
+      const containerHeight = videoContainer.offsetHeight;
+      
+      canvas.width = containerWidth;
+      canvas.height = containerHeight;
+      
+      console.log(`Canvas resized for tracking: ${containerWidth}x${containerHeight}`);
+    }
     
     // Start hand tracking
     currentCamera = window.HandTracking.startHandTracking(video, canvas, onResults);
     
+    isTrackingStarted = true;
     updateUI('tracking');
     console.log('Hand tracking started successfully');
     
@@ -127,6 +161,9 @@ async function startTracking() {
   }
 }
 
+/**
+ * Stop hand tracking
+ */
 /**
  * Stop hand tracking
  */
@@ -153,6 +190,7 @@ function stopTracking() {
     window.HandTracking.resetTrackingState();
     lastClickPosition = null;
     currentCamera = null;
+    isTrackingStarted = false;
     
     updateUI('stopped');
     console.log('Hand tracking stopped');
@@ -269,50 +307,126 @@ function handleClickEvent(x, y) {
  * @param {string} state - Current state ('starting', 'tracking', 'stopped', 'error')
  * @param {string} message - Optional message for error state
  */
+/**
+ * Update UI based on tracking state
+ * @param {string} state - Current state ('starting', 'tracking', 'stopped', 'error')
+ * @param {string} message - Optional message for error state
+ */
 function updateUI(state, message = '') {
-  const startButton = document.getElementById('startTracking');
-  const stopButton = document.getElementById('stopTracking');
-  const statusElement = document.getElementById('status');
-  
-  if (!startButton || !stopButton) return;
+  const statusDot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+  const cameraStatus = document.getElementById('cameraStatus');
+  const cameraOverlay = cameraStatus ? cameraStatus.parentElement : null;
+  const statusPill = document.querySelector('.status-pill');
+  const statusLabel = document.querySelector('.status-label');
   
   switch (state) {
     case 'starting':
-      startButton.disabled = true;
-      stopButton.disabled = true;
-      startButton.textContent = 'Starting...';
-      if (statusElement) statusElement.textContent = 'Initializing camera...';
+      // Header status
+      if (statusDot) {
+        statusDot.className = 'status-dot connecting';
+      }
+      if (statusText) {
+        statusText.textContent = 'Starting...';
+      }
+      
+      // Camera overlay
+      if (cameraOverlay) {
+        cameraOverlay.classList.remove('hidden');
+      }
+      if (cameraStatus) {
+        cameraStatus.innerHTML = '<div class="loading-spinner"></div><span>Starting camera...</span>';
+      }
+      
+      // Footer status pill
+      if (statusPill) {
+        statusPill.className = 'status-pill';
+      }
+      if (statusLabel) {
+        statusLabel.textContent = 'Initializing';
+      }
       break;
       
     case 'tracking':
-      startButton.disabled = true;
-      stopButton.disabled = false;
-      startButton.textContent = 'Start Tracking';
-      stopButton.textContent = 'Stop Tracking';
-      if (statusElement) statusElement.textContent = 'Tracking active - Move your hand to control cursor';
+      // Header status
+      if (statusDot) {
+        statusDot.className = 'status-dot active';
+      }
+      if (statusText) {
+        statusText.textContent = 'Active';
+      }
+      
+      // Camera overlay
+      if (cameraOverlay) {
+        cameraOverlay.classList.add('hidden');
+      }
+      
+      // Footer status pill
+      if (statusPill) {
+        statusPill.className = 'status-pill active';
+      }
+      if (statusLabel) {
+        statusLabel.textContent = 'Tracking Active';
+      }
       break;
       
     case 'stopped':
-      startButton.disabled = false;
-      stopButton.disabled = true;
-      startButton.textContent = 'Start Tracking';
-      stopButton.textContent = 'Stop Tracking';
-      if (statusElement) statusElement.textContent = 'Tracking stopped';
+      // Header status
+      if (statusDot) {
+        statusDot.className = 'status-dot';
+      }
+      if (statusText) {
+        statusText.textContent = 'Stopped';
+      }
+      
+      // Camera overlay
+      if (cameraOverlay) {
+        cameraOverlay.classList.remove('hidden');
+      }
+      if (cameraStatus) {
+        cameraStatus.innerHTML = '<span>Tracking stopped</span>';
+      }
+      
+      // Footer status pill
+      if (statusPill) {
+        statusPill.className = 'status-pill';
+      }
+      if (statusLabel) {
+        statusLabel.textContent = 'Tracking Stopped';
+      }
       break;
       
     case 'error':
-      startButton.disabled = false;
-      stopButton.disabled = true;
-      startButton.textContent = 'Start Tracking';
-      stopButton.textContent = 'Stop Tracking';
-      if (statusElement) statusElement.textContent = message || 'Error occurred';
+      // Header status
+      if (statusDot) {
+        statusDot.className = 'status-dot error';
+      }
+      if (statusText) {
+        statusText.textContent = 'Error';
+      }
+      
+      // Camera overlay
+      if (cameraOverlay) {
+        cameraOverlay.classList.remove('hidden');
+      }
+      if (cameraStatus) {
+        cameraStatus.innerHTML = `<span>${message || 'Error occurred'}</span>`;
+      }
+      
+      // Footer status pill
+      if (statusPill) {
+        statusPill.className = 'status-pill error';
+      }
+      if (statusLabel) {
+        statusLabel.textContent = 'Error';
+      }
       break;
   }
 }
 
 // Handle popup unload
 window.addEventListener('beforeunload', function() {
-  if (window.HandTracking.isCurrentlyTracking()) {
+  if (isTrackingStarted || window.HandTracking.isCurrentlyTracking()) {
     stopTracking();
   }
 });
@@ -373,4 +487,4 @@ function drawBasicHandLandmarks(ctx, landmarks) {
 }
 
 // Log initialization
-console.log('Hand Tracking Extension v1.1.4 - Modular popup loaded');
+console.log('Wavi Extension v2.0.0 - Auto-starting hand tracking popup loaded');

@@ -62,20 +62,27 @@ function startHandTracking(videoElement, canvasElement, onResultsCallback) {
 
   hands.onResults(onResultsCallback);
   
+  // Get actual container dimensions instead of hardcoded values
+  const videoContainer = videoElement.parentElement;
+  const containerWidth = videoContainer ? videoContainer.offsetWidth : 1280;
+  const containerHeight = videoContainer ? videoContainer.offsetHeight : 720;
+  
+  console.log(`Starting camera with dimensions: ${containerWidth}x${containerHeight}`);
+  
   const camera = new Camera(videoElement, {
     onFrame: async () => {
       if (isTracking) {
         await hands.send({ image: videoElement });
       }
     },
-    width: 640,
-    height: 480
+    width: containerWidth,
+    height: containerHeight
   });
 
   camera.start();
   isTracking = true;
   
-  console.log('Hand tracking started');
+  console.log('Hand tracking started with container-based dimensions');
   return camera;
 }
 

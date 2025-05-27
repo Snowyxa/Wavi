@@ -1,6 +1,24 @@
 # Version Roadmap
 
-## v1.0.0 - Basic Hand Tracking (Current)
+## v2.0.0 - Auto-Start & Modern UI ✅
+**Status**: Completed (May 28, 2025)
+**Focus**: Auto-starting functionality and beautiful modern interface
+
+### Major Features
+- [x] **Auto-Start Technology** - Tracking begins automatically when popup opens
+- [x] **Zero-Button Interface** - Removed start/stop buttons for seamless experience
+- [x] **Modern UI Redesign** - Beautiful gradient interface with status indicators
+- [x] **Dark Mode Support** - Automatic theme adaptation based on system preferences
+- [x] **Enhanced Visual Feedback** - Color-coded status dots and smooth animations
+
+### Technical Improvements
+- [x] Optimized initialization process for faster startup
+- [x] Enhanced error handling and recovery
+- [x] Improved resource management and cleanup
+- [x] Hardware-accelerated CSS animations
+- [x] Better state management for auto-start behavior
+
+## v1.0.0 - Basic Hand Tracking
 **Status**: Completed
 **Focus**: Core functionality and basic cursor control
 
@@ -220,16 +238,84 @@
 - Improvement 2
 
 ### Bug Fixes
-- Fix 1
-- Fix 2
+## v2.1.0 - Advanced Gestures (Planned)
+**Status**: Planning Phase
+**Focus**: Enhanced gesture system and user customization
 
-### Known Issues
-- Issue 1
-- Issue 2
+### Planned Features
+- [ ] **Multiple Click Gestures** - User-selectable click options (fist, pinch, peace sign)
+- [ ] **Gesture Sensitivity Controls** - Adjustable tracking sensitivity settings
+- [ ] **Calibration System** - Personal gesture training and calibration
+- [ ] **Hand Preference Settings** - Left/right hand optimization
+- [ ] **Gesture History** - Activity logging and gesture analytics
 
-### Technical Notes
-- Note 1
-- Note 2
+### Technical Goals
+- [ ] Gesture configuration system
+- [ ] User preference storage
+- [ ] Advanced MediaPipe configuration
+- [ ] Gesture learning algorithms
+- [ ] Performance optimization for multiple gesture types
+
+## v2.2.0 - Multi-Hand & Advanced Features (Future)
+**Status**: Concept Phase
+**Focus**: Advanced tracking capabilities and accessibility
+
+### Planned Features
+- [ ] **Two-Hand Support** - Simultaneous tracking of both hands
+- [ ] **Scroll Gestures** - Hand movement for page scrolling
+- [ ] **Voice Integration** - Hybrid voice + gesture commands
+- [ ] **Gesture Macros** - Record and replay gesture sequences
+- [ ] **Accessibility Dashboard** - Comprehensive accessibility controls
+
+### Technical Goals
+- [ ] Multi-hand MediaPipe integration
+- [ ] Voice recognition API integration
+- [ ] Gesture sequence recording system
+- [ ] Advanced accessibility features
+- [ ] Performance optimization for complex tracking
+
+## v3.0.0 - AI-Powered Gestures (Vision)
+**Status**: Research Phase
+**Focus**: Machine learning and adaptive gesture recognition
+
+### Vision Features
+- [ ] **AI Gesture Learning** - Personalized gesture recognition
+- [ ] **Context-Aware Controls** - Website-specific gesture behaviors
+- [ ] **Predictive Tracking** - Anticipatory cursor movement
+- [ ] **Gesture Analytics** - Usage patterns and optimization suggestions
+- [ ] **Cross-Device Sync** - Gesture settings across devices
+
+### Research Areas
+- [ ] On-device machine learning models
+- [ ] Gesture pattern recognition
+- [ ] Predictive algorithms
+- [ ] Privacy-preserving AI
+- [ ] Cross-platform compatibility
+
+---
+
+## Development Status Tracking
+
+### Completed Milestones ✅
+- **v1.0.0** - Basic hand tracking foundation
+- **v1.1.0** - Click functionality implementation
+- **v1.1.1** - YouTube compatibility and positioning fixes
+- **v1.1.2** - Gesture state management improvements
+- **v1.1.3** - Click position locking system
+- **v1.1.4** - Modular architecture and stability
+- **v2.0.0** - Auto-start technology and modern UI
+
+### Current Priority 🎯
+**v2.1.0** - Advanced gesture system development
+- Gesture customization framework
+- User preference management
+- Enhanced accessibility features
+
+### Long-term Vision 🔮
+- AI-powered adaptive gesture recognition
+- Cross-platform gesture synchronization
+- Voice-gesture hybrid control systems
+- Enterprise accessibility solutions
 ```
 
 ## Version Naming Convention

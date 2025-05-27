@@ -145,6 +145,14 @@ function configureVideoElement(videoElement) {
   videoElement.muted = true;
   videoElement.playsInline = true;
   
+  // Prevent video from changing container dimensions
+  videoElement.style.width = '100%';
+  videoElement.style.height = '100%';
+  videoElement.style.objectFit = 'cover';
+  videoElement.style.position = 'absolute';
+  videoElement.style.top = '0';
+  videoElement.style.left = '0';
+  
   // Set video attributes for better performance
   videoElement.setAttribute('webkit-playsinline', 'true');
   videoElement.setAttribute('playsinline', 'true');

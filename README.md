@@ -1,11 +1,12 @@
-# 👋 Wavi - Hand Gesture Cursor Control
+# 👋 Wavi - Auto-Starting Hand Gesture Control
 
-**Wave goodbye to traditional mouse controls!** Wavi is a Chrome extension that transforms your webcam into a powerful gesture controller, allowing you to navigate websites with simple hand movements.
+**Wave goodbye to traditional mouse controls!** Wavi is a Chrome extension that transforms your webcam into a powerful gesture controller, allowing you to navigate websites with simple hand movements. Now with **instant auto-start** - no buttons needed!
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.1.4-blue.svg)
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
 ![Chrome Extension](https://img.shields.io/badge/chrome-extension-green.svg)
+![Auto Start](https://img.shields.io/badge/auto--start-enabled-brightgreen.svg)
 ![Privacy First](https://img.shields.io/badge/privacy-first-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
@@ -13,10 +14,21 @@
 
 ## ✨ Features
 
+### 🚀 **Instant Auto-Start**
+- **Zero-Click Activation** - Tracking starts automatically when you open the extension
+- **No Button Required** - Simply open the popup and start gesturing
+- **Instant Feedback** - Modern UI with real-time status indicators
+
 ### 🎯 **Intuitive Control**
 - **Index Finger Tracking** - Move your index finger to control the cursor
 - **Fist Gestures** - Make a fist to click anywhere on the page
 - **Real-time Response** - Ultra-low latency tracking for smooth interaction
+
+### 🎨 **Beautiful Modern Interface**
+- **Gradient Design** - Sleek, modern UI with smooth animations
+- **Status Indicators** - Visual feedback with color-coded status dots
+- **Dark Mode Support** - Automatically adapts to your system theme
+- **Responsive Layout** - Works perfectly on all screen sizes
 
 ### 🌐 **Universal Compatibility**
 - **Works Everywhere** - Compatible with all websites including YouTube, social media, and complex web apps
@@ -27,6 +39,7 @@
 - **100% Local Processing** - All hand tracking happens in your browser
 - **No Data Transmission** - Zero data sent to external servers
 - **Camera Control** - Full control over when your camera is active
+- **Secure by Design** - No tracking, no analytics, no data collection
 
 ### ⚡ **Performance Optimized**
 - **MediaPipe Integration** - Leverages Google's advanced hand tracking technology
@@ -50,61 +63,67 @@
    - 🎉 Wavi icon appears in your toolbar!
 
 ### First Use
-1. **🎬 Start Tracking** - Click the Wavi extension icon → "Start Tracking"
-2. **📹 Grant Camera Access** - Allow camera permissions when prompted
+1. **🎬 Instant Start** - Click the Wavi extension icon and tracking starts automatically!
+2. **📹 Grant Camera Access** - Allow camera permissions when prompted (one-time only)
 3. **✋ Position Your Hand** - Hold your hand clearly in view of the camera
-4. **👆 Point & Navigate** - Move your index finger to control the cursor
-5. **🎯 Choose Your Gesture** - Select from multiple click options for accessibility
-6. **📜 Scroll & Explore** - Enable scroll mode for hands-free page navigation
+4. **👆 Point & Navigate** - Move your index finger to control the cursor immediately
+5. **✊ Make a Fist** - Close your hand to click anywhere on the page
+6. **🎯 Enjoy Seamless Control** - No buttons to press, no setup required!
 
 ## 🎮 How to Use
 
-### Click Gestures (Choose Your Preferred Method)
-| Gesture | Action | Best For | Visual Feedback |
-|---------|--------|----------|----------------|
-| **👌 Pinch** | Touch thumb to index finger | Motor difficulties, precision | Red cursor when active |
-| **✌️ Peace Sign** | Extend index & middle fingers | Quick gestures | Red cursor when active |
-| **👍 Thumbs Up** | Thumb up, others closed | One-handed operation | Red cursor when active |
-| **🖐️ Palm Close** | Open hand to closed fist | Traditional feel | Red cursor when active |
-| **👊 Fist** | Make a fist (legacy) | Original users | Red cursor when active |
-
-### Navigation & Movement
+### Core Gestures
 | Gesture | Action | Visual Feedback |
 |---------|--------|----------------|
 | **👆 Point** | Move cursor | Green circular cursor follows your finger |
-| **📜 Scroll Mode** | Hand movement scrolls page | Blue cursor indicates scroll mode |
-| **🖐️ Open Hand** | Idle state | Cursor remains visible but inactive |
+| **✊ Fist** | Click action | Red cursor when fist is detected |
+| **🖐️ Open Hand** | Idle state | Normal cursor, no action |
+
+### Getting Started
+1. **Open Extension** - Click the Wavi icon in your Chrome toolbar
+2. **Auto-Start Magic** - Tracking begins automatically (no buttons needed!)
+3. **Grant Permissions** - Allow camera access when prompted
+4. **Start Gesturing** - Point your index finger to move the cursor
+5. **Click with Fist** - Make a fist gesture to click
 
 ### Pro Tips
-- **Gesture Selection**: Use the dropdown menu to choose your preferred click gesture
-- **Accessibility**: Pinch gesture is easiest for users with limited hand mobility  
-- **Scroll Mode**: Toggle scroll mode on/off, adjust sensitivity as needed
 - **Lighting**: Works best in well-lit environments
 - **Distance**: Keep hand 1-2 feet from camera for optimal tracking
 - **Stability**: Small, deliberate movements work better than large gestures
+- **Camera Position**: Ensure your hand is clearly visible in the camera view
+- **Performance**: Close other camera-using apps for best performance
 
 ## 📁 Project Structure
 
 ```
 wavi-extension/
 ├── 📄 manifest.json           # Extension configuration & permissions
-├── 🎨 popup.html             # Extension popup interface
-├── 🧠 popup.js               # Hand tracking engine & gesture logic
+├── 🎨 popup.html             # Modern auto-start interface
+├── 🧠 popup.js               # Auto-starting hand tracking engine
 ├── 🎯 content.js             # Cursor overlay & click handling
-├── 💄 styles.css             # UI styling & animations
-├── 📚 docs/                  # Documentation folder
+├── 💄 styles.css             # Beautiful modern UI with animations
+├── ⚙️ config.js              # Configuration settings
+├── 🔧 service-worker.js      # Background service worker
+├── 📚 docs/                  # Comprehensive documentation
 │   ├── API-REFERENCE.md      # Technical API documentation
 │   ├── DOCUMENTATION.md      # Complete implementation guide
 │   ├── TROUBLESHOOTING.md    # Common issues & solutions
 │   ├── requirements.md       # System requirements
-│   ├── implementation-checklist.md
 │   └── version-roadmap.md    # Development roadmap
-└── 📦 lib/                   # MediaPipe libraries
-    ├── hands_solution_packed_assets_loader.js
-    ├── hands_solution_simd_wasm_bin.js
-    ├── hands.js
-    ├── camera_utils.js
-    └── drawing_utils.js
+├── 🎨 icons/                 # Extension icons
+│   └── icon.svg
+├── 📦 lib/                   # MediaPipe libraries
+│   ├── hands_solution_packed_assets_loader.js
+│   ├── hands_solution_simd_wasm_bin.js
+│   ├── hands.js
+│   ├── camera_utils.js
+│   └── drawing_utils.js
+└── 🔧 modules/               # Modular components
+    ├── cameraUtils.js
+    ├── communication.js
+    ├── gestureDetection.js
+    ├── handTracking.js
+    └── smoothing.js
 ```
 
 ## 📖 Documentation
@@ -117,9 +136,17 @@ wavi-extension/
 | 📋 **[Requirements](./docs/requirements.md)** | System requirements & compatibility |
 | 🗺️ **[Roadmap](./docs/version-roadmap.md)** | Future features & development timeline |
 
-## 🎯 Current Status: v1.1.1
+## 🎯 Current Status: v2.0.0
 
-### ✅ Working Features
+### 🆕 New in v2.0.0
+- ✅ **Auto-Start Technology** - Tracking begins instantly when popup opens
+- ✅ **Modern UI Redesign** - Beautiful gradient interface with status indicators
+- ✅ **Zero-Button Experience** - No more start/stop buttons needed
+- ✅ **Enhanced Visual Feedback** - Color-coded status dots and smooth animations
+- ✅ **Dark Mode Support** - Automatically adapts to system preferences
+- ✅ **Improved Accessibility** - Better contrast and visual indicators
+
+### ✅ Core Features
 - ✅ **Real-time Hand Tracking** - MediaPipe-powered gesture recognition
 - ✅ **Cursor Movement** - Smooth, responsive finger tracking
 - ✅ **Click Functionality** - Reliable fist-based clicking
@@ -127,11 +154,11 @@ wavi-extension/
 - ✅ **Visual Feedback** - Clear cursor states and click confirmation
 - ✅ **Privacy Protection** - 100% local processing
 
-### 🔧 Recent Fixes (v1.1.1)
-- **Fixed Y-axis Tracking** - Cursor no longer gets stuck at screen edges
-- **YouTube Optimization** - Enhanced compatibility with complex website layouts
-- **Coordinate Precision** - Resolved scaling issues for accurate positioning
-- **Improved Responsiveness** - Better initial cursor placement and sensitivity
+### 🔧 Technical Improvements
+- **Enhanced Performance** - Optimized initialization and resource management
+- **Better Error Handling** - Improved camera permission and error states
+- **Smoother Animations** - Hardware-accelerated CSS transitions
+- **Responsive Design** - Mobile and desktop optimized layouts
 
 ## 🔧 System Requirements
 
