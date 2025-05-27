@@ -8,14 +8,17 @@ function createCursor() {
     cursor.style.position = 'fixed';
     cursor.style.width = '20px';
     cursor.style.height = '20px';
-    cursor.style.backgroundColor = 'rgba(0, 255, 0, 0.5)';
+    cursor.style.backgroundColor = 'rgba(0, 255, 0, 0.8)';
     cursor.style.borderRadius = '50%';
     cursor.style.pointerEvents = 'none';
     cursor.style.zIndex = '99999'; // Higher z-index for YouTube
     cursor.style.transform = 'translate(-50%, -50%)';
     cursor.style.transition = 'transform 0.1s ease-out, background-color 0.2s ease-out';
+    cursor.style.border = '2px solid rgba(0, 255, 0, 1)'; // Solid border for better visibility
+    cursor.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.5)'; // Add glow effect
     document.body.appendChild(cursor);
     initializeCursor();
+    console.log('Hand tracking cursor created and added to page');
   }
 }
 
@@ -27,14 +30,27 @@ function initializeCursor() {
   cursor.style.left = `${viewportWidth / 2}px`;
   cursor.style.top = `${viewportHeight / 2}px`;
   cursor.style.opacity = '0.8';
+  cursor.style.display = 'block'; // Ensure cursor is visible
+  console.log(`Cursor initialized at center: ${viewportWidth / 2}px, ${viewportHeight / 2}px`);
 }
 
 // Call initialization
 createCursor();
 
+// Also create cursor when page is fully loaded (backup)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', createCursor);
+} else {
+  createCursor();
+}
+
 // Update cursor position relative to viewport and scroll
 function updateCursorPosition(x, y) {
-  if (!cursor) return;
+  if (!cursor) {
+    console.warn('Cursor element not found, creating new one');
+    createCursor();
+    return;
+  }
   
   // For YouTube and similar sites, use viewport-relative positioning
   // since they have complex layouts that can interfere with absolute positioning
@@ -48,9 +64,11 @@ function updateCursorPosition(x, y) {
     // Clamp to viewport bounds
     const finalX = Math.max(0, Math.min(x, viewportWidth - 20));
     const finalY = Math.max(0, Math.min(y, viewportHeight - 20));
-    
+
     cursor.style.left = `${finalX}px`;
     cursor.style.top = `${finalY}px`;
+    cursor.style.opacity = '0.8';
+    cursor.style.display = 'block';
     
     console.log(`YouTube cursor position: x=${x}, y=${y}, finalX=${finalX}, finalY=${finalY}, viewport=${viewportWidth}x${viewportHeight}`);
   } else {
@@ -69,6 +87,8 @@ function updateCursorPosition(x, y) {
 
     cursor.style.left = `${finalX}px`;
     cursor.style.top = `${finalY}px`;
+    cursor.style.opacity = '0.8';
+    cursor.style.display = 'block';
     
     console.log(`Standard cursor position: x=${x}, y=${y}, finalX=${finalX}, finalY=${finalY}`);
   }
@@ -117,12 +137,14 @@ function showClickFeedback() {
   }, 200);
 }
 
-// Listen for messages from the popup
+// Listen for messages from the service worker
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log('Content script received message:', message.action, message);
+  
   if (message.action === 'ping') {
     sendResponse({ status: 'ready' });
     return true;
-  }  if (message.action === 'getDimensions') {
+  }if (message.action === 'getDimensions') {
     const isYouTube = window.location.hostname.includes('youtube.com');
     
     if (isYouTube) {

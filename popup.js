@@ -57,16 +57,34 @@ function setupEventListeners() {
  */
 async function initializeHandTracking() {
   try {
+    // Check if MediaPipe functions are available
+    console.log('Checking MediaPipe availability:');
+    console.log('- typeof Hands:', typeof Hands);
+    console.log('- typeof Camera:', typeof Camera);
+    console.log('- typeof drawConnectors:', typeof drawConnectors);
+    console.log('- typeof drawLandmarks:', typeof drawLandmarks);
+    console.log('- typeof HAND_CONNECTIONS:', typeof HAND_CONNECTIONS);
+    console.log('- MediaPipeBasePath:', window.MediaPipeBasePath);
+    
+    // Check if essential MediaPipe components are loaded
+    if (typeof Hands === 'undefined') {
+      throw new Error('MediaPipe Hands library not loaded. Check that lib/hands.js is accessible.');
+    }
+    
+    if (typeof Camera === 'undefined') {
+      throw new Error('MediaPipe Camera utility not loaded. Check that lib/camera_utils.js is accessible.');
+    }
+    
     const handsInstance = await window.HandTracking.initializeMediaPipeHands();
     if (!handsInstance) {
       console.error('Failed to initialize MediaPipe Hands');
-      updateUI('error');
+      updateUI('error', 'Failed to initialize hand tracking');
       return;
     }
     console.log('MediaPipe Hands initialized successfully');
   } catch (error) {
     console.error('Error initializing hand tracking:', error);
-    updateUI('error');
+    updateUI('error', `Initialization failed: ${error.message}`);
   }
 }
 
@@ -169,16 +187,26 @@ function onResults(results) {
   
   if (handDetected) {
     // Process each detected hand
-    for (const landmarks of results.multiHandLandmarks) {
-      // Draw hand landmarks
-      drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
-        color: '#00FF00',
-        lineWidth: 2
-      });
-      drawLandmarks(ctx, landmarks, {
-        color: '#FF0000',
-        lineWidth: 1
-      });
+    for (const landmarks of results.multiHandLandmarks) {      // Draw hand landmarks and connections
+      if (typeof drawConnectors === 'function' && typeof HAND_CONNECTIONS !== 'undefined') {
+        drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
+          color: '#00FF00',
+          lineWidth: 2
+        });
+      } else {
+        console.warn('drawConnectors or HAND_CONNECTIONS not available - drawing basic connections');
+        drawBasicHandConnections(ctx, landmarks);
+      }
+      
+      if (typeof drawLandmarks === 'function') {
+        drawLandmarks(ctx, landmarks, {
+          color: '#FF0000',
+          lineWidth: 1
+        });
+      } else {
+        console.warn('drawLandmarks not available - drawing basic landmarks');
+        drawBasicHandLandmarks(ctx, landmarks);
+      }
       
       // Calculate cursor position
       const cursorPosition = window.HandTracking.calculateCursorPosition(landmarks);
@@ -288,6 +316,61 @@ window.addEventListener('beforeunload', function() {
     stopTracking();
   }
 });
+
+/**
+ * Fallback function to draw basic hand connections when MediaPipe drawing utils aren't available
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Array} landmarks - Hand landmarks
+ */
+function drawBasicHandConnections(ctx, landmarks) {
+  if (!landmarks || landmarks.length < 21) return;
+  
+  // Basic hand connections (simplified version of HAND_CONNECTIONS)
+  const connections = [
+    [0,1],[1,2],[2,3],[3,4],     // Thumb
+    [0,5],[5,6],[6,7],[7,8],     // Index finger
+    [5,9],[9,10],[10,11],[11,12], // Middle finger
+    [9,13],[13,14],[14,15],[15,16], // Ring finger
+    [13,17],[0,17],[17,18],[18,19],[19,20] // Pinky and palm
+  ];
+  
+  ctx.strokeStyle = '#00FF00';
+  ctx.lineWidth = 2;
+  
+  connections.forEach(([startIdx, endIdx]) => {
+    const start = landmarks[startIdx];
+    const end = landmarks[endIdx];
+    
+    if (start && end) {
+      ctx.beginPath();
+      ctx.moveTo(start.x * canvas.width, start.y * canvas.height);
+      ctx.lineTo(end.x * canvas.width, end.y * canvas.height);
+      ctx.stroke();
+    }
+  });
+}
+
+/**
+ * Fallback function to draw basic hand landmarks when MediaPipe drawing utils aren't available
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {Array} landmarks - Hand landmarks
+ */
+function drawBasicHandLandmarks(ctx, landmarks) {
+  if (!landmarks || landmarks.length < 21) return;
+  
+  ctx.fillStyle = '#FF0000';
+  
+  landmarks.forEach((landmark, index) => {
+    if (landmark) {
+      const x = landmark.x * canvas.width;
+      const y = landmark.y * canvas.height;
+      
+      ctx.beginPath();
+      ctx.arc(x, y, index === 8 ? 4 : 2, 0, 2 * Math.PI); // Larger dot for index finger tip
+      ctx.fill();
+    }
+  });
+}
 
 // Log initialization
 console.log('Hand Tracking Extension v1.1.4 - Modular popup loaded');

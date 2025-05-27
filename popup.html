@@ -19,12 +19,12 @@
     <div class="video-container">
       <video id="video" playsinline></video>
       <canvas id="output"></canvas>
-    </div>
-  </div>  <!-- MediaPipe libraries in correct loading order -->
-  <script>
-    // Set MediaPipe base path before loading
-    window.MediaPipeBasePath = './lib/';
-  </script>
+    </div>  </div>
+
+  <!-- Configuration loaded first -->
+  <script src="config.js"></script>
+  
+  <!-- MediaPipe libraries in correct loading order -->
   <script src="lib/hands.js"></script>
   <script src="lib/camera_utils.js"></script>
   <script src="lib/drawing_utils.js"></script>
