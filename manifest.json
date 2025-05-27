@@ -1,12 +1,11 @@
 {
   "manifest_version": 3,  "name": "Wavi - Hand Gesture Cursor Control",
-  "version": "1.1.1",
-  "description": "Control your cursor with intuitive hand gestures using your webcam. Wave goodbye to traditional mouse controls!",
+  "version": "1.1.4",
+  "description": "Control your cursor with intuitive hand gestures using your webcam. Simple fist gesture for clicking with improved accessibility.",
   "permissions": [
     "activeTab",
     "scripting"
-  ],
-  "content_security_policy": {
+  ],  "content_security_policy": {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; default-src 'self' blob: data:"
   },
   "web_accessible_resources": [

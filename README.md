@@ -4,7 +4,7 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.4-blue.svg)
 ![Chrome Extension](https://img.shields.io/badge/chrome-extension-green.svg)
 ![Privacy First](https://img.shields.io/badge/privacy-first-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
@@ -31,7 +31,8 @@
 ### ⚡ **Performance Optimized**
 - **MediaPipe Integration** - Leverages Google's advanced hand tracking technology
 - **Adaptive Sensitivity** - Automatically adjusts to your screen resolution
-- **Smooth Interpolation** - Fluid cursor movement with advanced filtering
+- **Advanced Smoothing** - Multi-layer smoothing system reduces jitter for improved accessibility
+- **Dead Zone Technology** - Ignores micro-movements for stable cursor positioning
 
 ## 🚀 Quick Start
 
@@ -53,21 +54,34 @@
 2. **📹 Grant Camera Access** - Allow camera permissions when prompted
 3. **✋ Position Your Hand** - Hold your hand clearly in view of the camera
 4. **👆 Point & Navigate** - Move your index finger to control the cursor
-5. **👊 Click & Interact** - Make a fist to click on elements
+5. **🎯 Choose Your Gesture** - Select from multiple click options for accessibility
+6. **📜 Scroll & Explore** - Enable scroll mode for hands-free page navigation
 
 ## 🎮 How to Use
 
+### Click Gestures (Choose Your Preferred Method)
+| Gesture | Action | Best For | Visual Feedback |
+|---------|--------|----------|----------------|
+| **👌 Pinch** | Touch thumb to index finger | Motor difficulties, precision | Red cursor when active |
+| **✌️ Peace Sign** | Extend index & middle fingers | Quick gestures | Red cursor when active |
+| **👍 Thumbs Up** | Thumb up, others closed | One-handed operation | Red cursor when active |
+| **🖐️ Palm Close** | Open hand to closed fist | Traditional feel | Red cursor when active |
+| **👊 Fist** | Make a fist (legacy) | Original users | Red cursor when active |
+
+### Navigation & Movement
 | Gesture | Action | Visual Feedback |
 |---------|--------|----------------|
-| **👆 Point** | Move cursor | Blue circular cursor follows your finger |
-| **👊 Fist** | Click/Tap | Cursor turns red and clicks at current position |
-| **🖐️ Open Hand** | Idle | Cursor remains visible but inactive |
+| **👆 Point** | Move cursor | Green circular cursor follows your finger |
+| **📜 Scroll Mode** | Hand movement scrolls page | Blue cursor indicates scroll mode |
+| **🖐️ Open Hand** | Idle state | Cursor remains visible but inactive |
 
 ### Pro Tips
+- **Gesture Selection**: Use the dropdown menu to choose your preferred click gesture
+- **Accessibility**: Pinch gesture is easiest for users with limited hand mobility  
+- **Scroll Mode**: Toggle scroll mode on/off, adjust sensitivity as needed
 - **Lighting**: Works best in well-lit environments
 - **Distance**: Keep hand 1-2 feet from camera for optimal tracking
 - **Stability**: Small, deliberate movements work better than large gestures
-- **Clicking**: Hold fist briefly for reliable click detection
 
 ## 📁 Project Structure
 

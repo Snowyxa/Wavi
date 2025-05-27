@@ -99,6 +99,76 @@
    - Position cursor before making fist
    - Ensure good hand visibility
 
+### 5. Jittery or Unstable Cursor Movement
+
+**Symptoms:**
+- Cursor shakes or vibrates even when hand is steady
+- Micro-movements make precise targeting difficult
+- Cursor behavior appears noisy or unstable
+- Particularly problematic for users with motoric issues or hand tremors
+
+**Causes:**
+- Natural hand micro-movements
+- Camera sensor noise
+- Inadequate smoothing of tracking data
+
+**Current Status:**
+✅ **Fixed in v1.1.3** - Comprehensive smoothing system implemented
+
+**Solution Implemented:**
+- Multi-layer smoothing system with hand position and cursor position smoothing
+- Dead zone implementation to ignore micro-movements (0.003 radius)
+- Velocity-based smoothing to prevent sudden direction changes
+- Position history averaging over 8 frames for temporal stability
+- Configurable smoothing parameters for different accessibility needs
+
+**If Issue Persists:**
+1. **Check Extension Version** - Ensure you're running v1.1.3 or later
+2. **Optimize Environment**
+   - Improve lighting consistency
+   - Minimize camera shake or vibration
+   - Use steady hand positioning
+3. **Adjust Usage Pattern**
+   - Move hand more slowly and deliberately
+   - Allow brief pauses between movements
+   - Practice smooth, controlled gestures
+
+**Advanced Configuration (Future Feature):**
+- Smoothing intensity adjustment for different user needs
+- Custom dead zone radius configuration
+- Accessibility-specific presets
+
+### 5. Cursor Movement During Fist Gesture
+
+**Symptoms:**
+- Cursor continues to move when making a fist
+- Hover target changes while attempting to click
+- Difficulty maintaining cursor position during click gesture
+
+**Causes:**
+- Cursor tracking remains active during fist detection
+- Hand position shifts slightly when forming fist
+- No cursor locking mechanism during click gesture
+
+**Current Status:**
+✅ **Fixed in v1.1.2** - Cursor position now locks during fist gestures
+
+**Solution Implemented:**
+- Cursor position locks automatically when fist gesture is detected
+- Minimum 150ms lock duration prevents premature unlocking
+- Smooth transition back to movement mode after gesture completion
+- Enhanced gesture state management separates movement and click modes
+
+**If Issue Persists (Legacy Troubleshooting):**
+1. **Check Extension Version** - Ensure you're running v1.1.2 or later
+2. **Reload Extension** - Disable and re-enable the extension
+3. **Refresh Webpage** - Restart tracking on the current page
+
+**Legacy Workarounds (No Longer Needed):**
+- ~~Move to target location first, pause to stabilize~~
+- ~~Hover over larger clickable areas~~
+- ~~Practice smooth fist formation without arm movement~~
+
 ### 5. Extension Not Loading
 
 **Symptoms:**

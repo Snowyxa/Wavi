@@ -49,6 +49,31 @@
 - [x] Site-specific positioning logic (YouTube vs standard sites)
 - [x] Improved coordinate mapping with proper bounds clamping
 - [x] Enhanced Y-axis sensitivity with 1.2x multiplier
+- [x] Viewport-relative positioning for complex UI layouts
+- [x] Increased z-index to 99999 for better cursor visibility
+
+## v1.1.2 - Gesture Stability Improvements
+**Status**: ✅ Completed
+**Focus**: Fixed cursor movement during click gestures and improved gesture reliability
+
+### Issues Fixed
+- [x] **Cursor Movement During Fist** - Prevented cursor movement when making click gesture
+- [x] Cursor position locking during click gesture detection
+- [x] Brief cursor freeze period when click gesture is initiated
+- [x] Improved gesture state management (separate movement and click modes)
+
+### Technical Improvements
+- [x] Gesture state machine implementation with position locking
+- [x] Cursor position stabilization during clicks (150ms minimum lock duration)
+- [x] Enhanced fist detection accuracy with temporal consistency
+- [x] Reduced hand position sensitivity during gesture transitions
+- [x] Added gestureStabilizationTimeout for smooth unlock transitions
+
+### Development Notes
+- **Issue Reported**: May 27, 2025 - Cursor continues moving during fist gesture, affecting click accuracy
+- **Issue Resolved**: May 27, 2025 - Implemented comprehensive cursor locking system
+- **Priority**: Medium - Significantly improved user experience for precise clicking
+- **Complexity**: Medium - Required gesture state management and timeout coordination
 - [x] Higher z-index (99999) for complex UI compatibility
 - [x] Viewport-relative positioning for dynamic layouts
 
@@ -58,6 +83,47 @@
 - [x] Added `isYouTube` detection and handling
 - [x] Improved `mapRange()` function with clamping
 - [x] Enhanced error handling and logging
+
+## v1.1.3 - Smoothing and Accessibility Improvements
+**Status**: ✅ Completed  
+**Focus**: Advanced smoothing system to reduce jittery tracking for improved accessibility
+
+### Issues Fixed
+- [x] **Jittery Cursor Movement** - Implemented comprehensive smoothing system for users with motoric issues
+- [x] Micro-movement noise reduction with dead zone implementation
+- [x] Velocity-based smoothing for consistent cursor behavior
+- [x] Position history averaging for stable tracking
+- [x] Stabilization detection to prevent unnecessary micro-adjustments
+
+### Technical Improvements
+- [x] **Multi-layer Smoothing System**:
+  - [x] Hand position smoothing with weighted averaging
+  - [x] Cursor position smoothing with exponential smoothing
+  - [x] Velocity smoothing to prevent sudden direction changes
+  - [x] Dead zone implementation (0.003 radius) for micro-movement filtering
+- [x] **Accessibility Features**:
+  - [x] Configurable smoothing factor (0.7 default, 0.1-0.9 range)
+  - [x] Movement threshold system to ignore insignificant movements
+  - [x] Stabilization frame counting for steady hand detection
+  - [x] Position history tracking (8 frames) for temporal averaging
+- [x] **Performance Optimizations**:
+  - [x] Reduced debug logging (10% sampling rate) to improve performance
+  - [x] Efficient position history management with automatic cleanup
+  - [x] Smart smoothing variable reset on tracking stop
+
+### Code Changes
+- [x] Added `applySmoothingToMovement()` function with dead zone and velocity smoothing
+- [x] Added `calculateSmoothedPosition()` function with weighted history averaging
+- [x] Added `addToPositionHistory()` function for temporal position tracking
+- [x] Updated movement calculation to use dual-layer smoothing approach
+- [x] Enhanced `stopTracking()` to reset all smoothing variables
+- [x] Optimized debug logging to reduce console spam
+
+### Development Notes
+- **Issue Reported**: Ongoing - Users with motoric issues experience jittery cursor movement
+- **Issue Resolved**: May 27, 2025 - Comprehensive smoothing system implemented
+- **Priority**: High - Critical for accessibility and user experience
+- **Complexity**: Medium - Multi-layered smoothing with performance considerations
 
 ## v1.2.0 - Scroll Implementation
 **Status**: Planned

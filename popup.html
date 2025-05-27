@@ -4,26 +4,39 @@
   <title>Hand Tracking Cursor Control</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <div class="container">
+<body>  <div class="container">
     <h1>Hand Tracking Cursor Control</h1>
+    
     <div class="controls">
       <button id="startTracking" class="button">Start Tracking</button>
       <button id="stopTracking" class="button">Stop Tracking</button>
     </div>
+    
     <div class="status">
-      <p>Status: <span id="statusText">Inactive</span></p>
+      <p id="status">Status: Ready - Click 'Start Tracking' to begin</p>
     </div>
+    
     <div class="video-container">
       <video id="video" playsinline></video>
-      <canvas id="canvas"></canvas>
+      <canvas id="output"></canvas>
     </div>
-  </div>
-  <script src="lib/hands_solution_packed_assets_loader.js"></script>
-  <script src="lib/hands_solution_simd_wasm_bin.js"></script>
+  </div>  <!-- MediaPipe libraries in correct loading order -->
+  <script>
+    // Set MediaPipe base path before loading
+    window.MediaPipeBasePath = './lib/';
+  </script>
   <script src="lib/hands.js"></script>
   <script src="lib/camera_utils.js"></script>
   <script src="lib/drawing_utils.js"></script>
+  
+  <!-- Module scripts -->
+  <script src="modules/smoothing.js"></script>
+  <script src="modules/gestureDetection.js"></script>
+  <script src="modules/communication.js"></script>
+  <script src="modules/cameraUtils.js"></script>
+  <script src="modules/handTracking.js"></script>
+  
+  <!-- Main popup script -->
   <script src="popup.js"></script>
 </body>
 </html> 

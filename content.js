@@ -143,19 +143,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
     sendResponse({ status: 'success' });
     return true;
-  }
-  if (message.action === 'moveCursor') {
+  }  if (message.action === 'moveCursor') {
     try {
       if (!cursor) createCursor();
       const { x, y, isHandVisible, isFist } = message;
       updateCursorPosition(x, y);
       cursor.style.opacity = isHandVisible ? '0.8' : '0.3';
       
-      // Update cursor appearance based on fist state
+      // Update cursor appearance based on gesture state
       if (isFist) {
         cursor.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        cursor.style.backgroundColor = 'rgba(255, 0, 0, 0.7)'; // Red for active gesture
       } else {
         cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+        cursor.style.backgroundColor = 'rgba(0, 255, 0, 0.5)'; // Green for normal mode
       }
       
       sendResponse({ status: 'success' });
@@ -163,8 +164,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse({ status: 'error', message: error.message });
     }
     return true;
-  }
-  if (message.action === 'click') {
+  }if (message.action === 'click') {
     try {
       if (!cursor) createCursor();
       const { x, y } = message;
@@ -172,8 +172,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       showClickFeedback();
       sendResponse({ status: 'success' });
     } catch (error) {
-      sendResponse({ status: 'error', message: error.message });
-    }
+      sendResponse({ status: 'error', message: error.message });    }
     return true;
   }
 });
