@@ -1,0 +1,17 @@
+/* Content script styles - only for elements injected into websites */
+#handtracking-cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  background-color: rgba(0, 255, 0, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out, background-color 0.2s ease-out;
+  border: 2px solid rgba(0, 255, 0, 1);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+/* Add any other styles needed for content script elements here */
+/* But DO NOT include any styles that affect the entire page layout */

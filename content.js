@@ -5,17 +5,7 @@ function createCursor() {
   if (!cursor) {
     cursor = document.createElement('div');
     cursor.id = 'handtracking-cursor';
-    cursor.style.position = 'fixed';
-    cursor.style.width = '20px';
-    cursor.style.height = '20px';
-    cursor.style.backgroundColor = 'rgba(0, 255, 0, 0.8)';
-    cursor.style.borderRadius = '50%';
-    cursor.style.pointerEvents = 'none';
-    cursor.style.zIndex = '99999'; // Higher z-index for YouTube
-    cursor.style.transform = 'translate(-50%, -50%)';
-    cursor.style.transition = 'transform 0.1s ease-out, background-color 0.2s ease-out';
-    cursor.style.border = '2px solid rgba(0, 255, 0, 1)'; // Solid border for better visibility
-    cursor.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.5)'; // Add glow effect
+    // All styles now come from content-styles.css
     document.body.appendChild(cursor);
     initializeCursor();
     console.log('Hand tracking cursor created and added to page');
