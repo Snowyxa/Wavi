@@ -174,6 +174,10 @@ class PopupController {
 document.addEventListener('DOMContentLoaded', async function() {
   // Wait for all modules to load
   const popupController = new PopupController();
+  
+  // Make popup controller globally accessible
+  window.popupController = popupController;
+  
   await popupController.waitForModules();
   
   // Initialize the popup
