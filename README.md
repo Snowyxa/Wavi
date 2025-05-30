@@ -20,8 +20,9 @@
 - **Directe Feedback** - Moderne UI met real-time status indicatoren
 
 ### 🎯 **Intuïtieve Besturing**
-- **Wijsvinger Tracking** - Beweeg je wijsvinger om de cursor te besturen
+- **Pols Tracking** - Beweeg je pols om de cursor te besturen
 - **Vuist Gebaren** - Maak een vuist om ergens op de pagina te klikken
+- **Scroll Gebaar** - Maak een "peace sign" (wijs- en middelvinger omhoog) om OMHOOG te scrollen. Maak een omgekeerd "peace sign" (wijs- en middelvinger omlaag) om OMLAAG te scrollen. Beweeg je hand op en neer om de scroll snelheid aan te passen.
 - **Real-time Reactie** - Ultra-lage latentie tracking voor soepele interactie
 
 ### 🎨 **Mooie Moderne Interface**
@@ -66,25 +67,29 @@
 1. **🎬 Instant Start** - Klik op het Wavi extensie icoon en tracking start automatisch!
 2. **📹 Camera Toegang Verlenen** - Sta camera permissies toe wanneer gevraagd (eenmalig)
 3. **✋ Positioneer Je Hand** - Houd je hand duidelijk zichtbaar voor de camera
-4. **👆 Wijs & Navigeer** - Beweeg je wijsvinger om de cursor direct te besturen
+4. **🖐️ Beweeg Je Hand** - Beweeg je hand (pols) om de cursor direct te besturen
 5. **✊ Maak een Vuist** - Sluit je hand om ergens op de pagina te klikken
-6. **🎯 Geniet van Naadloze Besturing** - Geen knoppen om in te drukken, geen setup vereist!
+6. **✌️ Gebruik het Scroll Gebaar** - Maak een "peace sign" (vingers omhoog) om omhoog te scrollen, of een omgekeerd "peace sign" (vingers omlaag) om omlaag te scrollen. Beweeg op/neer om te scrollen.
+7. **🎯 Geniet van Naadloze Besturing** - Geen knoppen om in te drukken, geen setup vereist!
 
 ## 🎮 Hoe Te Gebruiken
 
 ### Kern Gebaren
 | Gebaar | Actie | Visuele Feedback |
 |---------|--------|----------------|
-| **👆 Wijzen** | Cursor bewegen | Groene circulaire cursor volgt je vinger |
+| **🖐️ Hand Beweging (Pols)** | Cursor bewegen | Groene circulaire cursor volgt je pols |
 | **✊ Vuist** | Klik actie | Rode cursor wanneer vuist wordt gedetecteerd |
-| **🖐️ Open Hand** | Inactieve staat | Normale cursor, geen actie |
+| **✌️ Peace Sign (Op/Neer)** | Omhoog scrollen | Scroll indicatoren (nader te bepalen) |
+| **👇 Omgekeerd Peace Sign (Op/Neer)** | Omlaag scrollen | Scroll indicatoren (nader te bepalen) |
+| **🖐️ Open Hand (Stil)** | Inactieve staat | Normale cursor, geen actie |
 
 ### Aan De Slag
 1. **Open Extensie** - Klik op het Wavi icoon in je Chrome werkbalk
 2. **Auto-Start Magie** - Tracking begint automatisch (geen knoppen nodig!)
 3. **Verlenen Permissies** - Sta camera toegang toe wanneer gevraagd
-4. **Begin Met Gebaren** - Wijs met je wijsvinger om de cursor te bewegen
+4. **Begin Met Gebaren** - Beweeg je hand (pols) om de cursor te bewegen
 5. **Klik Met Vuist** - Maak een vuist gebaar om te klikken
+6. **Scroll Met Peace Sign** - Maak een "peace sign" (vingers omhoog) om omhoog te scrollen, of een omgekeerd "peace sign" (vingers omlaag) om omlaag te scrollen. Beweeg op/neer om te scrollen.
 
 ### Pro Tips
 - **Verlichting**: Werkt het best in goed verlichte omgevingen
