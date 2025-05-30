@@ -122,26 +122,26 @@ function mapRange(value, inMin, inMax, outMin, outMax) {
  * @returns {Object} - Cursor position {x, y}
  */
 function calculateCursorPosition(landmarks) {
-  const indexFinger = landmarks[8]; // Index finger tip
-  
-  if (!indexFinger) return null;
-  
+  const wrist = landmarks[0]; // Use wrist as the reference point
+
+  if (!wrist) return null;
+
   // Handle first hand detection
   if (isFirstHandDetection) {
     try {
       // Map the initial hand position to current cursor position to prevent jumps
       centerPosition = {
-        x: mapRange(indexFinger.x, 0.2, 0.8, tabDimensions.width * 0.2, tabDimensions.width * 0.8),
-        y: mapRange(indexFinger.y, 0.2, 0.8, tabDimensions.height * 0.2, tabDimensions.height * 0.8)
+        x: mapRange(wrist.x, 0.2, 0.8, tabDimensions.width * 0.2, tabDimensions.width * 0.8),
+        y: mapRange(wrist.y, 0.2, 0.8, tabDimensions.height * 0.2, tabDimensions.height * 0.8)
       };
-      
-      console.log(`First hand detection: x=${indexFinger.x.toFixed(4)}, y=${indexFinger.y.toFixed(4)}`);
+
+      console.log(`First hand detection (wrist): x=${wrist.x.toFixed(4)}, y=${wrist.y.toFixed(4)}`);
       console.log(`Center position set to: x=${centerPosition.x}, y=${centerPosition.y}`);
       console.log(`Tab dimensions: ${tabDimensions.width}x${tabDimensions.height}`);
       
       isFirstHandDetection = false;
-      lastHandPosition = { x: indexFinger.x, y: indexFinger.y };
-      
+      lastHandPosition = { x: wrist.x, y: wrist.y };
+
       return centerPosition;
     } catch (error) {
       console.error('Error during first hand detection:', error);
@@ -152,10 +152,10 @@ function calculateCursorPosition(landmarks) {
   // Calculate relative movement for subsequent frames
   if (lastHandPosition && centerPosition) {
     const currentHandPosition = {
-      x: indexFinger.x,
-      y: indexFinger.y
+      x: wrist.x,
+      y: wrist.y
     };
-    
+
     // Apply smoothing to hand position
     const smoothedHandPosition = window.Smoothing.applySmoothingToMovement(currentHandPosition, lastHandPosition);
       // Calculate movement delta with flipped X axis using smoothed position
