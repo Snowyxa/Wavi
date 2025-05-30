@@ -388,6 +388,45 @@ body.dark-theme {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Restart tracking button */
+.restart-tracking-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  margin-top: var(--space-3);
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(134, 73, 225, 0.25);
+  min-height: 44px;
+}
+
+.restart-tracking-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(134, 73, 225, 0.35);
+}
+
+.restart-tracking-btn:focus {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
+}
+
+.restart-tracking-btn:active {
+  transform: translateY(0);
+}
+
+.restart-tracking-btn svg {
+  flex-shrink: 0;
+}
+
 /* Footer */
 .footer {
   padding: var(--space-6) var(--space-8); /* Increased to space-8 (32px) horizontally for much wider layout */

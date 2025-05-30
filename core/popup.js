@@ -111,16 +111,32 @@ class PopupController {
         window.Communication.sendCursorRemoval();
       }
     });
-    
-    // Handle visibility change (popup closed but extension still running)
+      // Handle visibility change (popup closed but extension still running)
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') {
         console.log('Popup hidden, removing cursor');
         if (this.trackingManager) {
           this.trackingManager.stopTracking();
-          // Ensure cursor is removed
+          // Ensure cursor is removed with multiple attempts
           window.Communication.sendCursorRemoval();
+          
+          // Set up additional removal attempts in case the first one fails
+          setTimeout(() => {
+            if (document.visibilityState === 'hidden') {
+              console.log('Additional cursor removal attempt');
+              window.Communication.sendCursorRemoval();
+            }
+          }, 500);
         }
+      }
+    });
+    
+    // Additional check when the popup window loses focus
+    window.addEventListener('blur', () => {
+      console.log('Popup lost focus, ensuring cursor is removed');
+      if (this.trackingManager) {
+        this.trackingManager.stopTracking();
+        window.Communication.sendCursorRemoval();
       }
     });
   }
@@ -158,6 +174,10 @@ class PopupController {
 document.addEventListener('DOMContentLoaded', async function() {
   // Wait for all modules to load
   const popupController = new PopupController();
+  
+  // Make popup controller globally accessible
+  window.popupController = popupController;
+  
   await popupController.waitForModules();
   
   // Initialize the popup

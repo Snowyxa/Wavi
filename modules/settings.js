@@ -23,9 +23,8 @@ const DEFAULT_SETTINGS = {
   enableAudioFeedback: false,
   reducedMotion: false,
   highContrast: false,
-  
-  // Theme settings
-  theme: 'light', // 'light', 'dark', or 'auto'
+    // Theme settings
+  theme: 'dark', // 'light', 'dark', or 'auto'
   
   // Language settings
   language: 'nl', // 'nl' for Dutch, 'en' for English - default to Dutch

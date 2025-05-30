@@ -109,8 +109,7 @@ class StatusManager {
     if (statusLabel) {
       statusLabel.textContent = window.localizationManager ? window.localizationManager.t('trackingActive') : 'Tracking Active';
     }
-  }
-  /**
+  }  /**
    * Update UI for stopped state
    */
   updateStoppedState(statusDot, statusText, cameraOverlay, cameraStatus, statusPill, statusLabel) {
@@ -128,7 +127,31 @@ class StatusManager {
     }
     if (cameraStatus) {
       const stoppedText = window.localizationManager ? window.localizationManager.t('trackingStopped') : 'Tracking stopped';
-      cameraStatus.innerHTML = `<span>${stoppedText}</span>`;
+      const restartText = window.localizationManager ? window.localizationManager.t('clickToRestart') : 'Click to restart';
+      cameraStatus.innerHTML = `
+        <span>${stoppedText}</span>
+        <button id="restartTrackingBtn" class="restart-tracking-btn" 
+                title="${restartText}" 
+                aria-label="${restartText}"
+                tabindex="0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="5,3 19,12 5,21 5,3"></polygon>
+          </svg>
+          <span>${restartText}</span>
+        </button>
+      `;
+      
+      // Add click event listener for restart button
+      const restartBtn = document.getElementById('restartTrackingBtn');
+      if (restartBtn) {
+        restartBtn.addEventListener('click', this.handleRestartTracking.bind(this));
+        restartBtn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.handleRestartTracking();
+          }
+        });
+      }
     }
     
     // Footer status pill
@@ -138,7 +161,7 @@ class StatusManager {
     if (statusLabel) {
       statusLabel.textContent = window.localizationManager ? window.localizationManager.t('trackingStopped') : 'Tracking Stopped';
     }
-  }  /**
+  }/**
    * Update UI for error state
    */
   updateErrorState(statusDot, statusText, cameraOverlay, cameraStatus, statusPill, statusLabel, message) {
@@ -166,8 +189,7 @@ class StatusManager {
     if (statusLabel) {
       statusLabel.textContent = window.localizationManager ? window.localizationManager.t('error') : 'Error';
     }
-  }
-  /**
+  }  /**
    * Refresh current status with new language
    * This method re-applies the current state with updated translations
    */
@@ -194,6 +216,28 @@ class StatusManager {
     
     // Re-apply the current state to refresh with new translations
     this.updateUI(currentState);
+  }
+
+  /**
+   * Handle restart tracking button click
+   */
+  async handleRestartTracking() {
+    try {
+      console.log('StatusManager: Attempting to restart tracking...');
+      
+      // Get the tracking manager from the global popup controller
+      const popupController = window.popupController;
+      if (popupController && popupController.trackingManager) {
+        await popupController.trackingManager.startTracking();
+        console.log('StatusManager: Tracking restarted successfully');
+      } else {
+        console.error('StatusManager: Could not find tracking manager');
+        this.updateUI('error', 'Could not restart tracking');
+      }
+    } catch (error) {
+      console.error('StatusManager: Error restarting tracking:', error);
+      this.updateUI('error', `Failed to restart: ${error.message}`);
+    }
   }
 }
 
