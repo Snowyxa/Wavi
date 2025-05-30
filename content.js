@@ -2,7 +2,31 @@
 let cursor = null;
 
 function createCursor() {
-  if (!cursor) {
+  // First check if cursor already exists in the page
+  const existingCursor = document.getElementById('handtracking-cursor');
+  if (existingCursor) {
+    // If it exists but not in our reference, update our reference
+    if (cursor !== existingCursor) {
+      cursor = existingCursor;
+      console.log('Using existing cursor element');
+      return;
+    }
+  }
+  
+  // Remove any existing cursors first to prevent duplicates
+  const oldCursors = document.querySelectorAll('#handtracking-cursor');
+  if (oldCursors.length > 0) {
+    console.log(`Found ${oldCursors.length} existing cursors, removing them`);
+    oldCursors.forEach(oldCursor => {
+      if (oldCursor && oldCursor.parentNode) {
+        oldCursor.style.display = 'none';
+        oldCursor.parentNode.removeChild(oldCursor);
+      }
+    });
+  }
+  
+  // Create new cursor
+  if (!cursor || !document.body.contains(cursor)) {
     cursor = document.createElement('div');
     cursor.id = 'handtracking-cursor';
     // All styles now come from content-styles.css
@@ -146,8 +170,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
       sendResponse({ width: viewportWidth, height: viewportHeight });
     }
-    return true;
-  }  if (message.action === 'removeCursor') {
+    return true;  }  if (message.action === 'removeCursor') {
     // Ensure cursor is completely removed from the page
     if (cursor) {
       if (cursor.parentNode) {
@@ -158,12 +181,31 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       console.log('Cursor removed from page');
     }
     
-    // Also check for any orphaned cursors by ID
-    const orphanedCursor = document.getElementById('handtracking-cursor');
-    if (orphanedCursor && orphanedCursor.parentNode) {
-      orphanedCursor.style.display = 'none';
-      orphanedCursor.parentNode.removeChild(orphanedCursor);
-      console.log('Orphaned cursor found and removed');
+    // Find and remove any orphaned cursors by ID
+    const orphanedCursors = document.querySelectorAll('#handtracking-cursor');
+    orphanedCursors.forEach(orphanedCursor => {
+      if (orphanedCursor && orphanedCursor.parentNode) {
+        orphanedCursor.style.display = 'none';
+        orphanedCursor.parentNode.removeChild(orphanedCursor);
+        console.log('Orphaned cursor found and removed');
+      }
+    });
+    
+    // Find any cursors that might have been created with a different ID
+    const allDivs = document.querySelectorAll('div');
+    for (const div of allDivs) {
+      // Check for elements that might be our cursor based on style properties
+      if (div.style.backgroundColor && 
+          (div.style.backgroundColor.includes('rgba(0, 255, 0') || 
+           div.style.backgroundColor.includes('rgba(255, 0, 0'))) {
+        if (div.style.position === 'fixed' || div.style.position === 'absolute') {
+          if (div.parentNode) {
+            div.style.display = 'none';
+            div.parentNode.removeChild(div);
+            console.log('Potential cursor element removed');
+          }
+        }
+      }
     }
     
     sendResponse({ status: 'success' });

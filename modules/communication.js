@@ -83,7 +83,8 @@ function sendCursorRemoval() {
   // Send multiple times with delay to ensure delivery
   chrome.runtime.sendMessage({
     action: 'removeCursor',
-    timestamp: Date.now()  // Add timestamp to prevent request batching
+    timestamp: Date.now(),  // Add timestamp to prevent request batching
+    force: true // Add force flag to ensure removal
   }).catch(error => {
     console.log('Service worker communication failed for cursor removal:', error);
   });
@@ -92,11 +93,23 @@ function sendCursorRemoval() {
   setTimeout(() => {
     chrome.runtime.sendMessage({
       action: 'removeCursor',
-      timestamp: Date.now() + 1  // Different timestamp
+      timestamp: Date.now() + 1,  // Different timestamp
+      force: true
     }).catch(error => {
       console.log('Retry service worker communication failed for cursor removal:', error);
     });
   }, 100);
+  
+  // Send a third time after a longer delay
+  setTimeout(() => {
+    chrome.runtime.sendMessage({
+      action: 'removeCursor',
+      timestamp: Date.now() + 2,  // Different timestamp
+      force: true
+    }).catch(error => {
+      console.log('Final retry service worker communication failed for cursor removal:', error);
+    });
+  }, 300);
 }
 
 /**

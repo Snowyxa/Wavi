@@ -135,18 +135,29 @@ class TrackingManager {
       
       this.statusManager.updateUI('stopped');
       console.log('Hand tracking stopped');
-      
-      // Send cursor removal one more time as a safeguard
+        // Send cursor removal multiple times as a safeguard
       setTimeout(() => {
         window.Communication.sendCursorRemoval();
-      }, 200);
+      }, 100);
+      
+      setTimeout(() => {
+        window.Communication.sendCursorRemoval();
+      }, 300);
+      
+      setTimeout(() => {
+        window.Communication.sendCursorRemoval();
+      }, 500);
       
     } catch (error) {
       console.error('Error stopping tracking:', error);
       this.statusManager.updateUI('error', 'Failed to stop tracking');
       
-      // Even on error, try to remove the cursor
+      // Even on error, try to remove the cursor multiple times
       window.Communication.sendCursorRemoval();
+      
+      setTimeout(() => {
+        window.Communication.sendCursorRemoval();
+      }, 200);
     }
   }
 

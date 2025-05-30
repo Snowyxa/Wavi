@@ -6,19 +6,80 @@ console.log('Hand tracking service worker loaded');
 // Handle messages from popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('Service worker received message:', message.action, 'from:', sender.tab ? 'content script' : 'popup');
-    // Handle cursor removal with highest priority
+  // Handle cursor removal with highest priority
   if (message.action === 'removeCursor') {
     // Forward remove cursor message to all tabs to ensure it's removed everywhere
     chrome.tabs.query({}, function(tabs) {
+      let successCount = 0;
+      const tabCount = tabs.filter(tab => !tab.url.startsWith('chrome://')).length;
+      
+      // For each valid tab, try to remove the cursor
       for (const tab of tabs) {
         if (!tab.url.startsWith('chrome://')) {
-          chrome.tabs.sendMessage(tab.id, message).catch(error => {
-            console.log(`Failed to remove cursor from tab ${tab.id}:`, error);
-          });
+          try {
+            // First try simple message sending
+            chrome.tabs.sendMessage(tab.id, message)
+              .then(() => {
+                successCount++;
+                console.log(`Cursor removal successful for tab ${tab.id}`);
+                // If all tabs processed, respond
+                if (successCount >= tabCount) {
+                  sendResponse({ status: 'success', tabsProcessed: successCount });
+                }
+              })
+              .catch(error => {
+                console.log(`Failed to remove cursor from tab ${tab.id}, attempting script injection:`, error);
+                
+                // If message sending fails, try to inject the content script and retry
+                chrome.scripting.executeScript({
+                  target: { tabId: tab.id },
+                  files: ['content.js']
+                })
+                .then(() => {
+                  // Wait a bit for the script to initialize
+                  setTimeout(() => {
+                    chrome.tabs.sendMessage(tab.id, message)
+                      .then(() => {
+                        successCount++;
+                        console.log(`Cursor removal successful after injection for tab ${tab.id}`);
+                        // If all tabs processed, respond
+                        if (successCount >= tabCount) {
+                          sendResponse({ status: 'success', tabsProcessed: successCount });
+                        }
+                      })
+                      .catch(retryError => {
+                        console.log(`Failed to remove cursor after injection for tab ${tab.id}:`, retryError);
+                        // Count it as processed anyway
+                        successCount++;
+                        if (successCount >= tabCount) {
+                          sendResponse({ status: 'success', tabsProcessed: successCount });
+                        }
+                      });
+                  }, 200);
+                })
+                .catch(injectionError => {
+                  console.log(`Failed to inject content script into tab ${tab.id}:`, injectionError);
+                  // Count as processed anyway
+                  successCount++;
+                  if (successCount >= tabCount) {
+                    sendResponse({ status: 'success', tabsProcessed: successCount });
+                  }
+                });
+              });
+          } catch (error) {
+            console.log(`Error processing tab ${tab.id}:`, error);
+            successCount++;
+            if (successCount >= tabCount) {
+              sendResponse({ status: 'success', tabsProcessed: successCount });
+            }
+          }
         }
       }
-      // Always respond with success
-      sendResponse({ status: 'success' });
+      
+      // If no valid tabs were found, respond immediately
+      if (tabCount === 0) {
+        sendResponse({ status: 'success', tabsProcessed: 0 });
+      }
     });
     return true;
   }
