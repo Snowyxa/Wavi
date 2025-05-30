@@ -45,7 +45,7 @@ Wavi/
 │   └── [binary files]        # MediaPipe model files
 │
 ├── icons/                     # Extension icons
-│   └── icon.svg
+│   └── WaviExtensionLogo.png
 │
 └── docs/                      # Documentation
     ├── ARCHITECTUUR-DIAGRAM.md

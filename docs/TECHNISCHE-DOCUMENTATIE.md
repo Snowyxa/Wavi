@@ -12,12 +12,14 @@ De Hand Tracking Cursor Control Extension is een Chrome browser extensie die geb
 
 ### Kern Componenten
 
-1. **popup.js** - Hoofd hand tracking logica en MediaPipe integratie
-2. **content.js** - Cursor visualisatie en DOM interactie
-3. **popup.html** - Gebruikersinterface
-4. **manifest.json** - Extensie configuratie
-5. **lib/** - MediaPipe libraries en dependencies
-6. **modules/** - Modulaire componenten (nieuwe architectuur)
+1. **core/popup.js** - Hoofd popup controller en coördinatie
+2. **core/trackingManager.js** - Hand tracking lifecycle management
+3. **content.js** - Cursor visualisatie en DOM interactie
+4. **popup.html** - Gebruikersinterface
+5. **manifest.json** - Extensie configuratie
+6. **lib/** - MediaPipe libraries en dependencies
+7. **modules/** - Feature modules (camera, gestures, settings, etc.)
+8. **ui/** - UI componenten (status, theme, visualization, etc.)
 
 ### Technology Stack
 
@@ -30,9 +32,16 @@ De Hand Tracking Cursor Control Extension is een Chrome browser extensie die geb
 
 ```
 Wavi/
-├── popup.js                    # Main popup controller
+├── core/                       # Kern controllers
+│   ├── popup.js               # Main popup controller
+│   └── trackingManager.js     # Hand tracking lifecycle management
 ├── content.js                  # Content script
-├── modules/                    # Modulaire componenten
+├── ui/                         # UI componenten
+│   ├── statusManager.js       # UI status management
+│   ├── themeManager.js        # Theme switching
+│   ├── settingsUI.js          # Settings panel interactions
+│   └── handVisualization.js   # Hand landmarks visualization
+├── modules/                    # Feature modules
 │   ├── gestureDetection.js    # Vuist gebaar detectie & processing
 │   ├── smoothing.js            # Cursor beweging smoothing algoritmes
 │   ├── communication.js        # Chrome extensie messaging
@@ -40,9 +49,44 @@ Wavi/
 │   ├── handTracking.js         # MediaPipe integratie & cursor berekeningen
 │   ├── settings.js             # Configuratie opslag en beheer
 │   └── localization.js         # Meertalige ondersteuning (NL/EN)
+├── css/                        # Stylesheets
+│   ├── styles.css             # Main styles
+│   ├── theme-additions.css    # Theme-specific styles
+│   ├── button-styles.css      # Button styling
+│   └── content-styles.css     # Content script styles
 ├── lib/                        # MediaPipe libraries
 └── docs/                       # Documentatie
 ```
+
+### Module Loading Order
+
+Scripts worden geladen in de volgende volgorde in `popup.html` om dependencies correct af te handelen:
+
+1. **Configuration**: `config.js`
+2. **MediaPipe Libraries**: `hands.js`, `camera_utils.js`, `drawing_utils.js`
+3. **Feature Modules**: 
+   - `localization.js` - Internationalization
+   - `settings.js` - Configuration management
+   - `smoothing.js` - Data smoothing algorithms
+   - `gestureDetection.js` - Gesture recognition
+   - `communication.js` - Extension messaging
+   - `cameraUtils.js` - Camera management
+   - `handTracking.js` - MediaPipe integration
+4. **UI Modules**:
+   - `statusManager.js` - Status updates
+   - `themeManager.js` - Theme switching
+   - `handVisualization.js` - Hand drawing
+   - `settingsUI.js` - Settings panel
+5. **Core Modules**:
+   - `trackingManager.js` - Tracking coordination
+   - `popup.js` - Main controller
+
+### Component Dependencies
+
+- **Core Controllers** → UI Components + Feature Modules
+- **UI Components** → Feature Modules (settings, localization)
+- **Feature Modules** → MediaPipe Libraries
+- **All Modules** → Browser APIs (Storage, Messaging, WebRTC)
 
 ---
 
