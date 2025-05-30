@@ -1,52 +1,52 @@
 # Release Notes - Wavi v2.0.0 🚀
 
-**Release Date:** May 28, 2025  
-**Codename:** "Auto-Magic"
+**Release Datum:** 28 mei 2025  
+**Codenaam:** "Auto-Magic"
 
-## 🌟 Major Features
+## 🌟 Hoofdfuncties
 
-### 🚀 Auto-Start Technology
-- **Zero-Click Activation** - Tracking starts automatically when extension popup opens
-- **No Button Interface** - Completely removed start/stop buttons for seamless experience
-- **Instant Feedback** - Immediate visual response when opening the extension
-- **Smart Initialization** - Automatic camera setup and MediaPipe initialization
+### 🚀 Auto-Start Technologie
+- **Zero-Click Activatie** - Tracking start automatisch wanneer extensie popup opent
+- **Geen Knop Interface** - Start/stop knoppen volledig weggehaald voor naadloze ervaring
+- **Directe Feedback** - Onmiddellijke visuele respons bij openen van extensie
+- **Slimme Initialisatie** - Automatische camera setup en MediaPipe initialisatie
 
-### 🎨 Complete UI Redesign
-- **Modern Gradient Interface** - Beautiful color scheme with smooth transitions
-- **Status Indicators** - Real-time visual feedback with color-coded status dots
-- **Information Cards** - Clear gesture instructions with intuitive icons
-- **Responsive Layout** - Optimized for all screen sizes and orientations
+### 🎨 Volledige UI Herontwerp
+- **Moderne Gradient Interface** - Mooie kleurenschema met soepele overgangen
+- **Status Indicatoren** - Real-time visuele feedback met kleur-gecodeerde status stippen
+- **Informatie Kaarten** - Duidelijke gebaar instructies met intuïtieve iconen
+- **Responsive Layout** - Geoptimaliseerd voor alle schermgroottes en oriëntaties
 
-### 🌙 Dark Mode Support
-- **System Theme Detection** - Automatically adapts to user's system preferences
-- **Enhanced Contrast** - Improved accessibility with better color ratios
-- **Smooth Transitions** - Seamless switching between light and dark themes
+### 🌙 Dark Mode Ondersteuning
+- **Systeem Thema Detectie** - Past automatisch aan op gebruiker systeem voorkeuren
+- **Verbeterd Contrast** - Verbeterde toegankelijkheid met betere kleur ratio's
+- **Soepele Overgangen** - Naadloze overschakeling tussen lichte en donkere thema's
 
-## 🔧 Technical Improvements
+## 🔧 Technische Verbeteringen
 
-### ⚡ Performance Enhancements
-- **Optimized Initialization** - Faster startup with improved resource management
-- **Better Error Handling** - Enhanced camera permission and error state management
-- **Memory Management** - Improved cleanup on popup close and extension reload
-- **Animation Performance** - Hardware-accelerated CSS transitions
+### ⚡ Prestatie Verbeteringen
+- **Geoptimaliseerde Initialisatie** - Snellere opstart met verbeterd resource management
+- **Betere Error Handling** - Verbeterde camera permissie en error state management
+- **Memory Management** - Verbeterde cleanup bij popup sluiten en extensie reload
+- **Animatie Prestatie** - Hardware-versnelde CSS overgangen
 
-### 🎯 User Experience
-- **Simplified Workflow** - One-click extension activation
-- **Clear Visual Hierarchy** - Better information organization and readability
-- **Loading Animations** - Smooth spinners and state transitions
-- **Privacy Indicators** - Clear messaging about local processing
+### 🎯 Gebruikerservaring
+- **Vereenvoudigde Workflow** - Eén-klik extensie activatie
+- **Duidelijke Visuele Hiërarchie** - Betere informatie organisatie en leesbaarheid
+- **Loading Animaties** - Soepele spinners en state overgangen
+- **Privacy Indicatoren** - Duidelijke boodschappen over lokale processing
 
 ## 🔄 Breaking Changes
 
-### ⚠️ Interface Changes
-- **Removed Buttons** - Start/Stop buttons no longer exist in the interface
-- **Auto-Start Behavior** - Extension begins tracking immediately upon opening
-- **New Status System** - Status indicators replace traditional text-based status
+### ⚠️ Interface Wijzigingen
+- **Weggehaalde Knoppen** - Start/Stop knoppen bestaan niet meer in de interface
+- **Auto-Start Gedrag** - Extensie begint tracking onmiddellijk bij openen
+- **Nieuw Status Systeem** - Status indicatoren vervangen traditionele tekst-gebaseerde status
 
-### 🔧 Code Changes
-- **Updated UI Elements** - New DOM structure for modern interface
-- **Modified State Management** - Enhanced tracking state with auto-start logic
-- **Improved Event Handling** - Streamlined initialization and cleanup processes
+### 🔧 Code Wijzigingen
+- **Updated UI Elementen** - Nieuwe DOM structuur voor moderne interface
+- **Gewijzigde State Management** - Verbeterde tracking state met auto-start logica
+- **Verbeterde Event Handling** - Gestroomlijnde initialisatie en cleanup processen
 
 ## 🐛 Bug Fixes
 

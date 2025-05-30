@@ -1,54 +1,54 @@
-# Version Roadmap
+# Versie Roadmap
 
-## v2.0.0 - Auto-Start & Modern UI ✅
-**Status**: Completed (May 28, 2025)
-**Focus**: Auto-starting functionality and beautiful modern interface
+## v2.0.0 - Auto-Start & Moderne UI ✅
+**Status**: Voltooid (28 mei 2025)
+**Focus**: Auto-startende functionaliteit en mooie moderne interface
 
-### Major Features
-- [x] **Auto-Start Technology** - Tracking begins automatically when popup opens
-- [x] **Zero-Button Interface** - Removed start/stop buttons for seamless experience
-- [x] **Modern UI Redesign** - Beautiful gradient interface with status indicators
-- [x] **Dark Mode Support** - Automatic theme adaptation based on system preferences
-- [x] **Enhanced Visual Feedback** - Color-coded status dots and smooth animations
+### Hoofdfuncties
+- [x] **Auto-Start Technologie** - Tracking begint automatisch wanneer popup opent
+- [x] **Zero-Button Interface** - Start/stop knoppen weggehaald voor naadloze ervaring
+- [x] **Moderne UI Herontwerp** - Mooie gradient interface met status indicatoren
+- [x] **Dark Mode Ondersteuning** - Automatische thema aanpassing gebaseerd op systeem voorkeuren
+- [x] **Verbeterde Visuele Feedback** - Kleur-gecodeerde status stippen en soepele animaties
 
-### Technical Improvements
-- [x] Optimized initialization process for faster startup
-- [x] Enhanced error handling and recovery
-- [x] Improved resource management and cleanup
-- [x] Hardware-accelerated CSS animations
-- [x] Better state management for auto-start behavior
+### Technische Verbeteringen
+- [x] Geoptimaliseerd initialisatie proces voor snellere opstart
+- [x] Verbeterde error handling en recovery
+- [x] Verbeterd resource management en cleanup
+- [x] Hardware-versnelde CSS animaties
+- [x] Betere state management voor auto-start gedrag
 
-## v1.0.0 - Basic Hand Tracking
-**Status**: Completed
-**Focus**: Core functionality and basic cursor control
+## v1.0.0 - Basis Hand Tracking
+**Status**: Voltooid
+**Focus**: Kern functionaliteit en basis cursor control
 
-### Features
-- [x] Basic hand tracking implementation
-- [x] Real-time webcam analysis
-- [x] Cursor movement with open hand
-- [x] Basic popup UI with start/stop controls
-- [x] Local processing (no server communication)
-- [x] Privacy-focused (no image transmission)
+### Functies
+- [x] Basis hand tracking implementatie
+- [x] Real-time webcam analyse
+- [x] Cursor beweging met open hand
+- [x] Basis popup UI met start/stop controls
+- [x] Lokale processing (geen server communicatie)
+- [x] Privacy-gericht (geen afbeelding transmissie)
 
-### Technical Implementation
-- [x] MediaPipe Hands integration
-- [x] Browser extension setup
-- [x] Basic DOM interaction
-- [x] Webcam access handling
+### Technische Implementatie
+- [x] MediaPipe Hands integratie
+- [x] Browser extensie setup
+- [x] Basis DOM interactie
+- [x] Webcam toegang handling
 
-## v1.1.0 - Click Implementation
-**Status**: Completed
-**Focus**: Adding click functionality
+## v1.1.0 - Klik Implementatie
+**Status**: Voltooid
+**Focus**: Toevoegen klik functionaliteit
 
-### New Features
-- [x] Fist gesture detection
-- [x] Click event triggering
-- [x] Visual feedback for click actions
-- [x] Basic error handling for click events
+### Nieuwe Functies
+- [x] Vuist gebaar detectie
+- [x] Klik event triggering
+- [x] Visuele feedback voor klik acties
+- [x] Basis error handling voor klik events
 
-### Technical Improvements
-- [x] Click event simulation
-- [x] Gesture state management
+### Technische Verbeteringen
+- [x] Klik event simulatie
+- [x] Gebaar state management
 - [x] Performance optimization for click detection
 - [x] Basic error recovery
 

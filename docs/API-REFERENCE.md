@@ -1,27 +1,27 @@
-# API Reference
+# API Referentie
 
-## Overview
+## Overzicht
 
-The Hand Tracking Cursor Control Extension uses a message-passing system between the popup (hand tracking) and content script (cursor control). This document details the API for communication between components.
+De Hand Tracking Cursor Control Extension gebruikt een bericht-doorgeef systeem tussen de popup (hand tracking) en content script (cursor control). Dit document beschrijft de API voor communicatie tussen componenten.
 
-## Message Types
+## Bericht Types
 
 ### popup.js → content.js
 
 #### moveCursor
-Updates the cursor position on the webpage.
+Update de cursor positie op de webpagina.
 
 ```javascript
 {
   action: 'moveCursor',
-  x: number,           // X coordinate in pixels
-  y: number,           // Y coordinate in pixels  
-  isHandVisible: boolean,  // Whether hand is currently detected
-  isFist: boolean      // Whether fist gesture is detected
+  x: number,           // X coördinaat in pixels
+  y: number,           // Y coördinaat in pixels  
+  isHandVisible: boolean,  // Of hand momenteel gedetecteerd wordt
+  isFist: boolean      // Of vuist gebaar gedetecteerd wordt
 }
 ```
 
-**Example:**
+**Voorbeeld:**
 ```javascript
 chrome.tabs.sendMessage(tabId, {
   action: 'moveCursor',
@@ -33,17 +33,17 @@ chrome.tabs.sendMessage(tabId, {
 ```
 
 #### click
-Triggers a click event at the specified coordinates.
+Triggert een klik event op de gespecificeerde coördinaten.
 
 ```javascript
 {
   action: 'click',
-  x: number,           // Click X coordinate in pixels
-  y: number            // Click Y coordinate in pixels
+  x: number,           // Klik X coördinaat in pixels
+  y: number            // Klik Y coördinaat in pixels
 }
 ```
 
-**Example:**
+**Voorbeeld:**
 ```javascript
 chrome.tabs.sendMessage(tabId, {
   action: 'click',
@@ -53,7 +53,7 @@ chrome.tabs.sendMessage(tabId, {
 ```
 
 #### removeCursor
-Removes the cursor element from the page.
+Verwijdert het cursor element van de pagina.
 
 ```javascript
 {
@@ -64,7 +64,7 @@ Removes the cursor element from the page.
 ### content.js → popup.js
 
 #### ping
-Health check to verify content script is ready.
+Health check om te verifiëren dat content script klaar is.
 
 ```javascript
 // Request
@@ -79,7 +79,7 @@ Health check to verify content script is ready.
 ```
 
 #### getDimensions
-Gets the dimensions of the current browser tab/viewport.
+Krijgt de dimensies van de huidige browser tab/viewport.
 
 ```javascript
 // Request
@@ -89,49 +89,49 @@ Gets the dimensions of the current browser tab/viewport.
 
 // Response
 {
-  width: number,       // Tab width in pixels
-  height: number       // Tab height in pixels
+  width: number,       // Tab breedte in pixels
+  height: number       // Tab hoogte in pixels
 }
 ```
 
-**Site-specific behavior:**
-- **YouTube**: Returns `window.innerWidth/innerHeight`
-- **Other sites**: Returns larger of viewport or document dimensions
+**Site-specifiek gedrag:**
+- **YouTube**: Returnt `window.innerWidth/innerHeight`
+- **Andere sites**: Returnt groter van viewport of document dimensies
 
-## Core Functions
+## Kern Functies
 
 ### popup.js
 
 #### initHands()
-Initializes MediaPipe Hands with optimized settings.
+Initialiseert MediaPipe Hands met geoptimaliseerde instellingen.
 
 ```javascript
 async function initHands(): Promise<boolean>
 ```
 
-**Returns:** `true` if successful, `false` if failed
+**Returnt:** `true` als succesvol, `false` als mislukt
 
-**Configuration:**
-- `maxNumHands: 1` - Single hand detection
-- `modelComplexity: 1` - Balanced accuracy/performance
-- `minDetectionConfidence: 0.5` - 50% confidence threshold
-- `minTrackingConfidence: 0.5` - 50% tracking threshold
+**Configuratie:**
+- `maxNumHands: 1` - Single hand detectie
+- `modelComplexity: 1` - Gebalanceerde nauwkeurigheid/prestatie
+- `minDetectionConfidence: 0.5` - 50% confidence drempel
+- `minTrackingConfidence: 0.5` - 50% tracking drempel
 
 #### onResults(results)
-Processes hand tracking results from MediaPipe.
+Verwerkt hand tracking resultaten van MediaPipe.
 
 ```javascript
 async function onResults(results: HandResults): Promise<void>
 ```
 
 **Parameters:**
-- `results.multiHandLandmarks` - Array of hand landmark coordinates
+- `results.multiHandLandmarks` - Array van hand landmark coördinaten
 - `results.image` - Camera frame image
 
-**Key landmarks used:**
-- `landmarks[8]` - Index finger tip (cursor control)
-- `landmarks[4]` - Thumb tip (fist detection)
-- `landmarks[2,5,9,13,17]` - MCP joints (fist detection)
+**Belangrijke landmarks gebruikt:**
+- `landmarks[8]` - Wijsvinger tip (cursor control)
+- `landmarks[4]` - Duim tip (vuist detectie)
+- `landmarks[2,5,9,13,17]` - MCP gewrichten (vuist detectie)
 
 #### mapRange(value, inMin, inMax, outMin, outMax)
 Maps a value from one range to another with clamping.

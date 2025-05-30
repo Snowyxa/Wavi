@@ -1,68 +1,68 @@
-# Browser Extension POC Requirements
-## Proof of Concept: Gesture-Based Web Navigation for Users with Motor Disabilities
+# Browser Extensie POC Vereisten
+## Proof of Concept: Gebaar-Gebaseerde Web Navigatie voor Gebruikers met Motorische Beperkingen
 
-### 🎯 Core Functionality
-- [ ] Implement real-time webcam analysis for gesture recognition
-- [ ] Develop gesture recognition system for:
-  - [ ] Open hand → cursor movement
-  - [ ] Fist → click action
-  - [ ] Horizontal movement → scroll action
-  - [ ] "Stop" gesture → pause functionality
+### 🎯 Kern Functionaliteit
+- [ ] Implementeer real-time webcam analyse voor gebaar herkenning
+- [ ] Ontwikkel gebaar herkenning systeem voor:
+  - [ ] Open hand → cursor beweging
+  - [ ] Vuist → klik actie
+  - [ ] Horizontale beweging → scroll actie
+  - [ ] "Stop" gebaar → pauzeer functionaliteit
 
-### 💻 Technical Requirements
-- [ ] Develop as a browser extension for Chromium-based browsers (Chrome, Edge)
-- [ ] Implement client-side processing (no server communication)
-- [ ] Achieve performance target: reaction time under 500ms per frame
-- [ ] Ensure functionality in normal lighting conditions
-- [ ] Implement fallback mechanism for webcam loss
+### 💻 Technische Vereisten
+- [ ] Ontwikkel als browser extensie voor Chromium-gebaseerde browsers (Chrome, Edge)
+- [ ] Implementeer client-side processing (geen server communicatie)
+- [ ] Bereik prestatie doel: reactietijd onder 500ms per frame
+- [ ] Zorg voor functionaliteit in normale lichtomstandigheden
+- [ ] Implementeer fallback mechanisme voor webcam verlies
 
-### 🎨 User Interface Requirements
-- [ ] Create extension popup with settings:
-  - [ ] Activation/pause toggle
-  - [ ] Sensitivity controls
-  - [ ] Calibration options
-- [ ] Ensure UI compliance with WCAG 2.1 AA accessibility standards
-- [ ] Design intuitive user feedback system
+### 🎨 Gebruikersinterface Vereisten
+- [ ] Creëer extensie popup met instellingen:
+  - [ ] Activatie/pauze toggle
+  - [ ] Gevoeligheid controles
+  - [ ] Kalibratie opties
+- [ ] Zorg voor UI compliance met WCAG 2.1 AA toegankelijkheid standaarden
+- [ ] Ontwerp intuïtief gebruiker feedback systeem
 
-### 🔧 Key Features
-- [ ] Implement gesture-to-browser-action conversion:
-  - [ ] DOM event triggering (click, scroll, keypress)
-  - [ ] Robust handling of various web page elements
-  - [ ] Support for forms and dynamic content
-- [ ] Create adaptive system for:
-  - [ ] Different user movements
-  - [ ] Various lighting conditions
-  - [ ] User-specific calibration
+### 🔧 Belangrijke Functies
+- [ ] Implementeer gebaar-naar-browser-actie conversie:
+  - [ ] DOM event triggering (klik, scroll, keypress)
+  - [ ] Robuuste handling van verschillende web pagina elementen
+  - [ ] Ondersteuning voor formulieren en dynamische content
+- [ ] Creëer adaptief systeem voor:
+  - [ ] Verschillende gebruiker bewegingen
+  - [ ] Verschillende lichtomstandigheden
+  - [ ] Gebruiker-specifieke kalibratie
 
-### 🔒 Privacy and Security
-- [ ] Ensure all processing is done locally
-- [ ] Implement no-image-transmission policy
-- [ ] Secure webcam access handling
+### 🔒 Privacy en Beveiliging
+- [ ] Zorg dat alle processing lokaal gebeurt
+- [ ] Implementeer geen-afbeelding-transmissie beleid
+- [ ] Beveiligde webcam toegang handling
 
-### 📋 Development Priorities
-1. Core gesture recognition functionality
-2. Basic browser interaction implementation
-3. User interface and settings
-4. Performance optimization
-5. Accessibility compliance
-6. Testing and validation
+### 📋 Ontwikkelings Prioriteiten
+1. Kern gebaar herkenning functionaliteit
+2. Basis browser interactie implementatie
+3. Gebruikersinterface en instellingen
+4. Prestatie optimalisatie
+5. Toegankelijkheid compliance
+6. Testen en validatie
 
-### 🧪 Testing Requirements
-- [ ] Test with various web page types
-- [ ] Validate performance metrics
-- [ ] Conduct accessibility testing
-- [ ] Perform user testing with target audience
-- [ ] Document test results and improvements
+### 🧪 Test Vereisten
+- [ ] Test met verschillende web pagina types
+- [ ] Valideer prestatie metrics
+- [ ] Voer toegankelijkheid testen uit
+- [ ] Voer gebruiker testen uit met doelgroep
+- [ ] Documenteer test resultaten en verbeteringen
 
-### 📚 Documentation
-- [ ] Create user documentation
-- [ ] Document technical implementation
-- [ ] Provide setup and installation guide
-- [ ] Include troubleshooting guide
+### 📚 Documentatie
+- [ ] Creëer gebruiker documentatie
+- [ ] Documenteer technische implementatie
+- [ ] Verstrek setup en installatie gids
+- [ ] Inclusief probleemoplossing gids
 
-### 🎯 Success Criteria
-- [ ] Successful gesture recognition in normal conditions
-- [ ] Smooth web navigation experience
-- [ ] Positive user feedback
-- [ ] Meeting all performance requirements
-- [ ] Full accessibility compliance 
+### 🎯 Succes Criteria
+- [ ] Succesvolle gebaar herkenning in normale omstandigheden
+- [ ] Soepele web navigatie ervaring
+- [ ] Positieve gebruiker feedback
+- [ ] Voldoen aan alle prestatie vereisten
+- [ ] Volledige toegankelijkheid compliance

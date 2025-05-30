@@ -1,53 +1,53 @@
-# Hand Tracking Cursor Control Extension - Technical Documentation
+# Hand Tracking Cursor Control Extension - Technische Documentatie
 
-## Overview
+## Overzicht
 
-The Hand Tracking Cursor Control Extension is a Chrome browser extension that enables users to control their cursor using hand gestures through their webcam. The system uses MediaPipe Hands for real-time hand tracking and provides cursor movement and click functionality.
+De Hand Tracking Cursor Control Extension is een Chrome browser extensie die gebruikers in staat stelt hun cursor te besturen met handgebaren via hun webcam. Het systeem gebruikt MediaPipe Hands voor real-time hand tracking en biedt cursor beweging en klik functionaliteit.
 
-## Architecture
+## Architectuur
 
-### Core Components
+### Kern Componenten
 
-1. **popup.js** - Main hand tracking logic and MediaPipe integration
-2. **content.js** - Cursor visualization and DOM interaction
-3. **popup.html** - User interface
-4. **manifest.json** - Extension configuration
-5. **lib/** - MediaPipe libraries and dependencies
+1. **popup.js** - Hoofd hand tracking logica en MediaPipe integratie
+2. **content.js** - Cursor visualisatie en DOM interactie
+3. **popup.html** - Gebruikersinterface
+4. **manifest.json** - Extensie configuratie
+5. **lib/** - MediaPipe libraries en dependencies
 
 ### Technology Stack
 
-- **MediaPipe Hands** - Real-time hand landmark detection
-- **Chrome Extensions API** - Browser integration
-- **Canvas API** - Video processing and visualization
-- **WebRTC** - Webcam access
+- **MediaPipe Hands** - Real-time hand landmark detectie
+- **Chrome Extensions API** - Browser integratie
+- **Canvas API** - Video processing en visualisatie
+- **WebRTC** - Webcam toegang
 
-## Key Features
+## Belangrijke Functies
 
 ### 1. Real-time Hand Tracking
-- Uses MediaPipe Hands with optimized settings for performance
-- Tracks index finger tip (landmark 8) for cursor positioning
-- Supports single hand detection with confidence thresholds
+- Gebruikt MediaPipe Hands met geoptimaliseerde instellingen voor prestatie
+- Volgt wijsvinger tip (landmark 8) voor cursor positionering
+- Ondersteunt single hand detectie met confidence drempels
 
-### 2. Cursor Movement
-- Visual cursor overlay that follows hand movements
-- Site-specific positioning logic (YouTube vs. standard sites)
-- Smooth movement with configurable sensitivity
-- Viewport-relative positioning for complex layouts
+### 2. Cursor Beweging
+- Visuele cursor overlay die handbewegingen volgt
+- Site-specifieke positionering logica (YouTube vs. standaard sites)
+- Soepele beweging met configureerbare gevoeligheid
+- Viewport-relatieve positionering voor complexe layouts
 
-### 3. Click Functionality
-- Fist gesture detection for clicking
-- Multi-finger analysis for improved accuracy
-- Click cooldown to prevent accidental multiple clicks
-- Visual feedback during click events
+### 3. Klik Functionaliteit
+- Vuist gebaar detectie voor klikken
+- Multi-finger analyse voor verbeterde nauwkeurigheid
+- Klik cooldown om accidentele multiple clicks te voorkomen
+- Visuele feedback tijdens klik events
 
-### 4. Adaptive Behavior
-- Different positioning strategies for different websites
-- Resolution-based sensitivity scaling
-- Dynamic tab dimension detection
+### 4. Adaptief Gedrag
+- Verschillende positionering strategieën voor verschillende websites
+- Resolution-gebaseerde gevoeligheid scaling
+- Dynamische tab dimensie detectie
 
-## Implementation Details
+## Implementatie Details
 
-### Hand Detection and Tracking
+### Hand Detectie en Tracking
 
 ```javascript
 // MediaPipe configuration
@@ -59,28 +59,28 @@ hands.setOptions({
 });
 ```
 
-### Coordinate System
+### Coördinatensysteem
 
-The extension uses a multi-stage coordinate transformation:
+De extensie gebruikt een meerstadige coördinatentransformatie:
 
-1. **MediaPipe Coordinates** (0-1 normalized)
-   - X: 0 (left) to 1 (right)
-   - Y: 0 (top) to 1 (bottom)
+1. **MediaPipe Coördinaten** (0-1 genormaliseerd)
+   - X: 0 (links) tot 1 (rechts)  
+   - Y: 0 (boven) tot 1 (onder)
 
-2. **Screen Coordinates** (pixels)
-   - Transformed based on tab dimensions
-   - Site-specific handling for complex layouts
+2. **Scherm Coördinaten** (pixels)
+   - Getransformeerd op basis van tab dimensies
+   - Site-specifieke behandeling voor complexe layouts
 
-3. **Cursor Positioning**
-   - Fixed positioning for YouTube and similar sites
-   - Absolute positioning with scroll offset for standard sites
+3. **Cursor Positionering**
+   - Fixed positioning voor YouTube en vergelijkbare sites
+   - Absolute positioning met scroll offset voor standaard sites
 
-### Site-Specific Handling
+### Site-Specifieke Behandeling
 
-#### YouTube and Complex Sites
+#### YouTube en Complexe Sites
 ```javascript
 if (isYouTube) {
-  // Use viewport-relative positioning
+  // Gebruik viewport-relatieve positionering
   const finalX = Math.max(0, Math.min(x, viewportWidth - 20));
   const finalY = Math.max(0, Math.min(y, viewportHeight - 20));
   cursor.style.left = `${finalX}px`;
@@ -88,35 +88,35 @@ if (isYouTube) {
 }
 ```
 
-#### Standard Sites
+#### Standaard Sites
 ```javascript
 else {
-  // Use document-relative positioning with scroll
+  // Gebruik document-relatieve positionering met scroll
   const scrollX = window.scrollX;
   const scrollY = window.scrollY;
   let finalX = x + scrollX;
   let finalY = y + scrollY;
-  // Apply bounds clamping...
+  // Pas bounds clamping toe...
 }
 ```
 
-### Movement Calculation
+### Beweging Berekening
 
 ```javascript
-// Calculate movement delta
+// Bereken beweging delta
 const deltaX = -1 * (currentHandPosition.x - lastHandPosition.x) * movementSensitivity;
 const deltaY = (currentHandPosition.y - lastHandPosition.y) * movementSensitivity * yAxisSensitivityMultiplier;
 
-// Update cursor position
+// Update cursor positie
 centerPosition.x += deltaX * tabDimensions.width;
 centerPosition.y += deltaY * tabDimensions.height;
 ```
 
-### Fist Detection Algorithm
+### Vuist Detectie Algoritme
 
-The system uses a multi-criteria approach for fist detection:
+Het systeem gebruikt een multi-criteria benadering voor vuist detectie:
 
-1. **Finger State Analysis**
+1. **Vinger Status Analyse**
    ```javascript
    const isThumbClosed = thumbTip.y > thumbMCP.y;
    const isIndexClosed = indexTip.y > indexMCP.y;
@@ -132,7 +132,7 @@ The system uses a multi-criteria approach for fist detection:
    fistConfidence = (fistConfidence * 0.7) + (currentFistConfidence * 0.3);
    ```
 
-3. **Temporal Consistency**
+3. **Temporele Consistentie**
    ```javascript
    if (fistConfidence > fistConfidenceThreshold) {
      consecutiveFistFrames++;
@@ -140,167 +140,167 @@ The system uses a multi-criteria approach for fist detection:
    const newFistState = consecutiveFistFrames >= requiredFistFrames;
    ```
 
-## Known Issues and Solutions
+## Bekende Problemen en Oplossingen
 
-### Issue 1: Cursor Stuck at Top of Screen
-**Problem**: Initial cursor positioning was incorrectly calculated due to coordinate system mismatches.
+### Probleem 1: Cursor Vastzitten Bovenaan Scherm
+**Probleem**: Initiële cursor positionering werd verkeerd berekend door coördinatensysteem mismatches.
 
-**Solution**: 
-- Fixed coordinate transformation in `updateCursorPosition()`
-- Removed double viewport scaling
-- Improved initial hand position mapping
+**Oplossing**: 
+- Fixed coördinatentransformatie in `updateCursorPosition()`
+- Verwijderde dubbele viewport scaling
+- Verbeterde initiële hand positie mapping
 
-### Issue 2: YouTube-Specific Positioning Problems
-**Problem**: YouTube's complex layout interfered with standard positioning logic.
+### Probleem 2: YouTube-Specifieke Positionering Problemen
+**Probleem**: YouTube's complexe layout interfereert met standaard positionering logica.
 
-**Solution**:
-- Implemented site-specific detection
-- Used viewport-relative positioning for YouTube
-- Increased z-index for complex UI layers
-- Separate dimension handling for different site types
+**Oplossing**:
+- Geïmplementeerde site-specifieke detectie
+- Gebruikte viewport-relatieve positionering voor YouTube
+- Verhoogde z-index voor complexe UI layers
+- Aparte dimensie behandeling voor verschillende site types
 
-### Issue 3: Y-Axis Movement Sensitivity
-**Problem**: Vertical cursor movement was less responsive than horizontal.
+### Probleem 3: Y-As Beweging Gevoeligheid
+**Probleem**: Verticale cursor beweging was minder responsief dan horizontaal.
 
-**Solution**:
-- Added Y-axis sensitivity multiplier (1.2x)
-- Improved movement delta calculation
-- Enhanced bounds clamping logic
+**Oplossing**:
+- Toegevoegde Y-as gevoeligheid multiplier (1.2x)
+- Verbeterde beweging delta berekening
+- Verbeterde bounds clamping logica
 
-## Configuration Parameters
+## Configuratie Parameters
 
-### Movement Sensitivity
+### Beweging Gevoeligheid
 ```javascript
-let movementSensitivity = 2.0; // Base sensitivity
-let yAxisSensitivityMultiplier = 1.2; // Y-axis boost
+let movementSensitivity = 2.0; // Basis gevoeligheid
+let yAxisSensitivityMultiplier = 1.2; // Y-as boost
 ```
 
-### Fist Detection
+### Vuist Detectie
 ```javascript
-let fistConfidenceThreshold = 0.7; // 70% confidence required
-let requiredFistFrames = 3; // Consecutive frames for detection
+let fistConfidenceThreshold = 0.7; // 70% confidence vereist
+let requiredFistFrames = 3; // Opeenvolgende frames voor detectie
 ```
 
-### Performance
+### Prestatie
 ```javascript
-// Resolution scaling for different displays
+// Resolutie scaling voor verschillende displays
 resolutionScaleFactor = Math.min(1.0, Math.max(0.5, Math.sqrt(width * height) / 1920));
 ```
 
-## Browser Compatibility
+## Browser Compatibiliteit
 
-### Supported Browsers
-- Chrome (Primary target)
-- Chromium-based browsers
+### Ondersteunde Browsers
+- Chrome (Primair doel)
+- Chromium-gebaseerde browsers
 
-### Required Permissions
-- `activeTab` - Access to current tab
+### Vereiste Permissies
+- `activeTab` - Toegang tot huidige tab
 - `scripting` - Inject content scripts
-- Camera access (user permission)
+- Camera toegang (gebruiker permissie)
 
-## Performance Considerations
+## Prestatie Overwegingen
 
-### Optimization Strategies
-1. **Single Hand Detection** - Reduces processing overhead
-2. **Adaptive Camera Resolution** - Balances quality and performance
-3. **Frame-based Processing** - Smooth real-time updates
-4. **Efficient DOM Updates** - Minimal style recalculations
+### Optimalisatie Strategieën
+1. **Single Hand Detectie** - Vermindert processing overhead
+2. **Adaptieve Camera Resolutie** - Balanceert kwaliteit en prestatie
+3. **Frame-gebaseerde Processing** - Soepele real-time updates
+4. **Efficiënte DOM Updates** - Minimale style herberekeningen
 
-### Resource Usage
-- **CPU**: Moderate (MediaPipe processing)
-- **Memory**: Low-moderate (video buffers)
-- **Network**: None (local processing only)
+### Resource Gebruik
+- **CPU**: Gemiddeld (MediaPipe processing)
+- **Memory**: Laag-gemiddeld (video buffers)
+- **Network**: Geen (alleen lokale processing)
 
-## Privacy and Security
+## Privacy en Beveiliging
 
-### Data Handling
-- **No External Communication**: All processing is local
-- **No Data Storage**: No hand tracking data is saved
-- **Camera Access**: Required for real-time tracking
-- **Temporary Processing**: Video frames processed and discarded
+### Data Behandeling
+- **Geen Externe Communicatie**: Alle processing is lokaal
+- **Geen Data Opslag**: Geen hand tracking data wordt opgeslagen
+- **Camera Toegang**: Vereist voor real-time tracking
+- **Tijdelijke Processing**: Video frames geprocessed en weggegooid
 
-### Security Features
+### Beveiligings Functies
 - Content Security Policy compliance
 - Sandboxed execution environment
-- Permission-based camera access
+- Permission-gebaseerde camera toegang
 
-## Development Guidelines
+## Ontwikkelings Richtlijnen
 
-### Code Structure
+### Code Structuur
 ```
 popup.js
-├── Hand tracking initialization
-├── MediaPipe integration
-├── Coordinate transformation
-├── Gesture detection
-└── Communication with content script
+├── Hand tracking initialisatie
+├── MediaPipe integratie
+├── Coördinatentransformatie
+├── Gebaar detectie
+└── Communicatie met content script
 
 content.js
-├── Cursor visualization
-├── DOM interaction
-├── Site-specific positioning
+├── Cursor visualisatie
+├── DOM interactie
+├── Site-specifieke positionering
 └── Event handling
 ```
 
-### Best Practices
-1. **Error Handling**: Comprehensive try-catch blocks
-2. **Logging**: Detailed console output for debugging
-3. **Fallbacks**: Default values for failed operations
-4. **Performance**: Efficient coordinate calculations
+### Beste Praktijken
+1. **Error Handling**: Uitgebreide try-catch blocks
+2. **Logging**: Gedetailleerde console output voor debugging
+3. **Fallbacks**: Standaard waarden voor mislukte operaties
+4. **Prestatie**: Efficiënte coördinaat berekeningen
 
-## Future Enhancements
+## Toekomstige Verbeteringen
 
-### Planned Features
-1. **Scroll Functionality** - Horizontal hand movement for scrolling
-2. **Calibration System** - User-specific sensitivity adjustment
-3. **Multi-gesture Support** - Additional hand gestures
-4. **Settings UI** - Configurable parameters
+### Geplande Functies
+1. **Scroll Functionaliteit** - Horizontale hand beweging voor scrollen
+2. **Kalibratie Systeem** - Gebruiker-specifieke gevoeligheid aanpassing
+3. **Multi-gebaar Ondersteuning** - Aanvullende hand gebaren
+4. **Settings UI** - Configureerbare parameters
 
-### Technical Improvements
-1. **Machine Learning Optimization** - Custom gesture models
-2. **Cross-browser Support** - Firefox and Safari compatibility
-3. **Performance Enhancements** - WebAssembly integration
-4. **Accessibility Features** - Voice commands integration
+### Technische Verbeteringen
+1. **Machine Learning Optimalisatie** - Custom gebaar modellen
+2. **Cross-browser Ondersteuning** - Firefox en Safari compatibiliteit
+3. **Prestatie Verbeteringen** - WebAssembly integratie
+4. **Toegankelijkheids Functies** - Voice commands integratie
 
-## Troubleshooting
+## Probleemoplossing
 
-### Common Issues
+### Veelvoorkomende Problemen
 
-#### Cursor Not Moving
-1. Check camera permissions
-2. Verify MediaPipe library loading
-3. Ensure proper lighting conditions
-4. Check console for error messages
+#### Cursor Beweegt Niet
+1. Controleer camera permissies
+2. Verifieer MediaPipe library loading
+3. Zorg voor goede lichtomstandigheden
+4. Controleer console voor error berichten
 
-#### Poor Tracking Accuracy
-1. Improve lighting conditions
-2. Reduce background complexity
-3. Adjust camera position
-4. Check hand visibility in frame
+#### Slechte Tracking Nauwkeurigheid
+1. Verbeter lichtomstandigheden
+2. Verminder achtergrond complexiteit
+3. Pas camera positie aan
+4. Controleer hand zichtbaarheid in frame
 
-#### Site-Specific Problems
-1. Check if site has complex layout (like YouTube)
-2. Verify z-index values
+#### Site-Specifieke Problemen
+1. Controleer of site complexe layout heeft (zoals YouTube)
+2. Verifieer z-index waarden
 3. Test content script injection
-4. Review site-specific positioning logic
+4. Review site-specifieke positionering logica
 
-### Debug Information
-The extension provides extensive console logging:
-- Hand position coordinates
-- Cursor position calculations
-- Tab dimensions
-- Error messages and stack traces
+### Debug Informatie
+De extensie biedt uitgebreide console logging:
+- Hand positie coördinaten
+- Cursor positie berekeningen
+- Tab dimensies
+- Error berichten en stack traces
 
-## API Reference
+## API Referentie
 
-### Message Types (popup.js ↔ content.js)
+### Bericht Types (popup.js ↔ content.js)
 
 #### moveCursor
 ```javascript
 {
   action: 'moveCursor',
-  x: number,        // X coordinate
-  y: number,        // Y coordinate
+  x: number,        // X coördinaat
+  y: number,        // Y coördinaat
   isHandVisible: boolean,
   isFist: boolean
 }
@@ -310,8 +310,8 @@ The extension provides extensive console logging:
 ```javascript
 {
   action: 'click',
-  x: number,        // Click X coordinate
-  y: number         // Click Y coordinate
+  x: number,        // Klik X coördinaat
+  y: number         // Klik Y coördinaat
 }
 ```
 
@@ -330,20 +330,20 @@ The extension provides extensive console logging:
 }
 ```
 
-### Key Functions
+### Belangrijke Functies
 
 #### popup.js
-- `initHands()` - Initialize MediaPipe
-- `onResults()` - Process hand tracking results
-- `mapRange()` - Coordinate transformation
-- `getTabDimensions()` - Get browser tab size
+- `initHands()` - Initialiseer MediaPipe
+- `onResults()` - Verwerk hand tracking resultaten
+- `mapRange()` - Coördinatentransformatie
+- `getTabDimensions()` - Krijg browser tab grootte
 
 #### content.js
-- `createCursor()` - Create visual cursor element
-- `updateCursorPosition()` - Update cursor position
-- `simulateClick()` - Generate click events
-- `showClickFeedback()` - Visual click indication
+- `createCursor()` - Creëer visuele cursor element
+- `updateCursorPosition()` - Update cursor positie
+- `simulateClick()` - Genereer klik events
+- `showClickFeedback()` - Visuele klik indicatie
 
-## Conclusion
+## Conclusie
 
-This hand tracking cursor control extension demonstrates advanced computer vision integration in web browsers, providing an accessible alternative input method. The implementation balances performance, accuracy, and user experience while handling the complexity of different website layouts and user environments.
+Deze hand tracking cursor control extensie demonstreert geavanceerde computer vision integratie in web browsers, en biedt een toegankelijk alternatief invoermethode. De implementatie balanceert prestatie, nauwkeurigheid, en gebruikerservaring terwijl het de complexiteit van verschillende website layouts en gebruikersomgevingen afhandelt.

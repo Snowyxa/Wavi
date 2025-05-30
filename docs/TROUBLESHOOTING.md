@@ -1,54 +1,54 @@
-# Troubleshooting Guide
+# Probleemoplossing Gids
 
-## Common Issues and Solutions
+## Veelvoorkomende Problemen en Oplossingen
 
-### 1. Cursor Stuck at Top of Screen
+### 1. Cursor Vastzitten Bovenaan Scherm
 
-**Symptoms:**
-- Cursor appears at top of screen when tracking starts
-- Cursor doesn't move with hand movements
-- Issue occurs specifically on YouTube or complex websites
+**Symptomen:**
+- Cursor verschijnt bovenaan scherm wanneer tracking start
+- Cursor beweegt niet mee met hand bewegingen
+- Probleem treedt specifiek op bij YouTube of complexe websites
 
-**Causes:**
-- Coordinate system mismatch between MediaPipe and browser
-- Double viewport scaling
-- Site-specific layout interference
+**Oorzaken:**
+- Coördinatensysteem mismatch tussen MediaPipe en browser
+- Dubbele viewport scaling
+- Site-specifieke layout interferentie
 
-**Solutions:**
-✅ **Fixed in v1.1.1** - Updated coordinate transformation logic
+**Oplossingen:**
+✅ **Opgelost in v1.1.1** - Updated coördinatentransformatie logica
 
-**If issue persists:**
-1. Refresh the webpage
-2. Restart tracking (Stop → Start)
-3. Check browser console for error messages
+**Als probleem aanhoudt:**
+1. Ververs de webpagina
+2. Herstart tracking (Stop → Start)
+3. Controleer browser console voor error berichten
 
-### 2. Poor Hand Tracking Accuracy
+### 2. Slechte Hand Tracking Nauwkeurigheid
 
-**Symptoms:**
-- Hand not detected consistently
-- Cursor jumps or moves erratically
-- Tracking stops unexpectedly
+**Symptomen:**
+- Hand wordt niet consistent gedetecteerd
+- Cursor springt of beweegt onregelmatig
+- Tracking stopt onverwacht
 
-**Causes:**
-- Poor lighting conditions
-- Complex background
-- Hand partially out of frame
-- Camera quality issues
+**Oorzaken:**
+- Slechte lichtomstandigheden
+- Complexe achtergrond
+- Hand gedeeltelijk buiten frame
+- Camera kwaliteit problemen
 
-**Solutions:**
-1. **Improve Lighting**
-   - Face a light source (window/lamp)
-   - Avoid backlighting
-   - Use consistent, bright lighting
+**Oplossingen:**
+1. **Verbeter Verlichting**
+   - Ga voor een lichtbron staan (raam/lamp)
+   - Vermijd tegenlicht
+   - Gebruik consistente, heldere verlichting
 
-2. **Optimize Background**
-   - Use plain background when possible
-   - Minimize movement behind hand
-   - Avoid busy patterns
+2. **Optimaliseer Achtergrond**
+   - Gebruik effen achtergrond wanneer mogelijk
+   - Minimaliseer beweging achter hand
+   - Vermijd drukke patronen
 
-3. **Hand Positioning**
-   - Keep entire hand visible in camera
-   - Maintain 1-3 feet distance from camera
+3. **Hand Positionering**
+   - Houd volledige hand zichtbaar in camera
+   - Behoud 1-3 voet afstand van camera
    - Use clear, deliberate movements
 
 ### 3. YouTube-Specific Issues
