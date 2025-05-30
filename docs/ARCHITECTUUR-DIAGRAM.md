@@ -107,7 +107,8 @@ graph TB
     POPUP_CTRL --> HT
     POPUP_CTRL --> GD
     POPUP_CTRL --> SM
-    POPUP_CTRL --> CM    POPUP_CTRL --> CU
+    POPUP_CTRL --> CM
+    POPUP_CTRL --> CU
     POPUP_CTRL --> SETTINGS
     POPUP_CTRL --> LOC
     
@@ -137,7 +138,8 @@ graph TB
     HAND_VIS --> CV
     CS --> DOM
     SW --> TABS
-    CM --> MSG    SW --> MSG
+    CM --> MSG
+    SW --> MSG
     SETTINGS --> STORAGE
     THEME_MGR --> STORAGE
     LOC --> STORAGE
@@ -152,8 +154,8 @@ graph TB
     WRTC -->|Video Stream| TRACKING_MGR
     TRACKING_MGR -->|Video Frames| HT
     HT -->|Hand Landmarks| GD
-    GD -->|Gesture Data (Fist, Peace)| SM
-    SM -->|Smoothed Position, Scroll Commands| CM
+    GD -->|Gesture Data Fist Peace| SM
+    SM -->|Smoothed Position Scroll Commands| CM
     CM -->|Cursor Commands, Scroll Commands| SW
     SW -->|Cursor Commands, Scroll Commands| CS
     CS -->|DOM Manipulation, Scroll Actions| CURSOR
