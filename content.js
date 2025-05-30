@@ -151,6 +151,59 @@ function showClickFeedback() {
   }, 200);
 }
 
+// Function to simulate scroll at position
+function simulateScroll(direction) {
+  // Get the current scroll position
+  const scrollAmount = 100; // Pixels to scroll
+  
+  // Create wheel event for scrolling
+  const wheelEvent = new WheelEvent('wheel', {
+    bubbles: true,
+    cancelable: true,
+    view: window,
+    deltaY: direction === 'up' ? -scrollAmount : scrollAmount,
+    deltaMode: WheelEvent.DOM_DELTA_PIXEL
+  });
+  
+  // Find the element that should receive the scroll event
+  // Try the active element first, then document.body
+  let target = document.activeElement;
+  if (!target || target === document.body) {
+    target = document.documentElement || document.body;
+  }
+  
+  // Dispatch the wheel event
+  target.dispatchEvent(wheelEvent);
+  
+  // Fallback: use window.scrollBy if wheel event doesn't work
+  setTimeout(() => {
+    if (direction === 'up') {
+      window.scrollBy(0, -scrollAmount);
+    } else {
+      window.scrollBy(0, scrollAmount);
+    }
+  }, 10);
+  
+  console.log(`Scroll ${direction} simulated`);
+}
+
+// Function to show scroll feedback
+function showScrollFeedback(direction) {
+  if (!cursor) return;
+  
+  // Change cursor color to blue and add arrow indicator
+  const originalColor = cursor.style.backgroundColor;
+  cursor.style.backgroundColor = direction === 'up' ? 'rgba(0, 0, 255, 0.7)' : 'rgba(0, 100, 255, 0.7)';
+  cursor.style.transform = direction === 'up' ? 'translate(-50%, -50%) scale(1.2)' : 'translate(-50%, -50%) scale(1.2)';
+  
+  setTimeout(() => {
+    if (cursor) {
+      cursor.style.backgroundColor = originalColor;
+      cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    }
+  }, 300);
+}
+
 // Listen for messages from the service worker
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('Content script received message:', message.action, message);
@@ -231,7 +284,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse({ status: 'error', message: error.message });
     }
     return true;
-  }if (message.action === 'click') {
+  }  if (message.action === 'click') {
     try {
       if (!cursor) createCursor();
       const { x, y } = message;
@@ -240,6 +293,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse({ status: 'success' });
     } catch (error) {
       sendResponse({ status: 'error', message: error.message });    }
+    return true;
+  }
+
+  if (message.action === 'scroll') {
+    try {
+      const { direction } = message;
+      simulateScroll(direction);
+      showScrollFeedback(direction);
+      sendResponse({ status: 'success' });
+    } catch (error) {
+      sendResponse({ status: 'error', message: error.message });
+    }
+    return true;
+  }if (message.action === 'scroll') {
+    try {
+      const { direction } = message;
+      simulateScroll(direction);
+      showScrollFeedback(direction);
+      sendResponse({ status: 'success' });
+    } catch (error) {
+      sendResponse({ status: 'error', message: error.message });
+    }
     return true;
   }
 });
@@ -252,4 +327,4 @@ window.addEventListener('resize', () => {
 });
 
 // Notify that content script is loaded
-console.log('Hand tracking cursor control content script loaded'); 
+console.log('Hand tracking cursor control content script loaded');

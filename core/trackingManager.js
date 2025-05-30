@@ -171,7 +171,6 @@ class TrackingManager {
       this.processHandLandmarks(landmarks);
     });
   }
-
   /**
    * Process individual hand landmarks for gesture detection and cursor movement
    * @param {Array} landmarks - Hand landmarks
@@ -181,14 +180,23 @@ class TrackingManager {
     const cursorPosition = window.HandTracking.calculateCursorPosition(landmarks);
     
     if (cursorPosition) {
-      // Check for gesture detection
+      // Check for fist gesture detection
       const gestureDetected = window.GestureDetection.processFistDetection(landmarks);
       
-      // Handle gesture state changes
+      // Check for peace gesture detection (for scrolling)
+      const peaceGestureResult = window.GestureDetection.processPeaceDetection(landmarks);
+      
+      // Handle fist gesture state changes (clicking)
       window.GestureDetection.handleGestureStateChange(
         gestureDetected,
         cursorPosition,
         (x, y) => this.handleClickEvent(x, y)
+      );
+      
+      // Handle peace gesture state changes (scrolling)
+      window.GestureDetection.handlePeaceGestureStateChange(
+        peaceGestureResult,
+        (direction) => this.handleScrollEvent(direction)
       );
       
       // Send cursor movement (only if position is not locked)
@@ -212,6 +220,18 @@ class TrackingManager {
         }
       }
     }
+  }
+
+  /**
+   * Handle scroll events from gesture detection
+   * @param {string} direction - Scroll direction ('up' or 'down')
+   */
+  handleScrollEvent(direction) {
+    if (!window.Settings.getSetting('peaceGestureEnabled')) return;
+
+    console.log(`Scroll event: ${direction}`);
+    // Send scroll event to content script
+    window.Communication.sendScrollEvent(direction);
   }
 
   /**
