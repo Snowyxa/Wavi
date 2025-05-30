@@ -76,13 +76,27 @@ async function checkContentScriptReady() {
 
 /**
  * Send removal message to content script via service worker
+ * Ensures cursor is removed from all pages when popup is closed
  */
 function sendCursorRemoval() {
+  console.log('Sending cursor removal request');
+  // Send multiple times with delay to ensure delivery
   chrome.runtime.sendMessage({
-    action: 'removeCursor'
+    action: 'removeCursor',
+    timestamp: Date.now()  // Add timestamp to prevent request batching
   }).catch(error => {
-    console.log('Service worker communication failed for cursor removal');
+    console.log('Service worker communication failed for cursor removal:', error);
   });
+  
+  // Send again after a short delay as a backup
+  setTimeout(() => {
+    chrome.runtime.sendMessage({
+      action: 'removeCursor',
+      timestamp: Date.now() + 1  // Different timestamp
+    }).catch(error => {
+      console.log('Retry service worker communication failed for cursor removal:', error);
+    });
+  }, 100);
 }
 
 /**

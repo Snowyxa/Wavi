@@ -91,7 +91,6 @@ class PopupController {
       console.log(`Canvas dimensions set: ${containerWidth}x${containerHeight}`);
     }
   }
-
   /**
    * Setup event handlers
    */
@@ -106,8 +105,22 @@ class PopupController {
 
     // Handle popup unload
     window.addEventListener('beforeunload', () => {
-      if (this.trackingManager && (this.trackingManager.isTracking() || window.HandTracking.isCurrentlyTracking())) {
+      if (this.trackingManager) {
         this.trackingManager.stopTracking();
+        // Ensure cursor is removed
+        window.Communication.sendCursorRemoval();
+      }
+    });
+    
+    // Handle visibility change (popup closed but extension still running)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        console.log('Popup hidden, removing cursor');
+        if (this.trackingManager) {
+          this.trackingManager.stopTracking();
+          // Ensure cursor is removed
+          window.Communication.sendCursorRemoval();
+        }
       }
     });
   }

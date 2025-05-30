@@ -105,12 +105,14 @@ class TrackingManager {
       this.statusManager.updateUI('error', userMessage);
     }
   }
-
   /**
    * Stop hand tracking
    */
   stopTracking() {
     try {
+      // First, remove cursor from content script (prioritize this)
+      window.Communication.sendCursorRemoval();
+      
       // Stop hand tracking
       window.HandTracking.stopHandTracking();
       
@@ -125,9 +127,6 @@ class TrackingManager {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       }
       
-      // Remove cursor from content script
-      window.Communication.sendCursorRemoval();
-      
       // Reset state
       window.HandTracking.resetTrackingState();
       this.lastClickPosition = null;
@@ -137,9 +136,17 @@ class TrackingManager {
       this.statusManager.updateUI('stopped');
       console.log('Hand tracking stopped');
       
+      // Send cursor removal one more time as a safeguard
+      setTimeout(() => {
+        window.Communication.sendCursorRemoval();
+      }, 200);
+      
     } catch (error) {
       console.error('Error stopping tracking:', error);
       this.statusManager.updateUI('error', 'Failed to stop tracking');
+      
+      // Even on error, try to remove the cursor
+      window.Communication.sendCursorRemoval();
     }
   }
 

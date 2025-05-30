@@ -147,15 +147,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse({ width: viewportWidth, height: viewportHeight });
     }
     return true;
-  }
-  if (message.action === 'removeCursor') {
-    if (cursor && cursor.parentNode) {
-      cursor.parentNode.removeChild(cursor);
+  }  if (message.action === 'removeCursor') {
+    // Ensure cursor is completely removed from the page
+    if (cursor) {
+      if (cursor.parentNode) {
+        cursor.style.display = 'none';  // Hide immediately
+        cursor.parentNode.removeChild(cursor);
+      }
       cursor = null;
+      console.log('Cursor removed from page');
     }
+    
+    // Also check for any orphaned cursors by ID
+    const orphanedCursor = document.getElementById('handtracking-cursor');
+    if (orphanedCursor && orphanedCursor.parentNode) {
+      orphanedCursor.style.display = 'none';
+      orphanedCursor.parentNode.removeChild(orphanedCursor);
+      console.log('Orphaned cursor found and removed');
+    }
+    
     sendResponse({ status: 'success' });
     return true;
-  }  if (message.action === 'moveCursor') {
+  }if (message.action === 'moveCursor') {
     try {
       if (!cursor) createCursor();
       const { x, y, isHandVisible, isFist } = message;
