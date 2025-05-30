@@ -1,0 +1,190 @@
+.theme-toggle {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  padding: 8px;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background-color: var(--primary-light);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-toggle:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.theme-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Improved button styling */
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.action-button svg {
+  flex-shrink: 0;
+}
+
+.action-button.primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 2px 4px rgba(134, 73, 225, 0.25);
+}
+
+.action-button.primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(134, 73, 225, 0.35);
+}
+
+.action-button.secondary {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-medium);
+}
+
+.action-button.secondary:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+  transform: translateY(-1px);
+}
+
+.action-button:focus {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
+}
+
+.action-button:active {
+  transform: translateY(0);
+}
+
+/* Settings section enhancements */
+.settings-section {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.settings-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: var(--space-4);
+}
+
+.setting-item {
+  margin-bottom: var(--space-4);
+}
+
+.setting-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.setting-description {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
+}
+
+.setting-help {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: var(--space-2);
+}
+
+/* Logo enhancements */
+.logo-container {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 20px;
+  border-radius: var(--radius-md);
+  margin-right: 12px;
+  box-shadow: 0 0 15px rgba(134, 73, 225, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-container:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 50%);
+  pointer-events: none;
+}
+
+/* Calibration actions */
+.calibration-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.calibration-help {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: var(--space-3);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+/* Dark theme overrides for settings */
+body.dark-theme .theme-toggle {
+  background-color: var(--neutral-700);
+  border-color: var(--neutral-600);
+}
+
+body.dark-theme .action-button.secondary {
+  background: var(--neutral-800);
+  border-color: var(--neutral-700);
+}
+
+body.dark-theme .calibration-help {
+  background: var(--neutral-800);
+  border-color: var(--neutral-700);
+}

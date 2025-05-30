@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Wavi - Hand Gesture Control</title>
+<head>  <title>Wavi - Hand Gesture Control</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="theme-additions.css">
+  <link rel="stylesheet" href="button-styles.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Google Fonts commented out due to CSP restrictions - using system fonts instead -->
   <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,12 +21,20 @@
           <p class="tagline">Gesture Control</p>
         </div>
       </div>
-      <div class="status-badge">
-        <div id="statusDot" class="status-dot connecting"></div>
-        <span id="statusText">Initializing...</span>
+      <div class="header-controls">
+        <button id="settingsBtn" class="settings-button" aria-label="Open calibration and sensitivity settings" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2 2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+        <div class="status-badge">
+          <div id="statusDot" class="status-dot connecting"></div>
+          <span id="statusText">Initializing...</span>
+        </div>
       </div>
     </div>
-    
+
     <div class="video-container">
       <video id="video" playsinline></video>
       <canvas id="output"></canvas>
@@ -41,27 +50,230 @@
           <span class="status-icon">●</span>
           <span class="status-label">Initializing...</span>
         </div>
-      </div>
-      <p class="privacy-note"><span class="icon-lock"></span> All processing happens locally on your device</p>
+      </div>      <p class="privacy-note"><span class="icon-lock"></span> All processing happens locally on your device</p>
     </div>
   </div>
-  
-  <!-- Configuration loaded first -->
+
+  <!-- Settings Panel -->
+  <div id="settingsOverlay" class="settings-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="settingsPanelTitle">
+    <div id="settingsPanel" class="settings-panel" aria-hidden="true">
+      <div class="settings-header">
+        <h2 id="settingsPanelTitle">Calibration & Sensitivity Settings</h2>
+        <button id="closeSettingsBtn" class="close-button" aria-label="Close settings panel" title="Close Settings">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>      <div class="settings-content">
+        <!-- Theme Toggle -->
+        <section class="settings-section" aria-labelledby="themeTitle">
+          <h3 id="themeTitle">Appearance</h3>
+          
+          <div class="setting-item">
+            <label for="themeToggle" class="setting-label">
+              Theme Mode
+              <span class="setting-description">Switch between light and dark mode</span>
+            </label>
+            <div class="theme-toggle-container">
+              <button id="themeToggle" class="theme-toggle" aria-label="Toggle between light and dark mode" title="Toggle Theme">
+                <svg id="lightIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg id="darkIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              </button>
+              <span id="themeLabel" class="theme-label">Light Mode</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Hand Tracking Sensitivity -->
+        <section class="settings-section" aria-labelledby="trackingTitle">
+          <h3 id="trackingTitle">Hand Tracking Sensitivity</h3>
+          
+          <div class="setting-item">
+            <label for="xSensitivity" class="setting-label">
+              Horizontal Movement Sensitivity
+              <span class="setting-description">Controls how much the cursor moves horizontally in response to hand movement</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="xSensitivity" class="slider" min="0.1" max="5.0" step="0.1" value="1.5" 
+                     aria-valuetext="1.5x normal speed" aria-describedby="xSensitivityDesc">
+              <span id="xSensitivityValue" class="slider-value">1.5x</span>
+            </div>
+            <div id="xSensitivityDesc" class="setting-help">Current: 1.5x normal speed</div>
+          </div>
+
+          <div class="setting-item">
+            <label for="ySensitivity" class="setting-label">
+              Vertical Movement Sensitivity
+              <span class="setting-description">Adjusts vertical movement sensitivity relative to horizontal</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="ySensitivity" class="slider" min="0.5" max="3.0" step="0.1" value="1.2" 
+                     aria-valuetext="1.2x normal speed" aria-describedby="ySensitivityDesc">
+              <span id="ySensitivityValue" class="slider-value">1.2x</span>
+            </div>
+            <div id="ySensitivityDesc" class="setting-help">Current: 1.2x normal speed</div>
+          </div>
+        </section>
+
+        <!-- Movement Smoothing -->
+        <section class="settings-section" aria-labelledby="smoothingTitle">
+          <h3 id="smoothingTitle">Movement Smoothing</h3>
+          
+          <div class="setting-item">
+            <label for="smoothingFactor" class="setting-label">
+              Smoothing Factor
+              <span class="setting-description">Higher values reduce cursor jitter but may feel less responsive</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="smoothingFactor" class="slider" min="0.1" max="0.9" step="0.05" value="0.7" 
+                     aria-valuetext="70% smoothing" aria-describedby="smoothingFactorDesc">
+              <span id="smoothingFactorValue" class="slider-value">70%</span>
+            </div>
+            <div id="smoothingFactorDesc" class="setting-help">Current: 70% smoothing applied</div>
+          </div>
+
+          <div class="setting-item">
+            <label for="movementThreshold" class="setting-label">
+              Movement Threshold
+              <span class="setting-description">Minimum hand movement required to move the cursor</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="movementThreshold" class="slider" min="0.001" max="0.02" step="0.001" value="0.005" 
+                     aria-valuetext="5 pixels minimum movement" aria-describedby="movementThresholdDesc">
+              <span id="movementThresholdValue" class="slider-value">5px</span>
+            </div>
+            <div id="movementThresholdDesc" class="setting-help">Current: 5px minimum movement</div>
+          </div>
+
+          <div class="setting-item">
+            <label for="deadZoneRadius" class="setting-label">
+              Dead Zone Radius
+              <span class="setting-description">Size of the area around the cursor where small movements are ignored</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="deadZoneRadius" class="slider" min="0.001" max="0.01" step="0.001" value="0.003" 
+                     aria-valuetext="3 pixels dead zone" aria-describedby="deadZoneRadiusDesc">
+              <span id="deadZoneRadiusValue" class="slider-value">3px</span>
+            </div>
+            <div id="deadZoneRadiusDesc" class="setting-help">Current: 3px dead zone radius</div>
+          </div>
+        </section>
+
+        <!-- Gesture Detection -->
+        <section class="settings-section" aria-labelledby="gestureTitle">
+          <h3 id="gestureTitle">Gesture Detection</h3>
+          
+          <div class="setting-item">
+            <label for="fistConfidence" class="setting-label">
+              Fist Detection Confidence
+              <span class="setting-description">How confident the system must be that you are making a fist</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="fistConfidence" class="slider" min="0.3" max="0.95" step="0.05" value="0.7" 
+                     aria-valuetext="70% confidence required" aria-describedby="fistConfidenceDesc">
+              <span id="fistConfidenceValue" class="slider-value">70%</span>
+            </div>
+            <div id="fistConfidenceDesc" class="setting-help">Current: 70% confidence required</div>
+          </div>
+
+          <div class="setting-item">
+            <label for="fistFrames" class="setting-label">
+              Required Fist Frames
+              <span class="setting-description">Number of consecutive frames a fist must be detected</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="fistFrames" class="slider" min="1" max="10" step="1" value="3" 
+                     aria-valuetext="3 frames required" aria-describedby="fistFramesDesc">
+              <span id="fistFramesValue" class="slider-value">3</span>
+            </div>
+            <div id="fistFramesDesc" class="setting-help">Current: 3 frames required</div>
+          </div>
+
+          <div class="setting-item">
+            <label for="fistCooldown" class="setting-label">
+              Click Cooldown
+              <span class="setting-description">Minimum time between clicks to prevent accidental double-clicks</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="fistCooldown" class="slider" min="100" max="2000" step="50" value="500" 
+                     aria-valuetext="500 milliseconds cooldown" aria-describedby="fistCooldownDesc">
+              <span id="fistCooldownValue" class="slider-value">500ms</span>
+            </div>
+            <div id="fistCooldownDesc" class="setting-help">Current: 500ms cooldown period</div>
+          </div>        </section>
+
+        <!-- Calibration -->
+        <section class="settings-section" aria-labelledby="calibrationTitle">
+          <h3 id="calibrationTitle">Calibration</h3>
+          
+          <div class="calibration-actions">
+            <button id="autoCalibrateBtn" class="action-button primary">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"></path>
+                <path d="M9 12l2 2 4-4"></path>
+              </svg>
+              Run Auto-Calibration
+            </button>
+            <p class="calibration-help">Auto-calibration adjusts settings based on your screen size and typical usage patterns.</p>
+          </div>
+          
+          <div id="calibrationStatus" class="calibration-status" aria-live="polite" aria-atomic="true"></div>
+        </section>
+      </div>
+
+      <div class="settings-footer">
+        <button id="resetSettingsBtn" class="action-button secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          Reset to Defaults
+        </button>
+        <button id="saveSettingsBtn" class="action-button primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17,21 17,13 7,13 7,21"></polyline>
+            <polyline points="7,3 7,8 15,8"></polyline>
+          </svg>
+          Save Settings
+        </button>
+      </div>
+    </div>
+  </div>
+    <!-- Configuration loaded first -->
   <script src="config.js"></script>
   
   <!-- MediaPipe libraries in correct loading order -->
   <script src="lib/hands.js"></script>
   <script src="lib/camera_utils.js"></script>
   <script src="lib/drawing_utils.js"></script>
-  
-  <!-- Module scripts -->
+    <!-- Module scripts -->
+  <script src="modules/settings.js"></script>
   <script src="modules/smoothing.js"></script>
   <script src="modules/gestureDetection.js"></script>
   <script src="modules/communication.js"></script>
   <script src="modules/cameraUtils.js"></script>
   <script src="modules/handTracking.js"></script>
   
+  <!-- Theme manager script -->
+  <script src="theme.js"></script>
+  
   <!-- Main popup script -->
   <script src="popup.js"></script>
+  
+  <!-- Settings Panel Script -->
 </body>
 </html>

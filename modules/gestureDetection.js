@@ -9,6 +9,7 @@ let requiredFistFrames = 3;
 let lastFistState = false;
 let fistCooldown = false;
 let fistCooldownTimeout = null;
+let fistCooldownDuration = 500; // Configurable cooldown duration
 
 // Gesture stabilization variables
 let isPositionLocked = false;
@@ -98,10 +99,9 @@ function handleGestureStateChange(gestureDetected, centerPosition, onClickCallba
       fistCooldown = true;
       if (fistCooldownTimeout) {
         clearTimeout(fistCooldownTimeout);
-      }
-      fistCooldownTimeout = setTimeout(() => {
+      }      fistCooldownTimeout = setTimeout(() => {
         fistCooldown = false;
-      }, 500); // 500ms cooldown between clicks
+      }, fistCooldownDuration); // Configurable cooldown between clicks
     } else {
       // Fist released - unlock cursor after minimum duration
       const gestureDuration = fistDetectionStartTime ? Date.now() - fistDetectionStartTime : 0;
@@ -163,11 +163,58 @@ function getLockedPosition() {
   return lockedPosition;
 }
 
+/**
+ * Update gesture detection settings
+ * @param {Object} settings - New gesture settings
+ */
+function updateGestureSettings(settings) {
+  if (settings.fistConfidenceThreshold !== undefined) {
+    fistConfidenceThreshold = Math.max(0.3, Math.min(0.95, settings.fistConfidenceThreshold));
+  }
+  
+  if (settings.requiredFistFrames !== undefined) {
+    requiredFistFrames = Math.max(1, Math.min(10, settings.requiredFistFrames));
+  }
+  
+  if (settings.fistCooldown !== undefined) {
+    // Update the cooldown value, but don't interrupt current cooldown
+    const newCooldown = Math.max(100, Math.min(2000, settings.fistCooldown));
+    // Update for next cooldown cycle
+    fistCooldownDuration = newCooldown;
+  }
+  
+  if (settings.minimumLockDuration !== undefined) {
+    minimumLockDuration = Math.max(50, Math.min(500, settings.minimumLockDuration));
+  }
+  
+  console.log('Gesture detection settings updated:', {
+    fistConfidenceThreshold,
+    requiredFistFrames,
+    fistCooldownDuration: settings.fistCooldown,
+    minimumLockDuration
+  });
+}
+
+/**
+ * Get current gesture settings
+ * @returns {Object} - Current gesture settings
+ */
+function getGestureSettings() {
+  return {
+    fistConfidenceThreshold,
+    requiredFistFrames,
+    fistCooldown: fistCooldownDuration || 500,
+    minimumLockDuration
+  };
+}
+
 // Export functions for use in other modules
 window.GestureDetection = {
   processFistDetection,
   handleGestureStateChange,
   resetGestureState,
   isPositionCurrentlyLocked,
-  getLockedPosition
+  getLockedPosition,
+  updateGestureSettings,
+  getGestureSettings
 };

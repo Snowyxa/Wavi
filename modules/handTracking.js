@@ -12,6 +12,7 @@ let isFirstHandDetection = true;
 
 // Movement and sensitivity settings
 let movementSensitivity = 1.5; // Reduced for smoother movement
+let yAxisSensitivityMultiplier = 1.2; // Y-axis sensitivity multiplier
 let resolutionScaleFactor = 1.0; // Scaling factor for movement sensitivity based on resolution
 let tabDimensions = { width: 1920, height: 1080 }; // Store actual tab dimensions
 
@@ -157,14 +158,12 @@ function calculateCursorPosition(landmarks) {
     
     // Apply smoothing to hand position
     const smoothedHandPosition = window.Smoothing.applySmoothingToMovement(currentHandPosition, lastHandPosition);
-    
-    // Calculate movement delta with flipped X axis using smoothed position
+      // Calculate movement delta with flipped X axis using smoothed position
     const deltaX = -1 * (smoothedHandPosition.x - lastHandPosition.x) * movementSensitivity;
     
     // For Y axis: MediaPipe coordinates are 0 (top) to 1 (bottom)
     // We want natural movement: hand moves down -> cursor moves down
-    // Add a slight scaling factor for Y-axis to improve responsiveness
-    const yAxisSensitivityMultiplier = 1.2;
+    // Use the configurable Y-axis sensitivity multiplier
     const deltaY = (smoothedHandPosition.y - lastHandPosition.y) * movementSensitivity * yAxisSensitivityMultiplier;
     
     // Calculate new cursor position
@@ -261,6 +260,36 @@ function isCurrentlyTracking() {
   return isTracking;
 }
 
+/**
+ * Update sensitivity settings
+ * @param {Object} settings - New sensitivity settings
+ */
+function updateSensitivitySettings(settings) {
+  if (settings.movementSensitivity !== undefined) {
+    movementSensitivity = Math.max(0.1, Math.min(5.0, settings.movementSensitivity));
+  }
+  
+  if (settings.yAxisSensitivityMultiplier !== undefined) {
+    yAxisSensitivityMultiplier = Math.max(0.5, Math.min(3.0, settings.yAxisSensitivityMultiplier));
+  }
+  
+  console.log('Hand tracking sensitivity updated:', {
+    movementSensitivity,
+    yAxisSensitivityMultiplier
+  });
+}
+
+/**
+ * Get current sensitivity settings
+ * @returns {Object} - Current sensitivity settings
+ */
+function getSensitivitySettings() {
+  return {
+    movementSensitivity,
+    yAxisSensitivityMultiplier
+  };
+}
+
 // Export functions for use in other modules
 window.HandTracking = {
   initializeMediaPipeHands,
@@ -273,5 +302,7 @@ window.HandTracking = {
   setHandVisibility,
   getCurrentCursorPosition,
   isCurrentlyTracking,
-  mapRange
+  mapRange,
+  updateSensitivitySettings,
+  getSensitivitySettings
 };

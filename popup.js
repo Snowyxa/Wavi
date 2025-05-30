@@ -12,9 +12,18 @@ let currentStream = null;
 let currentCamera = null;
 let isTrackingStarted = false;
 
+// Settings state
+let settingsPanel = null;
+let settingsOverlay = null;
+
 // Initialize popup when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   initializePopup();
+  await initializeSettings();
+  
+  // Initialize theme
+  initializeTheme();
+  
   // Auto-start tracking after initialization
   setTimeout(() => {
     if (!isTrackingStarted) {
@@ -38,6 +47,29 @@ window.addEventListener('resize', function() {
     }
   }
 });
+
+/**
+ * Wait for required modules to load
+ */
+async function waitForModules() {
+  const maxAttempts = 50;
+  const delay = 100;
+  
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    if (window.Settings && 
+        window.HandTracking && 
+        window.GestureDetection && 
+        window.Smoothing) {
+      console.log('All modules loaded successfully');
+      return true;
+    }
+    
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
+  
+  console.warn('Some modules may not be loaded yet');
+  return false;
+}
 
 /**
  * Initialize the popup interface
@@ -484,6 +516,701 @@ function drawBasicHandLandmarks(ctx, landmarks) {
       ctx.fill();
     }
   });
+}
+
+/**
+ * Initialize settings panel and event handlers
+ */
+async function initializeSettings() {
+  // Wait for modules to load
+  await waitForModules();
+  
+  // Get DOM elements
+  settingsPanel = document.getElementById('settingsPanel');
+  settingsOverlay = document.getElementById('settingsOverlay');
+  
+  const settingsBtn = document.getElementById('settingsBtn');
+  const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+  const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+  const resetSettingsBtn = document.getElementById('resetSettingsBtn');
+  const autoCalibrateBtn = document.getElementById('autoCalibrateBtn');
+  const themeToggle = document.getElementById('themeToggle');
+  
+  if (!settingsPanel || !settingsOverlay) {
+    console.error('Settings UI elements not found');
+    return;
+  }
+  
+  // Event listeners
+  settingsBtn?.addEventListener('click', openSettings);
+  closeSettingsBtn?.addEventListener('click', closeSettings);
+  
+  // Close settings when clicking overlay (but not the panel itself)
+  settingsOverlay?.addEventListener('click', (event) => {
+    if (event.target === settingsOverlay) {
+      closeSettings();
+    }
+  });
+  
+  saveSettingsBtn?.addEventListener('click', saveSettings);
+  resetSettingsBtn?.addEventListener('click', resetSettings);
+  autoCalibrateBtn?.addEventListener('click', runAutoCalibration);
+  
+  // Theme toggle
+  themeToggle?.addEventListener('click', toggleTheme);
+  
+  // Preset buttons
+  const presetButtons = document.querySelectorAll('.preset-card');
+  presetButtons.forEach(button => {
+    button.addEventListener('click', handlePresetSelection);
+    button.addEventListener('keydown', handlePresetKeydown);
+  });
+  
+  // Slider inputs
+  const sliders = document.querySelectorAll('.slider');
+  sliders.forEach(slider => {
+    slider.addEventListener('input', handleSliderChange);
+    slider.addEventListener('change', updateSliderValue);
+  });
+  
+  // Checkbox inputs
+  const checkboxes = document.querySelectorAll('.checkbox');
+  checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', handleCheckboxChange);
+  });
+  
+  // Load current settings
+  loadSettings();
+  
+  // Keyboard navigation for settings panel
+  settingsPanel.addEventListener('keydown', handleSettingsKeydown);
+  
+  console.log('Settings panel initialized');
+}
+
+/**
+ * Load current settings and populate UI
+ */
+async function loadSettings() {
+  try {
+    if (typeof window.Settings === 'undefined') {
+      console.error('Settings module not loaded');
+      return;
+    }
+    
+    const settings = await window.Settings.getSettings();
+    populateSettingsUI(settings);
+    
+  } catch (error) {
+    console.error('Error loading settings:', error);
+    showCalibrationStatus('Error loading settings', 'error');
+  }
+}
+
+/**
+ * Populate settings UI with current values
+ */
+function populateSettingsUI(settings) {
+  // Hand tracking sensitivity
+  updateSliderUI('xSensitivity', settings.movementSensitivity, 'x');
+  updateSliderUI('ySensitivity', settings.yAxisSensitivityMultiplier, 'x');
+  
+  // Movement smoothing
+  updateSliderUI('smoothingFactor', settings.smoothingFactor, '%', 100);
+  updateSliderUI('movementThreshold', settings.movementThreshold, 'px', 1000);
+  updateSliderUI('deadZoneRadius', settings.deadZoneRadius, 'px', 1000);
+  
+  // Gesture detection
+  updateSliderUI('fistConfidence', settings.fistConfidenceThreshold, '%', 100);
+  updateSliderUI('fistFrames', settings.requiredFistFrames, '');
+  updateSliderUI('fistCooldown', settings.fistCooldown, 'ms');
+  
+  // Accessibility options
+  updateCheckboxUI('audioFeedback', settings.enableAudioFeedback);
+  updateCheckboxUI('highContrast', settings.highContrast);
+  updateCheckboxUI('reducedMotion', settings.reducedMotion);
+  
+  // Apply accessibility settings
+  applyAccessibilitySettings({
+    audioFeedback: settings.enableAudioFeedback,
+    highContrast: settings.highContrast,
+    reducedMotion: settings.reducedMotion
+  });
+  
+  // Theme
+  const currentTheme = settings.theme || 'light';
+  if (currentTheme === 'dark') {
+    document.body.classList.add('dark-theme');
+  } else {
+    document.body.classList.remove('dark-theme');
+  }
+  
+  // Update theme toggle UI
+  const lightIcon = document.getElementById('lightIcon');
+  const darkIcon = document.getElementById('darkIcon');
+  const themeLabel = document.getElementById('themeLabel');
+  
+  if (lightIcon && darkIcon && themeLabel) {
+    if (currentTheme === 'dark') {
+      lightIcon.style.display = 'none';
+      darkIcon.style.display = 'inline';
+      themeLabel.textContent = 'Dark Mode';
+    } else {
+      lightIcon.style.display = 'inline';
+      darkIcon.style.display = 'none';
+      themeLabel.textContent = 'Light Mode';
+    }
+  }
+}
+
+/**
+ * Update slider UI element
+ */
+function updateSliderUI(sliderId, value, unit, multiplier = 1) {
+  const slider = document.getElementById(sliderId);
+  const valueSpan = document.getElementById(sliderId + 'Value');
+  const descSpan = document.getElementById(sliderId.replace(/([A-Z])/g, '$1').toLowerCase() + 'Desc');
+  
+  if (slider) {
+    slider.value = value;
+    if (valueSpan) {
+      const displayValue = Math.round(value * multiplier);
+      valueSpan.textContent = displayValue + unit;
+    }
+    if (descSpan) {
+      const displayValue = Math.round(value * multiplier);
+      descSpan.textContent = `Current: ${displayValue}${unit} ${unit === '%' ? 'smoothing applied' : unit === 'ms' ? 'cooldown period' : unit === 'px' ? (sliderId.includes('threshold') ? 'minimum movement' : sliderId.includes('dead') ? 'dead zone radius' : '') : sliderId.includes('x') || sliderId.includes('y') ? 'normal speed' : ''}`;
+    }
+    
+    // Update aria-valuetext
+    const displayValue = Math.round(value * multiplier);
+    slider.setAttribute('aria-valuetext', `${displayValue}${unit} ${unit === 'x' ? 'normal speed' : unit === '%' ? 'smoothing' : unit === 'px' ? 'pixels' : unit === 'ms' ? 'milliseconds' : unit === '' ? (sliderId.includes('frames') ? 'frames required' : '') : ''}`);
+  }
+}
+
+/**
+ * Update checkbox UI element
+ */
+function updateCheckboxUI(checkboxId, checked) {
+  const checkbox = document.getElementById(checkboxId);
+  if (checkbox) {
+    checkbox.checked = checked;
+  }
+}
+
+/**
+ * Open settings panel
+ */
+function openSettings() {
+  settingsPanel.classList.add('active');
+  settingsOverlay.classList.add('active');
+  settingsPanel.setAttribute('aria-hidden', 'false');
+  settingsOverlay.setAttribute('aria-hidden', 'false');
+  
+  // Focus the close button for keyboard navigation
+  const closeBtn = document.getElementById('closeSettingsBtn');
+  if (closeBtn) {
+    closeBtn.focus();
+  }
+  
+  // Trap focus within settings panel
+  document.addEventListener('keydown', trapFocus);
+}
+
+/**
+ * Close settings panel
+ */
+function closeSettings() {
+  settingsPanel.classList.remove('active');
+  settingsOverlay.classList.remove('active');
+  settingsPanel.setAttribute('aria-hidden', 'true');
+  settingsOverlay.setAttribute('aria-hidden', 'true');
+  
+  // Return focus to settings button
+  const settingsBtn = document.getElementById('settingsBtn');
+  if (settingsBtn) {
+    settingsBtn.focus();
+  }
+  
+  // Remove focus trap
+  document.removeEventListener('keydown', trapFocus);
+}
+
+/**
+ * Toggle between light and dark theme
+ */
+function toggleTheme() {
+  const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  
+  // Update body class
+  if (newTheme === 'dark') {
+    document.body.classList.add('dark-theme');
+  } else {
+    document.body.classList.remove('dark-theme');
+  }
+  
+  // Update theme toggle UI
+  const lightIcon = document.getElementById('lightIcon');
+  const darkIcon = document.getElementById('darkIcon');
+  const themeLabel = document.getElementById('themeLabel');
+  
+  if (lightIcon && darkIcon && themeLabel) {
+    if (newTheme === 'dark') {
+      lightIcon.style.display = 'none';
+      darkIcon.style.display = 'inline';
+      themeLabel.textContent = 'Dark Mode';
+    } else {
+      lightIcon.style.display = 'inline';
+      darkIcon.style.display = 'none';
+      themeLabel.textContent = 'Light Mode';
+    }
+  }
+  
+  // Save theme preference
+  localStorage.setItem('waviTheme', newTheme);
+  
+  // Update settings if available
+  try {
+    if (window.Settings && typeof window.Settings.updateSettings === 'function') {
+      window.Settings.updateSettings({ theme: newTheme });
+    }
+  } catch (error) {
+    console.error('Error saving theme preference:', error);
+  }
+}
+
+/**
+ * Initialize theme based on saved preference
+ */
+function initializeTheme() {
+  try {
+    const savedTheme = localStorage.getItem('waviTheme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    
+    // Apply theme
+    if (currentTheme === 'dark') {
+      document.body.classList.add('dark-theme');
+      
+      const lightIcon = document.getElementById('lightIcon');
+      const darkIcon = document.getElementById('darkIcon');
+      const themeLabel = document.getElementById('themeLabel');
+      
+      if (lightIcon && darkIcon && themeLabel) {
+        lightIcon.style.display = 'none';
+        darkIcon.style.display = 'inline';
+        themeLabel.textContent = 'Dark Mode';
+      }
+    }
+  } catch (error) {
+    console.error('Error initializing theme:', error);
+  }
+}
+
+/**
+ * Handle preset selection
+ */
+async function handlePresetSelection(event) {
+  const presetName = event.currentTarget.dataset.preset;
+  if (!presetName) return;
+  
+  try {
+    // Update radio group selection
+    const presetButtons = document.querySelectorAll('.preset-card');
+    presetButtons.forEach(button => {
+      button.setAttribute('aria-checked', 'false');
+      button.setAttribute('tabindex', '-1');
+    });
+      event.currentTarget.setAttribute('aria-checked', 'true');
+    event.currentTarget.setAttribute('tabindex', '0');
+      // Apply preset settings
+    if (typeof window.Settings?.applyPreset === 'function') {
+      await window.Settings.applyPreset(presetName);
+      const newSettings = await window.Settings.getSettings();
+      populateSettingsUI(newSettings);
+      
+      // Apply settings to modules
+      await applySettingsToModules(newSettings);
+      
+      showCalibrationStatus(`Applied ${presetName} preset`, 'success');
+    }
+    
+  } catch (error) {
+    console.error('Error applying preset:', error);
+    showCalibrationStatus('Error applying preset', 'error');
+  }
+}
+
+/**
+ * Handle preset keyboard navigation
+ */
+function handlePresetKeydown(event) {
+  const presetButtons = Array.from(document.querySelectorAll('.preset-card'));
+  const currentIndex = presetButtons.indexOf(event.currentTarget);
+  
+  let newIndex = currentIndex;
+  
+  switch (event.key) {
+    case 'ArrowRight':
+    case 'ArrowDown':
+      newIndex = (currentIndex + 1) % presetButtons.length;
+      break;
+    case 'ArrowLeft':
+    case 'ArrowUp':
+      newIndex = (currentIndex - 1 + presetButtons.length) % presetButtons.length;
+      break;
+    case 'Enter':
+    case ' ':
+      event.preventDefault();
+      handlePresetSelection(event);
+      return;
+    default:
+      return;
+  }
+  
+  event.preventDefault();
+  
+  // Update focus and tabindex
+  presetButtons.forEach(button => button.setAttribute('tabindex', '-1'));
+  presetButtons[newIndex].setAttribute('tabindex', '0');
+  presetButtons[newIndex].focus();
+}
+
+/**
+ * Handle slider value changes
+ */
+function handleSliderChange(event) {
+  updateSliderValue(event);
+  
+  // Update settings via Settings module
+  const sliderId = event.target.id;
+  const value = parseFloat(event.target.value);
+  
+  updateSettingsValue(sliderId, value);
+}
+
+/**
+ * Update slider display value
+ */
+function updateSliderValue(event) {
+  const slider = event.target;
+  const sliderId = slider.id;
+  const value = parseFloat(slider.value);
+  const valueSpan = document.getElementById(sliderId + 'Value');
+  
+  if (valueSpan) {
+    let displayValue, unit;
+    
+    switch (sliderId) {
+      case 'xSensitivity':
+      case 'ySensitivity':
+        displayValue = value.toFixed(1);
+        unit = 'x';
+        break;
+      case 'smoothingFactor':
+      case 'fistConfidence':
+        displayValue = Math.round(value * 100);
+        unit = '%';
+        break;
+      case 'movementThreshold':
+      case 'deadZoneRadius':
+        displayValue = Math.round(value * 1000);
+        unit = 'px';
+        break;
+      case 'fistFrames':
+        displayValue = Math.round(value);
+        unit = '';
+        break;
+      case 'fistCooldown':
+        displayValue = Math.round(value);
+        unit = 'ms';
+        break;
+      default:
+        displayValue = value.toFixed(2);
+        unit = '';
+    }
+    
+    valueSpan.textContent = displayValue + unit;
+    
+    // Update aria-valuetext
+    slider.setAttribute('aria-valuetext', `${displayValue}${unit}`);
+  }
+}
+
+/**
+ * Update settings value from slider input
+ */
+async function updateSettingsValue(sliderId, value) {
+  try {
+    const updateObject = {};
+    
+    switch (sliderId) {
+      case 'xSensitivity':
+        updateObject.movementSensitivity = value;
+        break;
+      case 'ySensitivity':
+        updateObject.yAxisSensitivityMultiplier = value;
+        break;
+      case 'smoothingFactor':
+        updateObject.smoothingFactor = value;
+        break;
+      case 'movementThreshold':
+        updateObject.movementThreshold = value;
+        break;
+      case 'deadZoneRadius':
+        updateObject.deadZoneRadius = value;
+        break;
+      case 'fistConfidence':
+        updateObject.fistConfidenceThreshold = value;
+        break;
+      case 'fistFrames':
+        updateObject.requiredFistFrames = Math.round(value);
+        break;
+      case 'fistCooldown':
+        updateObject.fistCooldown = Math.round(value);
+        break;
+    }
+    
+    if (Object.keys(updateObject).length > 0) {
+      await window.Settings.updateSettings(updateObject);
+    }
+  } catch (error) {
+    console.error('Error updating settings value:', error);
+  }
+}
+
+/**
+ * Handle checkbox changes
+ */
+async function handleCheckboxChange(event) {
+  const checkboxId = event.target.id;
+  const checked = event.target.checked;
+  
+  try {
+    const updateObject = {};
+    
+    switch (checkboxId) {
+      case 'audioFeedback':
+        updateObject.enableAudioFeedback = checked;
+        break;
+      case 'highContrast':
+        updateObject.highContrast = checked;
+        applyHighContrast(checked);
+        break;
+      case 'reducedMotion':
+        updateObject.reducedMotion = checked;
+        applyReducedMotion(checked);
+        break;
+    }
+    
+    if (Object.keys(updateObject).length > 0) {
+      await window.Settings.updateSettings(updateObject);
+    }
+  } catch (error) {
+    console.error('Error updating checkbox setting:', error);
+  }
+}
+
+/**
+ * Apply accessibility settings
+ */
+function applyAccessibilitySettings(accessibility) {
+  applyHighContrast(accessibility.highContrast);
+  applyReducedMotion(accessibility.reducedMotion);
+}
+
+/**
+ * Apply high contrast mode
+ */
+function applyHighContrast(enabled) {
+  if (enabled) {
+    document.body.classList.add('high-contrast');
+  } else {
+    document.body.classList.remove('high-contrast');
+  }
+}
+
+/**
+ * Apply reduced motion preference
+ */
+function applyReducedMotion(enabled) {
+  if (enabled) {
+    document.body.classList.add('reduced-motion');
+  } else {
+    document.body.classList.remove('reduced-motion');
+  }
+}
+
+/**
+ * Save current settings
+ */
+async function saveSettings() {
+  try {
+    if (typeof window.Settings?.saveSettings === 'function') {
+      await window.Settings.saveSettings();
+      const settings = await window.Settings.getSettings();
+      await applySettingsToModules(settings);
+      showCalibrationStatus('Settings saved successfully', 'success');
+    }
+  } catch (error) {
+    console.error('Error saving settings:', error);
+    showCalibrationStatus('Error saving settings', 'error');
+  }
+}
+
+/**
+ * Reset settings to defaults
+ */
+async function resetSettings() {
+  try {
+    if (typeof window.Settings?.resetSettings === 'function') {
+      await window.Settings.resetSettings();
+      const settings = await window.Settings.getSettings();
+      populateSettingsUI(settings);
+      await applySettingsToModules(settings);
+      
+      // Reset preset selection
+      const presetButtons = document.querySelectorAll('.preset-card');
+      presetButtons.forEach(button => {
+        button.setAttribute('aria-checked', 'false');
+        button.setAttribute('tabindex', '-1');
+      });
+      presetButtons[0]?.setAttribute('tabindex', '0');
+      
+      showCalibrationStatus('Settings reset to defaults', 'success');
+    }
+  } catch (error) {
+    console.error('Error resetting settings:', error);
+    showCalibrationStatus('Error resetting settings', 'error');
+  }
+}
+
+/**
+ * Run auto-calibration
+ */
+async function runAutoCalibration() {
+  try {
+    const button = document.getElementById('autoCalibrateBtn');
+    if (button) {
+      button.disabled = true;
+      button.textContent = 'Calibrating...';
+    }
+      showCalibrationStatus('Running auto-calibration...', 'info');
+    
+    if (typeof window.Settings?.startAutoCalibration === 'function') {
+      await window.Settings.startAutoCalibration();
+      const calibratedSettings = await window.Settings.getSettings();
+      populateSettingsUI(calibratedSettings);
+      await applySettingsToModules(calibratedSettings);
+      
+      showCalibrationStatus('Auto-calibration completed successfully', 'success');
+    }
+    
+  } catch (error) {
+    console.error('Error during auto-calibration:', error);
+    showCalibrationStatus('Auto-calibration failed', 'error');
+  } finally {
+    const button = document.getElementById('autoCalibrateBtn');
+    if (button) {
+      button.disabled = false;
+      button.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"></path><path d="M9 12l2 2 4-4"></path></svg>Run Auto-Calibration';
+    }
+  }
+}
+
+/**
+ * Apply settings to all modules
+ */
+async function applySettingsToModules(settings) {
+  try {
+    // Apply to smoothing module
+    if (typeof window.Smoothing?.updateSettings === 'function') {
+      window.Smoothing.updateSettings({
+        smoothingFactor: settings.smoothingFactor,
+        movementThreshold: settings.movementThreshold,
+        deadZoneRadius: settings.deadZoneRadius,
+        enabled: true
+      });
+    }
+    
+    // Apply to gesture detection module
+    if (typeof window.GestureDetection?.updateGestureSettings === 'function') {
+      window.GestureDetection.updateGestureSettings({
+        fistConfidenceThreshold: settings.fistConfidenceThreshold,
+        requiredFistFrames: settings.requiredFistFrames,
+        fistCooldown: settings.fistCooldown,
+        minimumLockDuration: settings.minimumLockDuration || 150
+      });
+    }
+    
+    // Apply to hand tracking module
+    if (typeof window.HandTracking?.updateSensitivitySettings === 'function') {
+      window.HandTracking.updateSensitivitySettings({
+        movementSensitivity: settings.movementSensitivity,
+        yAxisSensitivityMultiplier: settings.yAxisSensitivityMultiplier
+      });
+    }
+    
+    console.log('Settings applied to all modules');
+    
+  } catch (error) {
+    console.error('Error applying settings to modules:', error);
+  }
+}
+
+/**
+ * Show calibration status message
+ */
+function showCalibrationStatus(message, type = 'info') {
+  const statusElement = document.getElementById('calibrationStatus');
+  if (statusElement) {
+    statusElement.textContent = message;
+    statusElement.className = `calibration-status ${type}`;
+    
+    // Clear status after 3 seconds for success/info messages
+    if (type === 'success' || type === 'info') {
+      setTimeout(() => {
+        statusElement.textContent = '';
+        statusElement.className = 'calibration-status';
+      }, 3000);
+    }
+  }
+}
+
+/**
+ * Handle settings panel keyboard navigation
+ */
+function handleSettingsKeydown(event) {
+  if (event.key === 'Escape') {
+    closeSettings();
+  }
+}
+
+/**
+ * Trap focus within settings panel
+ */
+function trapFocus(event) {
+  if (event.key !== 'Tab') return;
+  
+  const focusableElements = settingsPanel.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  );
+  
+  const firstElement = focusableElements[0];
+  const lastElement = focusableElements[focusableElements.length - 1];
+  
+  if (event.shiftKey) {
+    if (document.activeElement === firstElement) {
+      lastElement.focus();
+      event.preventDefault();
+    }
+  } else {
+    if (document.activeElement === lastElement) {
+      firstElement.focus();
+      event.preventDefault();
+    }
+  }
 }
 
 // Log initialization

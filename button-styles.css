@@ -1,0 +1,92 @@
+/* Additional styles for buttons */
+
+/* Enhanced buttons for better UX */
+button {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Reset buttons */
+#resetSettingsBtn {
+  background-color: transparent;
+  border: 1px solid var(--border-medium);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+#resetSettingsBtn:hover {
+  background-color: var(--neutral-100);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+/* Save settings button */
+#saveSettingsBtn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(134, 73, 225, 0.25);
+}
+
+#saveSettingsBtn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(134, 73, 225, 0.35);
+}
+
+/* Auto-calibration button */
+#autoCalibrateBtn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(134, 73, 225, 0.25);
+}
+
+#autoCalibrateBtn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(134, 73, 225, 0.35);
+}
+
+/* Settings button */
+.settings-button {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+}
+
+.settings-button:hover {
+  background-color: var(--primary-light);
+  color: white;
+  border-color: var(--primary-light);
+}
+
+/* Close button */
+.close-button:hover {
+  background-color: var(--primary-surface);
+  color: var(--primary);
+}
+
+/* Slider enhancements */
+input[type="range"]::-webkit-slider-thumb {
+  background-color: var(--primary);
+}
+
+input[type="range"]::-moz-range-thumb {
+  background-color: var(--primary);
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 2px rgba(134, 73, 225, 0.5);
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 2px rgba(134, 73, 225, 0.5);
+}
+
+/* Logo container enhancement */
+.logo-container {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+}
