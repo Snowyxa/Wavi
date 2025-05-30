@@ -77,12 +77,117 @@ html, body, .container {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-primary); /* Changed from bg-secondary to bg-primary for consistency */
   color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Light theme styles (explicit) */
+body.light-theme,
+body:not(.dark-theme) {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+}
+
+/* Light theme specific overrides */
+body.light-theme .brand-text h1,
+body:not(.dark-theme) .brand-text h1 {
+  color: #1e293b !important; /* Dark text for light theme */
+}
+
+body.light-theme .slider,
+body:not(.dark-theme) .slider {
+  background: #cbd5e1 !important; /* Darker gray background for better visibility */
+  border: 1px solid #94a3b8 !important; /* Add border for better contrast */
+}
+
+body.light-theme .slider::-webkit-slider-thumb,
+body:not(.dark-theme) .slider::-webkit-slider-thumb {
+  background: var(--primary) !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25) !important; /* Stronger shadow */
+  transform: scale(1.1) !important; /* Slightly larger for better visibility */
+}
+
+body.light-theme .slider::-moz-range-thumb,
+body:not(.dark-theme) .slider::-moz-range-thumb {
+  background: var(--primary) !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25) !important; /* Stronger shadow */
+  transform: scale(1.1) !important; /* Slightly larger for better visibility */
+}
+
+body.light-theme .status-dot.active,
+body:not(.dark-theme) .status-dot.active {
+  background: var(--success) !important;
+  box-shadow: 0 0 0 2px var(--success-light) !important;
+}
+
+body.light-theme .status-dot.connecting,
+body:not(.dark-theme) .status-dot.connecting {
+  background: var(--warning) !important;
+  box-shadow: 0 0 0 2px var(--warning-light) !important;
+}
+
+body.light-theme .status-dot.error,
+body:not(.dark-theme) .status-dot.error {
+  background: var(--error) !important;
+  box-shadow: 0 0 0 2px var(--error-light) !important;
+}
+
+body.light-theme .tagline,
+body:not(.dark-theme) .tagline {
+  color: #64748b !important; /* Ensure tagline is visible in light mode */
+}
+
+body.light-theme .slider-value,
+body:not(.dark-theme) .slider-value {
+  color: var(--primary) !important; /* Keep slider values purple for contrast */
+}
+
+body.light-theme .slider-label,
+body:not(.dark-theme) .slider-label {
+  color: #1e293b !important; /* Dark text for labels in light mode */
+}
+
+body.light-theme .slider-description,
+body:not(.dark-theme) .slider-description {
+  color: #475569 !important; /* Darker gray for better visibility in light mode */
+  font-weight: 500 !important; /* Make text slightly bolder */
+}
+
+/* Improve status badge visibility in light mode */
+body.light-theme .status-badge,
+body:not(.dark-theme) .status-badge {
+  background: #e9d5ff !important; /* Lighter purple background */
+  color: #6b21a8 !important; /* Darker purple text for better contrast */
+  border: 1px solid #c084fc !important; /* Light border for definition */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ensure status test is visible with strong contrast */
+body.light-theme #statusText,
+body:not(.dark-theme) #statusText {
+  color: #6b21a8 !important; /* Darker purple text for better visibility */
+  font-weight: 600 !important;
+}
+
+/* Improve section title visibility in light mode */
+body.light-theme .section-title,
+body:not(.dark-theme) .section-title {
+  color: #4c1d95 !important; /* Use a dark purple for better visibility */
+  font-weight: 700 !important;
+  border-bottom: 1px solid #e2e8f0 !important; /* Add subtle border for emphasis */
+  padding-bottom: 4px !important;
 }
 
 /* Dark theme styles */
@@ -125,22 +230,31 @@ body.dark-theme {
 }
 
 .logo-container {
-  width: 52px; /* Increased from 44px for wider layout */
-  height: 52px; /* Increased from 44px for wider layout */
+  width: 48px; /* Optimized size for better proportions */
+  height: 48px; /* Keep perfect square for logo */
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-md), 0 0 15px rgba(134, 73, 225, 0.4); /* Add glow effect for all modes */
+  position: relative;
+  overflow: hidden;
 }
 
 .logo-icon {
-  font-size: 32px; /* Increased from 28px for wider layout */
+  font-size: 28px; /* Adjusted for better proportions */
   color: white;
   font-weight: 700;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   letter-spacing: -0.5px;
+  text-align: center; /* Center the W */
+  line-height: 1; /* Ensure proper vertical centering */
+  width: 100%; /* Take full container width */
+  height: 100%; /* Take full container height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .brand-text {
@@ -277,7 +391,7 @@ body.dark-theme {
 /* Footer */
 .footer {
   padding: var(--space-6) var(--space-8); /* Increased to space-8 (32px) horizontally for much wider layout */
-  background: var(--bg-secondary);
+  background: var(--bg-primary); /* Changed from bg-secondary to bg-primary for consistency */
   border-top: 1px solid var(--border-light);
   display: flex;
   flex-direction: column;
@@ -362,6 +476,24 @@ body.dark-theme {
   }
 }
 
+/* Responsive adjustments for settings footer on small screens */
+@media (max-width: 480px) {
+  .settings-footer {
+    padding: var(--space-3);
+    gap: var(--space-2);
+  }
+  
+  .settings-footer .action-button {
+    padding: var(--space-2) var(--space-3);
+    font-size: 13px;
+  }
+  
+  .settings-footer .action-button svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 /* Custom Icon Styles */
 .icon-lock {
   position: relative;
@@ -400,6 +532,28 @@ body.dark-theme {
   transition: all var(--transition-normal);
 }
 
+/* Add shimmer effect to logo */
+.logo-container:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 2.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
 .status-badge:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
@@ -408,7 +562,8 @@ body.dark-theme {
 /* Accessibility improvements */
 @media (prefers-reduced-motion: reduce) {
   .status-dot.connecting,
-  .status-dot.active {
+  .status-dot.active,
+  .logo-container:after {
     animation: none;
   }
   
@@ -529,8 +684,10 @@ body.dark-theme {
   border-left: 1px solid var(--border-light);
   z-index: 1001;
   transition: right 0.3s ease;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   box-shadow: var(--shadow-xl);
+  overflow: hidden; /* Prevent double scrollbars */
 }
 
 .settings-panel.active {
@@ -540,7 +697,9 @@ body.dark-theme {
 .settings-content {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  padding-bottom: 80px; /* Make room for fixed footer */
+  overflow-y: auto; /* Only this element scrolls */
+  flex: 1; /* Take up all available space */
 }
 
 .settings-header {
@@ -905,11 +1064,32 @@ body.dark-theme {
 
 /* Settings Footer */
 .settings-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   padding: var(--space-4);
   border-top: 1px solid var(--border-light);
   background: var(--bg-primary);
   display: flex;
   gap: var(--space-3);
+  z-index: 1002; /* Ensure it appears above content */
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.settings-footer .action-button {
+  flex: 1;
+  justify-content: center;
+  white-space: nowrap;
+  min-height: 44px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: var(--space-3) var(--space-4);
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-md);
 }
 
 .reset-button {

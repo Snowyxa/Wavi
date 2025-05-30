@@ -69,13 +69,13 @@
 }
 
 .action-button.secondary {
-  background: var(--bg-secondary);
+  background: rgba(0, 0, 0, 0.05); /* Use semi-transparent overlay instead of bg-secondary */
   color: var(--text-secondary);
   border: 1px solid var(--border-medium);
 }
 
 .action-button.secondary:hover {
-  background: var(--bg-tertiary);
+  background: rgba(0, 0, 0, 0.08); /* Slightly darker on hover */
   color: var(--text-primary);
   border-color: var(--border-medium);
   transform: translateY(-1px);
@@ -129,22 +129,7 @@
 }
 
 /* Logo enhancements */
-.logo-container {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: white;
-  font-weight: 700;
-  font-size: 20px;
-  border-radius: var(--radius-md);
-  margin-right: 12px;
-  box-shadow: 0 0 15px rgba(134, 73, 225, 0.4);
-  position: relative;
-  overflow: hidden;
-}
+/* Removing conflicting logo container styles as they are now properly defined in styles.css */
 
 .logo-container:after {
   content: '';
@@ -168,23 +153,27 @@
   font-size: 13px;
   color: var(--text-secondary);
   padding: var(--space-3);
-  background: var(--bg-secondary);
+  background: rgba(0, 0, 0, 0.03); /* Use semi-transparent overlay instead of bg-secondary */
   border-radius: var(--radius-md);
   border: 1px solid var(--border-light);
 }
 
 /* Dark theme overrides for settings */
 body.dark-theme .theme-toggle {
-  background-color: var(--neutral-700);
+  background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent overlay instead */
   border-color: var(--neutral-600);
 }
 
 body.dark-theme .action-button.secondary {
-  background: var(--neutral-800);
+  background: rgba(255, 255, 255, 0.07); /* Semi-transparent overlay instead */
   border-color: var(--neutral-700);
 }
 
+body.dark-theme .action-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.12); /* Slightly lighter on hover in dark mode */
+}
+
 body.dark-theme .calibration-help {
-  background: var(--neutral-800);
+  background: rgba(255, 255, 255, 0.05); /* Semi-transparent overlay instead */
   border-color: var(--neutral-700);
 }

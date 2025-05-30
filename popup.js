@@ -636,13 +636,30 @@ function populateSettingsUI(settings) {
     highContrast: settings.highContrast,
     reducedMotion: settings.reducedMotion
   });
+  // Theme - Don't override if user just toggled it
+  const savedTheme = settings.theme || 'auto';
+  let effectiveTheme;
   
-  // Theme
-  const currentTheme = settings.theme || 'light';
-  if (currentTheme === 'dark') {
-    document.body.classList.add('dark-theme');
+  if (savedTheme === 'auto') {
+    // Use system preference for auto theme
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    effectiveTheme = prefersDark ? 'dark' : 'light';
   } else {
-    document.body.classList.remove('dark-theme');
+    effectiveTheme = savedTheme;
+  }
+  
+  // Only apply theme if it's different from current state to avoid overriding user toggles
+  const isCurrentlyDark = document.body.classList.contains('dark-theme');
+  const shouldBeDark = effectiveTheme === 'dark';
+  
+  if (isCurrentlyDark !== shouldBeDark) {
+    if (effectiveTheme === 'dark') {
+      document.body.classList.remove('light-theme');
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+      document.body.classList.add('light-theme');
+    }
   }
   
   // Update theme toggle UI
@@ -651,7 +668,7 @@ function populateSettingsUI(settings) {
   const themeLabel = document.getElementById('themeLabel');
   
   if (lightIcon && darkIcon && themeLabel) {
-    if (currentTheme === 'dark') {
+    if (effectiveTheme === 'dark') {
       lightIcon.style.display = 'none';
       darkIcon.style.display = 'inline';
       themeLabel.textContent = 'Dark Mode';
@@ -743,12 +760,22 @@ function toggleTheme() {
   const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
   const newTheme = currentTheme === 'light' ? 'dark' : 'light';
   
-  // Update body class
+  console.log(`Toggling theme from ${currentTheme} to ${newTheme}`);
+  console.log('Body classes before:', document.body.className);
+  
+  // Update body class with explicit class management
   if (newTheme === 'dark') {
+    document.body.classList.remove('light-theme');
     document.body.classList.add('dark-theme');
   } else {
     document.body.classList.remove('dark-theme');
+    document.body.classList.add('light-theme');
   }
+  
+  console.log('Body classes after:', document.body.className);
+  
+  // Force a repaint to ensure styles are applied
+  document.body.offsetHeight;
   
   // Update theme toggle UI
   const lightIcon = document.getElementById('lightIcon');
@@ -765,15 +792,21 @@ function toggleTheme() {
       darkIcon.style.display = 'none';
       themeLabel.textContent = 'Light Mode';
     }
+    console.log(`UI updated for ${newTheme} theme`);
+  } else {
+    console.warn('Theme toggle UI elements not found');
   }
   
   // Save theme preference
   localStorage.setItem('waviTheme', newTheme);
   
-  // Update settings if available
+  // Update settings if available - don't call saveSettings directly
   try {
     if (window.Settings && typeof window.Settings.updateSettings === 'function') {
-      window.Settings.updateSettings({ theme: newTheme });
+      // Only update the theme setting, don't trigger a full settings application
+      const themeUpdate = { theme: newTheme };
+      window.Settings.updateSettings(themeUpdate);
+      console.log('Theme updated to:', newTheme);
     }
   } catch (error) {
     console.error('Error saving theme preference:', error);
@@ -787,22 +820,44 @@ function initializeTheme() {
   try {
     const savedTheme = localStorage.getItem('waviTheme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
     
-    // Apply theme
+    // Determine the effective theme
+    let currentTheme;
+    if (savedTheme && savedTheme !== 'auto') {
+      currentTheme = savedTheme;
+    } else {
+      // Use system preference for 'auto' or when no preference is saved
+      currentTheme = prefersDark ? 'dark' : 'light';
+    }
+    
+    // Apply theme with explicit class management
     if (currentTheme === 'dark') {
+      document.body.classList.remove('light-theme');
       document.body.classList.add('dark-theme');
-      
-      const lightIcon = document.getElementById('lightIcon');
-      const darkIcon = document.getElementById('darkIcon');
-      const themeLabel = document.getElementById('themeLabel');
-      
-      if (lightIcon && darkIcon && themeLabel) {
+    } else {
+      document.body.classList.remove('dark-theme');
+      document.body.classList.add('light-theme');
+    }
+    
+    // Update theme toggle UI elements
+    const lightIcon = document.getElementById('lightIcon');
+    const darkIcon = document.getElementById('darkIcon');
+    const themeLabel = document.getElementById('themeLabel');
+    
+    if (lightIcon && darkIcon && themeLabel) {
+      if (currentTheme === 'dark') {
         lightIcon.style.display = 'none';
         darkIcon.style.display = 'inline';
         themeLabel.textContent = 'Dark Mode';
+      } else {
+        lightIcon.style.display = 'inline';
+        darkIcon.style.display = 'none';
+        themeLabel.textContent = 'Light Mode';
       }
     }
+    
+    console.log('Theme initialized:', currentTheme, '(saved theme was:', savedTheme, ')');
+    console.log('Body classes:', document.body.className);
   } catch (error) {
     console.error('Error initializing theme:', error);
   }
@@ -1124,6 +1179,17 @@ async function runAutoCalibration() {
  */
 async function applySettingsToModules(settings) {
   try {
+    // If no settings provided, get them from the Settings module
+    if (!settings && window.Settings?.getSettings) {
+      settings = await window.Settings.getSettings();
+    }
+    
+    // Safety check - if still no settings, use defaults
+    if (!settings) {
+      console.warn('No settings available, using defaults');
+      return;
+    }
+    
     // Apply to smoothing module
     if (typeof window.Smoothing?.updateSettings === 'function') {
       window.Smoothing.updateSettings({

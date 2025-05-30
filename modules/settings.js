@@ -24,9 +24,8 @@ const DEFAULT_SETTINGS = {
   enableAudioFeedback: false,
   reducedMotion: false,
   highContrast: false,
-  
-  // Theme settings
-  theme: 'auto', // 'light', 'dark', or 'auto'
+    // Theme settings
+  theme: 'light', // 'light', 'dark', or 'auto'
   
   // Version for settings migration
   settingsVersion: '1.0.0'
@@ -110,7 +109,7 @@ function loadFromLocalStorage() {
  * Save settings to Chrome storage
  * @returns {Promise<void>} - Promise resolving when settings are saved
  */
-async function saveSettings() {
+async function saveSettings(skipModuleSync = false) {
   try {
     // Check if we're in an extension context
     const isExtensionContext = typeof chrome !== 'undefined' && 
@@ -134,8 +133,10 @@ async function saveSettings() {
       console.log('Settings saved to localStorage');
     }
     
-    // Apply settings to modules immediately
-    applySettingsToModules();
+    // Apply settings to modules immediately (unless specifically skipped for theme updates)
+    if (!skipModuleSync) {
+      applySettingsToModules();
+    }
     
     // Dispatch settings change event
     window.dispatchEvent(new CustomEvent('waviSettingsChanged', {
@@ -156,11 +157,16 @@ async function updateSettings(newSettings) {
   // Validate and sanitize settings
   const validatedSettings = validateSettings(newSettings);
   
+  // Check if this is just a theme update
+  const isThemeOnlyUpdate = 
+    Object.keys(validatedSettings).length === 1 && 
+    Object.keys(validatedSettings)[0] === 'theme';
+  
   // Merge with current settings
   currentSettings = { ...currentSettings, ...validatedSettings };
   
   // Save to storage
-  await saveSettings();
+  await saveSettings(isThemeOnlyUpdate);
   
   console.log('Settings updated:', validatedSettings);
 }
@@ -242,13 +248,22 @@ function validateSettings(settings) {
   if (settings.minimumLockDuration !== undefined) {
     validated.minimumLockDuration = Math.max(50, Math.min(500, Number(settings.minimumLockDuration)));
   }
-  
-  // Boolean settings
+    // Boolean settings
   ['enableVisualFeedback', 'enableAudioFeedback', 'reducedMotion', 'highContrast'].forEach(key => {
     if (settings[key] !== undefined) {
       validated[key] = Boolean(settings[key]);
     }
   });
+    // Theme setting validation
+  if (settings.theme !== undefined) {
+    const validThemes = ['light', 'dark', 'auto'];
+    if (validThemes.includes(settings.theme)) {
+      validated.theme = settings.theme;
+      console.log('Theme setting validated:', settings.theme);
+    } else {
+      console.warn('Invalid theme setting ignored:', settings.theme);
+    }
+  }
   
   return validated;
 }
