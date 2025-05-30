@@ -117,34 +117,45 @@ wavi-extension/
 │   ├── hands_solution_simd_wasm_bin.js
 │   ├── hands.js
 │   ├── camera_utils.js
-│   └── drawing_utils.js
-└── 🔧 modules/               # Modulaire componenten
-    ├── cameraUtils.js
-    ├── communication.js
-    ├── gestureDetection.js
-    ├── handTracking.js
-    └── smoothing.js
+│   ├── drawing_utils.js
+│   ├── hands_solution_packed_assets.data
+│   ├── hands_solution_simd_wasm_bin.wasm
+│   ├── hands.binarypb
+│   └── hand_landmark_full.tflite
+├── 🔧 modules/               # Modulaire componenten
+│   ├── cameraUtils.js
+│   ├── communication.js
+│   ├── gestureDetection.js
+│   ├── handTracking.js
+│   ├── settings.js
+│   └── smoothing.js
+├── 🎨 ui/                    # UI componenten
+│   ├── handVisualization.js
+│   ├── settingsUI.js
+│   ├── statusManager.js
+│   └── themeManager.js
+├── 🧠 core/                  # Kern modules
+│   ├── popup.js
+│   └── trackingManager.js
+└── 🎨 css/                   # Styling bestanden
+    ├── button-styles.css
+    ├── content-styles.css
+    ├── styles.css
+    └── theme-additions.css
 ```
-
-## 📖 Documentatie
-
-| Document | Beschrijving |
-|----------|-------------|
-| 📘 **[Technische Documentatie](./docs/DOCUMENTATION.md)** | Volledige implementatie gids & architectuur |
-| 🔧 **[API Referentie](./docs/API-REFERENCE.md)** | Functie definities & code voorbeelden |
-| 🆘 **[Probleemoplossing Gids](./docs/TROUBLESHOOTING.md)** | Veelvoorkomende problemen & oplossingen |
-| 📋 **[Vereisten](./docs/requirements.md)** | Systeemvereisten & compatibiliteit |
-| 🗺️ **[Roadmap](./docs/version-roadmap.md)** | Toekomstige functies & ontwikkelings tijdlijn |
 
 ## 🎯 Huidige Status: v2.0.0
 
 ### 🆕 Nieuw in v2.0.0
 - ✅ **Auto-Start Technologie** - Tracking begint instant wanneer popup opent
 - ✅ **Moderne UI Herontwerp** - Mooie gradient interface met status indicatoren
+- ✅ **Modulaire Architectuur** - Nieuwe georganiseerde codestructuur met core/, ui/, modules/
 - ✅ **Nul-Knop Ervaring** - Geen start/stop knoppen meer nodig
 - ✅ **Verbeterde Visuele Feedback** - Kleurgecodeerde status stippen en vloeiende animaties
+- ✅ **Geavanceerde Instellingen** - Uitgebreide kalibratie en gevoeligheidsopties
 - ✅ **Dark Mode Ondersteuning** - Past automatisch aan systeemvoorkeuren aan
 - ✅ **Verbeterde Toegankelijkheid** - Beter contrast en visuele indicatoren
+- ✅ **Auto-Kalibratie** - Intelligente automatische gevoeligheid aanpassing
 
 ### ✅ Kern Functies
 - ✅ **Real-time Hand Tracking** - MediaPipe-aangedreven gebaar herkenning
@@ -153,12 +164,16 @@ wavi-extension/
 - ✅ **Site Compatibiliteit** - Geoptimaliseerd voor YouTube & complexe layouts
 - ✅ **Visuele Feedback** - Duidelijke cursor states en klik bevestiging
 - ✅ **Privacy Bescherming** - 100% lokale verwerking
+- ✅ **Geavanceerde Smoothing** - Multi-layer bewegings stabilisatie
+- ✅ **Configureerbare Gevoeligheid** - Aanpasbare bewegings- en klik instellingen
 
 ### 🔧 Technische Verbeteringen
 - **Verbeterde Prestaties** - Geoptimaliseerde initialisatie en resource management
 - **Betere Error Handling** - Verbeterde camera permissie en error states
 - **Vloeiendere Animaties** - Hardware-versnelde CSS transities
 - **Responsief Ontwerp** - Mobiel en desktop geoptimaliseerde layouts
+- **Modulaire Codebase** - Nieuwe architectuur met gescheiden verantwoordelijkheden
+- **Component-Based UI** - Herbruikbare UI componenten voor betere onderhoudbaarheid
 
 ## 🔧 Systeemvereisten
 
@@ -186,11 +201,8 @@ We verwelkomen bijdragen! Bekijk onze bijdrage richtlijnen en voel je vrij om:
 - 🔧 **PRs Indienen** - Draag code verbeteringen of nieuwe functies bij
 - 📖 **Docs Verbeteren** - Help om onze documentatie nog beter te maken
 
-## 📄 Licentie
 
-Dit project is gelicenseerd onder de MIT Licentie - zie het [LICENSE](LICENSE) bestand voor details.
-
-## 🙏 Dankbetuigingen
+## 🙏 Danku aan:
 
 - **Google MediaPipe** - Voor de ongelooflijke hand tracking technologie
 - **Chrome Extensions API** - Voor het leveren van het platform
@@ -205,7 +217,3 @@ Dit project is gelicenseerd onder de MIT Licentie - zie het [LICENSE](LICENSE) b
 [📚 Documentatie Overzicht](./docs/DOCUMENTATIE-OVERZICHT.md) • [🔧 Technische Docs](./docs/TECHNISCHE-DOCUMENTATIE.md) • [🛠️ Problemen & Oplossingen](./docs/ISSUES-EN-OPLOSSINGEN.md)
 
 </div>
-
-## Licentie
-
-MIT Licentie
