@@ -94,7 +94,7 @@ Scripts worden geladen in de volgende volgorde in `popup.html` om dependencies c
 
 ### 1. Real-time Hand Tracking
 - Gebruikt MediaPipe Hands met geoptimaliseerde instellingen voor prestatie
-- Volgt wijsvinger tip (landmark 8) voor cursor positionering
+- Volgt pols positie (landmark 0) voor cursor positionering
 - Ondersteunt single hand detectie met confidence drempels
 
 ### 2. Cursor Beweging
@@ -202,7 +202,7 @@ async function initHands(): Promise<boolean>
 async function onResults(results: HandResults): Promise<void>
 ```
 - Verwerkt hand tracking resultaten van MediaPipe
-- Gebruikt landmarks[8] voor cursor control en landmarks[4,2,5,9,13,17] voor vuist detectie
+- Gebruikt landmark 0 (pols) voor cursor control en landmarks[4,2,5,9,13,17] voor vuist detectie
 
 #### content.js
 
@@ -483,4 +483,4 @@ Deze hand tracking cursor control extensie demonstreert geavanceerde computer vi
 
 ---
 
-*Laatst Bijgewerkt: 30 mei 2025*
+*Laatst Bijgewerkt: 6 oktober 2023*
