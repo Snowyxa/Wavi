@@ -202,7 +202,7 @@ Dit project is gelicenseerd onder de MIT Licentie - zie het [LICENSE](LICENSE) b
 
 **Gemaakt met ❤️ voor een toegankelijker web**
 
-[Documentatie](./docs/DOCUMENTATION.md) • [API Referentie](./docs/API-REFERENCE.md) • [Probleemoplossing](./docs/TROUBLESHOOTING.md)
+[📚 Documentatie Overzicht](./docs/DOCUMENTATIE-OVERZICHT.md) • [🔧 Technische Docs](./docs/TECHNISCHE-DOCUMENTATIE.md) • [🛠️ Problemen & Oplossingen](./docs/ISSUES-EN-OPLOSSINGEN.md)
 
 </div>
 
