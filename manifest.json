@@ -3,6 +3,12 @@
   "name": "Wavi - Handgebaar Besturing",
   "version": "2.0.0",
   "description": "Automatisch startende handgebaar besturing met mooie moderne interface. Wijs om te bewegen, vuist om te klikken - geen knoppen vereist!",
+  "icons": {
+    "16": "icons/WaviExtensionLogo.png",
+    "32": "icons/WaviExtensionLogo.png",
+    "48": "icons/WaviExtensionLogo.png",
+    "128": "icons/WaviExtensionLogo.png"
+  },
   "permissions": [
     "activeTab",
     "scripting"

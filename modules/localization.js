@@ -20,13 +20,16 @@ class LocalizationManager {
         initializing: 'Initialiseren...',
         startingCamera: 'Camera opstarten...',
         allProcessingLocal: 'Alle verwerking gebeurt lokaal op je apparaat',
-        
-        // Status messages
+          // Status messages
         ready: 'Klaar',
         detecting: 'Detecteren',
         active: 'Actief',
         connecting: 'Verbinden',
         error: 'Fout',
+        stopped: 'Gestopt',
+        trackingActive: 'Volging Actief',
+        trackingStopped: 'Volging Gestopt',
+        errorOccurred: 'Er is een fout opgetreden',
         cameraPermissionNeeded: 'Camera permissie vereist',
         cameraStarting: 'Camera opstarten...',
         
@@ -115,13 +118,16 @@ class LocalizationManager {
         initializing: 'Initializing...',
         startingCamera: 'Starting camera...',
         allProcessingLocal: 'All processing happens locally on your device',
-        
-        // Status messages
+          // Status messages
         ready: 'Ready',
         detecting: 'Detecting',
         active: 'Active',
         connecting: 'Connecting',
         error: 'Error',
+        stopped: 'Stopped',
+        trackingActive: 'Tracking Active',
+        trackingStopped: 'Tracking Stopped',
+        errorOccurred: 'Error occurred',
         cameraPermissionNeeded: 'Camera permission needed',
         cameraStarting: 'Starting camera...',
         
@@ -309,14 +315,16 @@ class LocalizationManager {
    */
   getSupportedLanguages() {
     return this.supportedLanguages;
-  }
-
-  /**
+  }  /**
    * Update UI with current language
    */
   updateUI() {
+    console.log(`LocalizationManager: Updating UI with language ${this.currentLanguage}`);
+    
     // Update all elements with data-i18n attribute
     const elements = document.querySelectorAll('[data-i18n]');
+    console.log(`LocalizationManager: Found ${elements.length} elements with data-i18n`);
+    
     elements.forEach(element => {
       const key = element.getAttribute('data-i18n');
       const translation = this.t(key);
@@ -334,6 +342,14 @@ class LocalizationManager {
 
     // Update specific content that might need special handling
     this.updateSpecialContent();
+      // Refresh dynamic status messages
+    if (window.statusManager) {
+      console.log('LocalizationManager: Calling status manager refresh from updateUI');
+      window.statusManager.refreshCurrentStatus();
+    } else {
+      console.warn('LocalizationManager: No status manager found, using direct update');
+      this.directStatusRefresh();
+    }
   }
 
   /**
@@ -365,6 +381,46 @@ class LocalizationManager {
       'en': this.t('english')
     };
     return names[languageCode] || languageCode;
+  }
+
+  /**
+   * Direct status refresh when statusManager is not available
+   */
+  directStatusRefresh() {
+    // Get status elements
+    const statusText = document.getElementById('statusText');
+    const statusLabel = document.querySelector('.status-label');
+    const statusDot = document.getElementById('statusDot');
+    
+    if (!statusDot) return;
+    
+    // Determine current state from CSS classes
+    let statusKey = 'stopped';
+    let labelKey = 'trackingStopped';
+    
+    if (statusDot.classList.contains('active')) {
+      statusKey = 'active';
+      labelKey = 'trackingActive';
+    } else if (statusDot.classList.contains('connecting')) {
+      statusKey = 'startingCamera';
+      labelKey = 'initializing';
+    } else if (statusDot.classList.contains('error')) {
+      statusKey = 'error';
+      labelKey = 'error';
+    }
+    
+    // Update status text elements directly
+    if (statusText) {
+      const newText = this.t(statusKey);
+      statusText.textContent = newText;
+      console.log(`LocalizationManager: Updated statusText from "${statusText.textContent}" to "${newText}"`);
+    }
+    
+    if (statusLabel) {
+      const newLabel = this.t(labelKey);
+      statusLabel.textContent = newLabel;
+      console.log(`LocalizationManager: Updated statusLabel to "${newLabel}"`);
+    }
   }
 }
 

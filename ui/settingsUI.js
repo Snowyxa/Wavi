@@ -456,22 +456,36 @@ class SettingsUIManager {
     } catch (error) {
       console.error('Error updating checkbox setting:', error);
     }
-  }
-
-  /**
+  }  /**
    * Handle language selection change
    */
   async handleLanguageChange(event) {
     const newLanguage = event.target.value;
+    console.log(`SettingsUI: Language change initiated to ${newLanguage}`);
     
     try {
       // Update language setting
       await window.Settings.updateSettings({ language: newLanguage });
+      console.log(`SettingsUI: Settings updated with language ${newLanguage}`);
       
       // Update localization
       if (window.localizationManager) {
         await window.localizationManager.setLanguage(newLanguage);
+        console.log(`SettingsUI: Localization manager language set to ${newLanguage}`);
+        
         window.localizationManager.updateUI();
+        console.log(`SettingsUI: Localization UI updated`);
+      } else {
+        console.warn('SettingsUI: No localization manager found');
+      }
+        // Refresh status messages with new language
+      if (window.statusManager) {
+        console.log('SettingsUI: Calling status manager refresh');
+        window.statusManager.refreshCurrentStatus();
+      } else {
+        console.warn('SettingsUI: No status manager found, doing direct element update');
+        // Fallback: directly update status elements if statusManager is not available
+        this.directStatusUpdate();
       }
       
       console.log(`Language changed to: ${newLanguage}`);
@@ -690,6 +704,46 @@ class SettingsUIManager {
         }
       }
     }
+  }
+
+  /**
+   * Direct status update fallback when statusManager is not available
+   */
+  directStatusUpdate() {
+    if (!window.localizationManager) return;
+    
+    // Get status elements
+    const statusText = document.getElementById('statusText');
+    const statusLabel = document.querySelector('.status-label');
+    const statusDot = document.getElementById('statusDot');
+    
+    if (!statusDot) return;
+    
+    // Determine current state from CSS classes
+    let statusKey = 'stopped';
+    let labelKey = 'trackingStopped';
+    
+    if (statusDot.classList.contains('active')) {
+      statusKey = 'active';
+      labelKey = 'trackingActive';
+    } else if (statusDot.classList.contains('connecting')) {
+      statusKey = 'startingCamera';
+      labelKey = 'initializing';
+    } else if (statusDot.classList.contains('error')) {
+      statusKey = 'error';
+      labelKey = 'error';
+    }
+    
+    // Update status text elements directly
+    if (statusText) {
+      statusText.textContent = window.localizationManager.t(statusKey);
+    }
+    
+    if (statusLabel) {
+      statusLabel.textContent = window.localizationManager.t(labelKey);
+    }
+    
+    console.log(`SettingsUI: Direct status update - ${statusKey} -> ${window.localizationManager.t(statusKey)}`);
   }
 }
 

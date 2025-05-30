@@ -32,8 +32,7 @@ class PopupController {
     // Configure video element
     if (this.video) {
       window.CameraUtils.configureVideoElement(this.video);
-    }
-      // Initialize components
+    }      // Initialize components
     this.trackingManager = new window.TrackingManager(this.video, this.canvas);
     this.themeManager = new window.ThemeManager();
     this.settingsUIManager = new window.SettingsUIManager();
@@ -45,11 +44,21 @@ class PopupController {
     window.themeManager = this.themeManager;
     window.localizationManager = this.localizationManager;
     
+    // Make statusManager globally accessible (it's created inside trackingManager)
+    if (this.trackingManager.statusManager) {
+      window.statusManager = this.trackingManager.statusManager;
+    }
+    
     // Initialize localization
     await this.localizationManager.initialize();
-    
-    // Initialize MediaPipe Hands
+      // Initialize MediaPipe Hands
     await this.trackingManager.initializeHandTracking();
+    
+    // Ensure statusManager is globally accessible after initialization
+    if (this.trackingManager.statusManager && !window.statusManager) {
+      window.statusManager = this.trackingManager.statusManager;
+      console.log('PopupController: StatusManager made globally accessible');
+    }
     
     // Initialize settings UI
     await this.settingsUIManager.initializeSettingsUI();

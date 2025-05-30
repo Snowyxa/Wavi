@@ -56,7 +56,6 @@ class StatusManager {
         break;
     }
   }
-
   /**
    * Update UI for starting state
    */
@@ -66,7 +65,7 @@ class StatusManager {
       statusDot.className = 'status-dot connecting';
     }
     if (statusText) {
-      statusText.textContent = 'Starting...';
+      statusText.textContent = window.localizationManager ? window.localizationManager.t('startingCamera') : 'Starting...';
     }
     
     // Camera overlay
@@ -74,7 +73,8 @@ class StatusManager {
       cameraOverlay.classList.remove('hidden');
     }
     if (cameraStatus) {
-      cameraStatus.innerHTML = '<div class="loading-spinner"></div><span>Starting camera...</span>';
+      const startingText = window.localizationManager ? window.localizationManager.t('startingCamera') : 'Starting camera...';
+      cameraStatus.innerHTML = `<div class="loading-spinner"></div><span>${startingText}</span>`;
     }
     
     // Footer status pill
@@ -82,10 +82,9 @@ class StatusManager {
       statusPill.className = 'status-pill';
     }
     if (statusLabel) {
-      statusLabel.textContent = 'Initializing';
+      statusLabel.textContent = window.localizationManager ? window.localizationManager.t('initializing') : 'Initializing';
     }
   }
-
   /**
    * Update UI for tracking state
    */
@@ -95,7 +94,7 @@ class StatusManager {
       statusDot.className = 'status-dot active';
     }
     if (statusText) {
-      statusText.textContent = 'Active';
+      statusText.textContent = window.localizationManager ? window.localizationManager.t('active') : 'Active';
     }
     
     // Camera overlay
@@ -108,10 +107,9 @@ class StatusManager {
       statusPill.className = 'status-pill active';
     }
     if (statusLabel) {
-      statusLabel.textContent = 'Tracking Active';
+      statusLabel.textContent = window.localizationManager ? window.localizationManager.t('trackingActive') : 'Tracking Active';
     }
   }
-
   /**
    * Update UI for stopped state
    */
@@ -121,7 +119,7 @@ class StatusManager {
       statusDot.className = 'status-dot';
     }
     if (statusText) {
-      statusText.textContent = 'Stopped';
+      statusText.textContent = window.localizationManager ? window.localizationManager.t('stopped') : 'Stopped';
     }
     
     // Camera overlay
@@ -129,7 +127,8 @@ class StatusManager {
       cameraOverlay.classList.remove('hidden');
     }
     if (cameraStatus) {
-      cameraStatus.innerHTML = '<span>Tracking stopped</span>';
+      const stoppedText = window.localizationManager ? window.localizationManager.t('trackingStopped') : 'Tracking stopped';
+      cameraStatus.innerHTML = `<span>${stoppedText}</span>`;
     }
     
     // Footer status pill
@@ -137,11 +136,9 @@ class StatusManager {
       statusPill.className = 'status-pill';
     }
     if (statusLabel) {
-      statusLabel.textContent = 'Tracking Stopped';
+      statusLabel.textContent = window.localizationManager ? window.localizationManager.t('trackingStopped') : 'Tracking Stopped';
     }
-  }
-
-  /**
+  }  /**
    * Update UI for error state
    */
   updateErrorState(statusDot, statusText, cameraOverlay, cameraStatus, statusPill, statusLabel, message) {
@@ -150,7 +147,7 @@ class StatusManager {
       statusDot.className = 'status-dot error';
     }
     if (statusText) {
-      statusText.textContent = 'Error';
+      statusText.textContent = window.localizationManager ? window.localizationManager.t('error') : 'Error';
     }
     
     // Camera overlay
@@ -158,7 +155,8 @@ class StatusManager {
       cameraOverlay.classList.remove('hidden');
     }
     if (cameraStatus) {
-      cameraStatus.innerHTML = `<span>${message || 'Error occurred'}</span>`;
+      const errorText = message || (window.localizationManager ? window.localizationManager.t('errorOccurred') : 'Error occurred');
+      cameraStatus.innerHTML = `<span>${errorText}</span>`;
     }
     
     // Footer status pill
@@ -166,8 +164,36 @@ class StatusManager {
       statusPill.className = 'status-pill error';
     }
     if (statusLabel) {
-      statusLabel.textContent = 'Error';
+      statusLabel.textContent = window.localizationManager ? window.localizationManager.t('error') : 'Error';
     }
+  }
+  /**
+   * Refresh current status with new language
+   * This method re-applies the current state with updated translations
+   */
+  refreshCurrentStatus() {
+    // Get current state from UI elements
+    const { statusDot, statusPill } = this.statusElements;
+    
+    if (!statusDot) {
+      console.log('StatusManager: No status dot found for refresh');
+      return;
+    }
+    
+    // Determine current state from CSS classes
+    let currentState = 'stopped'; // default
+    if (statusDot.classList.contains('active')) {
+      currentState = 'tracking';
+    } else if (statusDot.classList.contains('connecting')) {
+      currentState = 'starting';
+    } else if (statusDot.classList.contains('error')) {
+      currentState = 'error';
+    }
+    
+    console.log(`StatusManager: Refreshing status - detected state: ${currentState}, classes: ${statusDot.className}`);
+    
+    // Re-apply the current state to refresh with new translations
+    this.updateUI(currentState);
   }
 }
 
