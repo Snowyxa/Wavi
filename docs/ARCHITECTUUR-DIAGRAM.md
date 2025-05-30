@@ -152,11 +152,14 @@ graph TB
     WRTC -->|Video Stream| TRACKING_MGR
     TRACKING_MGR -->|Video Frames| HT
     HT -->|Hand Landmarks| GD
-    GD -->|Gesture Data| SM
-    SM -->|Smoothed Position| CM
-    CM -->|Cursor Commands| SW
-    SW -->|Cursor Commands| CS
-    CS -->|DOM Manipulation| CURSOR
+    GD -->|Gesture Data (Fist, Peace)| SM
+    SM -->|Smoothed Position, Scroll Commands| CM
+    CM -->|Cursor Commands, Scroll Commands| SW
+    SW -->|Cursor Commands, Scroll Commands| CS
+    CS -->|DOM Manipulation, Scroll Actions| CURSOR
+    CS -->|Scroll Actions| WP1
+    CS -->|Scroll Actions| WP2
+    CS -->|Scroll Actions| WP3
     
     %% Settings Flow
     SETTINGS_UI -->|Configuration| SETTINGS
@@ -214,8 +217,8 @@ graph TB
 
 ### Core Modules
 - **modules/handTracking.js**: MediaPipe integratie en hand landmark detectie
-- **modules/gestureDetection.js**: Vuist gesture herkenning voor klikken
-- **modules/smoothing.js**: Cursor beweging smoothing en stabilisatie
+- **modules/gestureDetection.js**: Vuist gesture herkenning voor klikken en Peace-teken herkenning voor scrollen
+- **modules/smoothing.js**: Cursor beweging smoothing en stabilisatie, verwerkt scroll commando's
 - **modules/communication.js**: Chrome extension messaging tussen componenten
 - **modules/cameraUtils.js**: Camera initialisatie en stream management
 - **modules/settings.js**: Configuratie opslag en beheer met Chrome Storage API
@@ -240,16 +243,16 @@ graph TB
 ### Data Flow
 1. **Camera Input**: WebRTC API levert video stream aan tracking manager
 2. **Hand Detection**: MediaPipe analyseert video frames voor hand landmarks
-3. **Gesture Recognition**: Vuist detectie voor klik events
-4. **Position Smoothing**: Cursor bewegingen worden gestabiliseerd
-5. **Settings Integration**: Configuratie wordt toegepast op alle modules
-6. **Communication**: Commands worden via service worker naar content script gestuurd
-7. **DOM Manipulation**: Content script creëert en beweegt virtuele cursor op webpagina's
+3. **Gesture Recognition**: Vuist detectie voor klik events; Peace-teken detectie voor scroll events (up/down)
+4. **Position Smoothing & Scroll Command Generation**: Cursor bewegingen worden gestabiliseerd; scroll commando's worden gegenereerd op basis van peace-gebaar
+5. **Settings Integration**: Configuratie wordt toegepast op alle modules, inclusief gesture detectie parameters
+6. **Communication**: Klik- en scroll-commando's worden via service worker naar content script gestuurd
+7. **DOM Manipulation & Scrolling**: Content script creëert en beweegt virtuele cursor, en voert scroll acties uit op webpagina's
 
 ### Communication Architecture
-- **Popup Controller ↔ Service Worker**: Runtime messaging voor commands
-- **Service Worker ↔ Content Script**: Tab messaging voor cursor control
-- **Content Script ↔ DOM**: Directe DOM manipulatie voor cursor weergave
+- **Popup Controller ↔ Service Worker**: Runtime messaging voor klik- en scroll-commando's
+- **Service Worker ↔ Content Script**: Tab messaging voor cursor control en scroll acties
+- **Content Script ↔ DOM**: Directe DOM manipulatie voor cursor weergave en het uitvoeren van scroll events
 - **Settings Module ↔ Chrome Storage**: Persistente configuratie opslag
 - **UI Components ↔ Core Modules**: Interne module communicatie
 
@@ -292,9 +295,10 @@ graph TB
 - Icon reference gecorrigeerd naar WaviExtensionLogo.png
 - Technische documentatie geüpdatet voor modulaire architectuur
 - Module loading order gedocumenteerd
+- Peace-teken scroll functionaliteit toegevoegd en gedocumenteerd in architectuur.
 
 ### 📋 Architectuur Compliance
-- **95%** - Architectuur documentatie accuraat met werkelijke implementatie
+- **98%** - Architectuur documentatie accuraat met werkelijke implementatie, inclusief peace-scroll.
 - **Alle modules** bestaan en functioneren volgens specificatie
 - **Dependencies** correct gedefinieerd en geladen
 - **No breaking changes** - backwards compatible updates
