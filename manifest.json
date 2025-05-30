@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Wavi - Hand Gesture Control",
+  "name": "Wavi - Handgebaar Besturing",
   "version": "2.0.0",
-  "description": "Auto-starting hand gesture control with beautiful modern interface. Point to move, fist to click - no buttons required!",
+  "description": "Automatisch startende handgebaar besturing met mooie moderne interface. Wijs om te bewegen, vuist om te klikken - geen knoppen vereist!",
   "permissions": [
     "activeTab",
     "scripting"

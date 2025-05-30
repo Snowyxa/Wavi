@@ -33,14 +33,20 @@ class PopupController {
     if (this.video) {
       window.CameraUtils.configureVideoElement(this.video);
     }
-    
-    // Initialize components
+      // Initialize components
     this.trackingManager = new window.TrackingManager(this.video, this.canvas);
     this.themeManager = new window.ThemeManager();
     this.settingsUIManager = new window.SettingsUIManager();
     
-    // Make theme manager globally accessible for settings
+    // Initialize localization manager
+    this.localizationManager = new window.LocalizationManager();
+    
+    // Make managers globally accessible for settings
     window.themeManager = this.themeManager;
+    window.localizationManager = this.localizationManager;
+    
+    // Initialize localization
+    await this.localizationManager.initialize();
     
     // Initialize MediaPipe Hands
     await this.trackingManager.initializeHandTracking();
@@ -96,7 +102,6 @@ class PopupController {
       }
     });
   }
-
   /**
    * Wait for required modules to load
    */
@@ -113,7 +118,8 @@ class PopupController {
           window.ThemeManager &&
           window.SettingsUIManager &&
           window.StatusManager &&
-          window.HandVisualization) {
+          window.HandVisualization &&
+          window.LocalizationManager) {
         console.log('All modules loaded successfully');
         return true;
       }

@@ -50,8 +50,7 @@ graph TB
         SETTINGS_UI[ui/settingsUI.js]
         HAND_VIS[ui/handVisualization.js]
     end
-    
-    %% Core Modules
+      %% Core Modules
     subgraph "Core Modules"
         HT[modules/handTracking.js]
         GD[modules/gestureDetection.js]
@@ -59,6 +58,7 @@ graph TB
         CM[modules/communication.js]
         CU[modules/cameraUtils.js]
         SETTINGS[modules/settings.js]
+        LOC[modules/localization.js]
     end
     
     %% MediaPipe Libraries
@@ -95,11 +95,11 @@ graph TB
     CF --> POPUP_CTRL
     MF --> SW
     MF --> CS
-    
-    %% Core System Dependencies
+      %% Core System Dependencies
     POPUP_CTRL --> STATUS_MGR
     POPUP_CTRL --> THEME_MGR
     POPUP_CTRL --> SETTINGS_UI
+    POPUP_CTRL --> LOC
     TRACKING_MGR --> HAND_VIS
     TRACKING_MGR --> STATUS_MGR
     
@@ -107,9 +107,9 @@ graph TB
     POPUP_CTRL --> HT
     POPUP_CTRL --> GD
     POPUP_CTRL --> SM
-    POPUP_CTRL --> CM
-    POPUP_CTRL --> CU
+    POPUP_CTRL --> CM    POPUP_CTRL --> CU
     POPUP_CTRL --> SETTINGS
+    POPUP_CTRL --> LOC
     
     TRACKING_MGR --> HT
     TRACKING_MGR --> GD
@@ -119,6 +119,8 @@ graph TB
     %% UI Component Dependencies
     SETTINGS_UI --> SETTINGS
     SETTINGS_UI --> THEME_MGR
+    SETTINGS_UI --> LOC
+    STATUS_MGR --> LOC
     HAND_VIS --> MPDU
     
     %% MediaPipe Integration
@@ -135,10 +137,10 @@ graph TB
     HAND_VIS --> CV
     CS --> DOM
     SW --> TABS
-    CM --> MSG
-    SW --> MSG
+    CM --> MSG    SW --> MSG
     SETTINGS --> STORAGE
     THEME_MGR --> STORAGE
+    LOC --> STORAGE
     
     %% Communication Flow
     POPUP_CTRL -.->|Messages| SW
@@ -217,6 +219,7 @@ graph TB
 - **modules/communication.js**: Chrome extension messaging tussen componenten
 - **modules/cameraUtils.js**: Camera initialisatie en stream management
 - **modules/settings.js**: Configuratie opslag en beheer met Chrome Storage API
+- **modules/localization.js**: Meertalige ondersteuning met Dutch/English talen
 
 ### CSS Styling
 - **css/styles.css**: Hoofdstijlen voor popup interface

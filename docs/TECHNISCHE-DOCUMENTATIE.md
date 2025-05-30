@@ -37,7 +37,9 @@ Wavi/
 │   ├── smoothing.js            # Cursor beweging smoothing algoritmes
 │   ├── communication.js        # Chrome extensie messaging
 │   ├── cameraUtils.js          # Camera setup & video stream management
-│   └── handTracking.js         # MediaPipe integratie & cursor berekeningen
+│   ├── handTracking.js         # MediaPipe integratie & cursor berekeningen
+│   ├── settings.js             # Configuratie opslag en beheer
+│   └── localization.js         # Meertalige ondersteuning (NL/EN)
 ├── lib/                        # MediaPipe libraries
 └── docs/                       # Documentatie
 ```
@@ -67,6 +69,12 @@ Wavi/
 - Verschillende positionering strategieën voor verschillende websites
 - Resolution-gebaseerde gevoeligheid scaling
 - Dynamische tab dimensie detectie
+
+### 5. Meertalige Ondersteuning
+- Volledige Nederlandse en Engelse interface ondersteuning
+- Real-time taalwisseling zonder herstart
+- Automatische vertaling van alle UI elementen
+- Opslag van taalvoorkeur in Chrome Storage
 
 ---
 

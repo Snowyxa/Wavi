@@ -18,14 +18,17 @@ const DEFAULT_SETTINGS = {
   requiredFistFrames: 3,
   fistCooldown: 500,
   minimumLockDuration: 150,
-  
-  // Accessibility settings
+    // Accessibility settings
   enableVisualFeedback: true,
   enableAudioFeedback: false,
   reducedMotion: false,
   highContrast: false,
-    // Theme settings
+  
+  // Theme settings
   theme: 'light', // 'light', 'dark', or 'auto'
+  
+  // Language settings
+  language: 'nl', // 'nl' for Dutch, 'en' for English - default to Dutch
   
   // Version for settings migration
   settingsVersion: '1.0.0'

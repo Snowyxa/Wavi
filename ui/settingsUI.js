@@ -37,13 +37,13 @@ class SettingsUIManager {
   /**
    * Setup all event handlers for settings UI
    */
-  setupEventHandlers() {
-    const settingsBtn = document.getElementById('settingsBtn');
+  setupEventHandlers() {    const settingsBtn = document.getElementById('settingsBtn');
     const closeSettingsBtn = document.getElementById('closeSettingsBtn');
     const saveSettingsBtn = document.getElementById('saveSettingsBtn');
     const resetSettingsBtn = document.getElementById('resetSettingsBtn');
     const autoCalibrateBtn = document.getElementById('autoCalibrateBtn');
     const themeToggle = document.getElementById('themeToggle');
+    const languageSelect = document.getElementById('languageSelect');
     
     // Event listeners
     settingsBtn?.addEventListener('click', () => this.openSettings());
@@ -63,6 +63,11 @@ class SettingsUIManager {
     // Theme toggle handled by ThemeManager
     if (window.themeManager) {
       themeToggle?.addEventListener('click', () => window.themeManager.toggleTheme());
+    }
+    
+    // Language selector
+    if (languageSelect && window.localizationManager) {
+      languageSelect.addEventListener('change', (e) => this.handleLanguageChange(e));
     }
     
     // Preset buttons
@@ -88,7 +93,6 @@ class SettingsUIManager {
     // Keyboard navigation for settings panel
     this.settingsPanel.addEventListener('keydown', (e) => this.handleSettingsKeydown(e));
   }
-
   /**
    * Wait for required modules to load
    */
@@ -100,7 +104,8 @@ class SettingsUIManager {
       if (window.Settings && 
           window.HandTracking && 
           window.GestureDetection && 
-          window.Smoothing) {
+          window.Smoothing &&
+          window.localizationManager) {
         console.log('All modules loaded successfully');
         return true;
       }
@@ -148,11 +153,13 @@ class SettingsUIManager {
     this.updateSliderUI('fistConfidence', settings.fistConfidenceThreshold, '%', 100);
     this.updateSliderUI('fistFrames', settings.requiredFistFrames, '');
     this.updateSliderUI('fistCooldown', settings.fistCooldown, 'ms');
-    
-    // Accessibility options
+      // Accessibility options
     this.updateCheckboxUI('audioFeedback', settings.enableAudioFeedback);
     this.updateCheckboxUI('highContrast', settings.highContrast);
     this.updateCheckboxUI('reducedMotion', settings.reducedMotion);
+    
+    // Language selection
+    this.updateLanguageUI(settings.language || 'nl');
     
     // Apply accessibility settings
     this.applyAccessibilitySettings({
@@ -191,7 +198,6 @@ class SettingsUIManager {
       slider.setAttribute('aria-valuetext', `${displayValue}${unit} ${unit === 'x' ? 'normal speed' : unit === '%' ? 'smoothing' : unit === 'px' ? 'pixels' : unit === 'ms' ? 'milliseconds' : unit === '' ? (sliderId.includes('frames') ? 'frames required' : '') : ''}`);
     }
   }
-
   /**
    * Update checkbox UI element
    */
@@ -199,6 +205,16 @@ class SettingsUIManager {
     const checkbox = document.getElementById(checkboxId);
     if (checkbox) {
       checkbox.checked = checked;
+    }
+  }
+
+  /**
+   * Update language UI element
+   */
+  updateLanguageUI(language) {
+    const languageSelect = document.getElementById('languageSelect');
+    if (languageSelect) {
+      languageSelect.value = language;
     }
   }
 
@@ -434,12 +450,33 @@ class SettingsUIManager {
           this.applyReducedMotion(checked);
           break;
       }
-      
-      if (Object.keys(updateObject).length > 0) {
+        if (Object.keys(updateObject).length > 0) {
         await window.Settings.updateSettings(updateObject);
       }
     } catch (error) {
       console.error('Error updating checkbox setting:', error);
+    }
+  }
+
+  /**
+   * Handle language selection change
+   */
+  async handleLanguageChange(event) {
+    const newLanguage = event.target.value;
+    
+    try {
+      // Update language setting
+      await window.Settings.updateSettings({ language: newLanguage });
+      
+      // Update localization
+      if (window.localizationManager) {
+        await window.localizationManager.setLanguage(newLanguage);
+        window.localizationManager.updateUI();
+      }
+      
+      console.log(`Language changed to: ${newLanguage}`);
+    } catch (error) {
+      console.error('Error changing language:', error);
     }
   }
 
