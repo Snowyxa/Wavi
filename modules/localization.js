@@ -73,8 +73,7 @@ class LocalizationManager {
         deadZoneRadius: 'Dode Zone Straal',
         deadZoneRadiusDescription: 'Grootte van het gebied rond de cursor waar kleine bewegingen worden genegeerd',
         deadZoneRadius2: 'dode zone straal',
-        
-        // Gesture detection
+          // Gesture detection
         gestureDetection: 'Gebaar Detectie',
         fistDetectionConfidence: 'Vuist Detectie Vertrouwen',
         fistConfidenceDescription: 'Hoe zeker het systeem moet zijn dat je een vuist maakt',
@@ -85,6 +84,21 @@ class LocalizationManager {
         clickCooldown: 'Klik Afkoeling',
         clickCooldownDescription: 'Minimale tijd tussen klikken om onbedoelde dubbele klikken te voorkomen',
         cooldownPeriod: 'afkoelperiode',
+        
+        // Peace gesture settings
+        peaceGestureSettings: 'Vrede Gebaar Scroll Instellingen',
+        enablePeaceGesture: 'Activeer Vrede Gebaar',
+        peaceGestureEnabledDescription: 'Schakel scroll functionaliteit met vrede gebaar in of uit',
+        peaceDetectionConfidence: 'Vrede Detectie Vertrouwen',
+        peaceConfidenceDescription: 'Hoe zeker het systeem moet zijn dat je een vrede gebaar maakt',
+        requiredPeaceFrames: 'Vereiste Vrede Frames',
+        peaceFramesDescription: 'Aantal opeenvolgende frames waarin een vrede gebaar moet worden gedetecteerd',
+        scrollCooldown: 'Scroll Afkoeling',
+        scrollCooldownDescription: 'Minimale tijd tussen scroll acties om onbedoelde herhalingen te voorkomen',
+        scrollSensitivity: 'Scroll Gevoeligheid',
+        scrollSensitivityDescription: 'Controleert hoeveel er wordt gescrolld per gebaar',
+        minScrollInterval: 'Minimaal Scroll Interval',
+        minScrollIntervalDescription: 'Minimale tijd tussen individuele scroll stappen',
         
         // Calibration
         calibration: 'Kalibratie',
@@ -171,8 +185,7 @@ class LocalizationManager {
         deadZoneRadius: 'Dead Zone Radius',
         deadZoneRadiusDescription: 'Size of the area around the cursor where small movements are ignored',
         deadZoneRadius2: 'dead zone radius',
-        
-        // Gesture detection
+          // Gesture detection
         gestureDetection: 'Gesture Detection',
         fistDetectionConfidence: 'Fist Detection Confidence',
         fistConfidenceDescription: 'How confident the system must be that you are making a fist',
@@ -183,6 +196,21 @@ class LocalizationManager {
         clickCooldown: 'Click Cooldown',
         clickCooldownDescription: 'Minimum time between clicks to prevent accidental double-clicks',
         cooldownPeriod: 'cooldown period',
+        
+        // Peace gesture settings
+        peaceGestureSettings: 'Peace Gesture Scroll Settings',
+        enablePeaceGesture: 'Enable Peace Gesture',
+        peaceGestureEnabledDescription: 'Enable or disable scroll functionality with peace gesture',
+        peaceDetectionConfidence: 'Peace Detection Confidence',
+        peaceConfidenceDescription: 'How confident the system must be that you are making a peace gesture',
+        requiredPeaceFrames: 'Required Peace Frames',
+        peaceFramesDescription: 'Number of consecutive frames a peace gesture must be detected',
+        scrollCooldown: 'Scroll Cooldown',
+        scrollCooldownDescription: 'Minimum time between scroll actions to prevent accidental repetition',
+        scrollSensitivity: 'Scroll Sensitivity',
+        scrollSensitivityDescription: 'Controls how much scrolling occurs per gesture',
+        minScrollInterval: 'Minimum Scroll Interval',
+        minScrollIntervalDescription: 'Minimum time between individual scroll steps',
         
         // Calibration
         calibration: 'Calibration',

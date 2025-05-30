@@ -12,12 +12,19 @@ const DEFAULT_SETTINGS = {
   movementThreshold: 0.005,
   deadZoneRadius: 0.003,
   velocitySmoothing: 0.8,
-  
-  // Gesture detection settings
+    // Gesture detection settings
   fistConfidenceThreshold: 0.7,
   requiredFistFrames: 3,
   fistCooldown: 500,
   minimumLockDuration: 150,
+  
+  // Peace gesture scroll settings
+  peaceGestureEnabled: true,
+  peaceConfidenceThreshold: 0.75,
+  peaceRequiredFrames: 2,
+  peaceCooldown: 300,
+  scrollSensitivity: 1.0,
+  minScrollInterval: 100,
     // Accessibility settings
   enableVisualFeedback: true,
   enableAudioFeedback: false,
@@ -246,9 +253,33 @@ function validateSettings(settings) {
   if (settings.fistCooldown !== undefined) {
     validated.fistCooldown = Math.max(100, Math.min(2000, Number(settings.fistCooldown)));
   }
-  
-  if (settings.minimumLockDuration !== undefined) {
+    if (settings.minimumLockDuration !== undefined) {
     validated.minimumLockDuration = Math.max(50, Math.min(500, Number(settings.minimumLockDuration)));
+  }
+  
+  // Peace gesture settings validation
+  if (settings.peaceGestureEnabled !== undefined) {
+    validated.peaceGestureEnabled = Boolean(settings.peaceGestureEnabled);
+  }
+  
+  if (settings.peaceConfidenceThreshold !== undefined) {
+    validated.peaceConfidenceThreshold = Math.max(0.3, Math.min(0.95, Number(settings.peaceConfidenceThreshold)));
+  }
+  
+  if (settings.peaceRequiredFrames !== undefined) {
+    validated.peaceRequiredFrames = Math.max(1, Math.min(10, Number(settings.peaceRequiredFrames)));
+  }
+  
+  if (settings.peaceCooldown !== undefined) {
+    validated.peaceCooldown = Math.max(100, Math.min(2000, Number(settings.peaceCooldown)));
+  }
+  
+  if (settings.scrollSensitivity !== undefined) {
+    validated.scrollSensitivity = Math.max(0.1, Math.min(5.0, Number(settings.scrollSensitivity)));
+  }
+  
+  if (settings.minScrollInterval !== undefined) {
+    validated.minScrollInterval = Math.max(50, Math.min(1000, Number(settings.minScrollInterval)));
   }
     // Boolean settings
   ['enableVisualFeedback', 'enableAudioFeedback', 'reducedMotion', 'highContrast'].forEach(key => {
@@ -293,14 +324,16 @@ function applySettingsToModules() {
       yAxisSensitivityMultiplier: currentSettings.yAxisSensitivityMultiplier
     });
   }
-  
-  // Apply gesture detection settings
+    // Apply gesture detection settings
   if (window.GestureDetection && typeof window.GestureDetection.updateGestureSettings === 'function') {
     window.GestureDetection.updateGestureSettings({
       fistConfidenceThreshold: currentSettings.fistConfidenceThreshold,
       requiredFistFrames: currentSettings.requiredFistFrames,
       fistCooldown: currentSettings.fistCooldown,
-      minimumLockDuration: currentSettings.minimumLockDuration
+      minimumLockDuration: currentSettings.minimumLockDuration,
+      peaceConfidenceThreshold: currentSettings.peaceConfidenceThreshold,
+      peaceRequiredFrames: currentSettings.peaceRequiredFrames,
+      peaceCooldown: currentSettings.peaceCooldown
     });
   }
   
@@ -350,12 +383,17 @@ function getSettingDescriptions() {
     movementThreshold: 'Minimum hand movement required to move the cursor. Higher values ignore smaller movements.',
     deadZoneRadius: 'Size of the area around the cursor where small movements are ignored.',
     fistConfidenceThreshold: 'How confident the system must be that you are making a fist before triggering a click.',
-    requiredFistFrames: 'Number of consecutive frames a fist must be detected before triggering a click.',
-    fistCooldown: 'Minimum time between clicks in milliseconds to prevent accidental double-clicks.',
+    requiredFistFrames: 'Number of consecutive frames a fist must be detected before triggering a click.',    fistCooldown: 'Minimum time between clicks in milliseconds to prevent accidental double-clicks.',
     enableVisualFeedback: 'Show visual indicators when gestures are detected.',
     enableAudioFeedback: 'Play sounds when gestures are detected.',
     reducedMotion: 'Reduce animations and motion effects for users who prefer less movement.',
-    highContrast: 'Use high contrast colors for better visibility.'
+    highContrast: 'Use high contrast colors for better visibility.',
+    peaceGestureEnabled: 'Enable peace sign gesture for scrolling functionality.',
+    peaceConfidenceThreshold: 'How confident the system must be that you are making a peace sign before triggering a scroll.',
+    peaceRequiredFrames: 'Number of consecutive frames a peace sign must be detected before triggering a scroll.',
+    peaceCooldown: 'Minimum time between scroll actions in milliseconds to prevent rapid scrolling.',
+    scrollSensitivity: 'Controls how much the page scrolls in response to peace gesture.',
+    minScrollInterval: 'Minimum time between individual scroll events in milliseconds.'
   };
 }
 

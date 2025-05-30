@@ -214,7 +214,93 @@
               <span id="fistCooldownValue" class="slider-value">500ms</span>
             </div>
             <div id="fistCooldownDesc" class="setting-help">Current: 500ms cooldown period</div>
-          </div>        </section>        <!-- Calibration -->
+          </div>        </section>
+
+        <!-- Peace Gesture Scroll Settings -->
+        <section class="settings-section" aria-labelledby="peaceGestureTitle">
+          <h3 id="peaceGestureTitle" data-i18n="peaceGestureSettings">Vrede Gebaar Scroll Instellingen</h3>
+            <div class="setting-item">
+            <label for="peaceGestureEnabled" class="setting-label">
+              <span data-i18n="enablePeaceGesture">Activeer Vrede Gebaar</span>
+              <span class="setting-description" data-i18n="peaceGestureEnabledDescription">Schakel scroll functionaliteit met vrede gebaar in of uit</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="peaceGestureEnabled" class="checkbox" checked>
+              <div class="checkbox-custom"></div>
+              <div class="checkbox-text">
+                <span data-i18n="enablePeaceGesture">Activeer Vrede Gebaar</span>
+                <span class="checkbox-description" data-i18n="peaceGestureEnabledDescription">Schakel scroll functionaliteit met vrede gebaar in of uit</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <label for="peaceConfidenceThreshold" class="setting-label">
+              <span data-i18n="peaceDetectionConfidence">Vrede Detectie Vertrouwen</span>
+              <span class="setting-description" data-i18n="peaceConfidenceDescription">Hoe zeker het systeem moet zijn dat je een vrede gebaar maakt</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="peaceConfidenceThreshold" class="slider" min="0.3" max="0.95" step="0.05" value="0.75" 
+                     aria-valuetext="75% confidence required" aria-describedby="peaceConfidenceDesc">
+              <span id="peaceConfidenceThresholdValue" class="slider-value">75%</span>
+            </div>
+            <div id="peaceConfidenceDesc" class="setting-help">Current: 75% confidence required</div>
+          </div>
+
+          <div class="setting-item">
+            <label for="peaceRequiredFrames" class="setting-label">
+              <span data-i18n="requiredPeaceFrames">Vereiste Vrede Frames</span>
+              <span class="setting-description" data-i18n="peaceFramesDescription">Aantal opeenvolgende frames waarin een vrede gebaar moet worden gedetecteerd</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="peaceRequiredFrames" class="slider" min="1" max="10" step="1" value="2" 
+                     aria-valuetext="2 frames required" aria-describedby="peaceFramesDesc">
+              <span id="peaceRequiredFramesValue" class="slider-value">2</span>
+            </div>
+            <div id="peaceFramesDesc" class="setting-help">Current: 2 frames required</div>
+          </div>
+
+          <div class="setting-item">
+            <label for="peaceCooldown" class="setting-label">
+              <span data-i18n="scrollCooldown">Scroll Afkoeling</span>
+              <span class="setting-description" data-i18n="scrollCooldownDescription">Minimale tijd tussen scroll acties om onbedoelde herhalingen te voorkomen</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="peaceCooldown" class="slider" min="100" max="1000" step="50" value="300" 
+                     aria-valuetext="300 milliseconds cooldown" aria-describedby="peaceCooldownDesc">
+              <span id="peaceCooldownValue" class="slider-value">300ms</span>
+            </div>
+            <div id="peaceCooldownDesc" class="setting-help">Current: 300ms cooldown period</div>
+          </div>
+
+          <div class="setting-item">
+            <label for="scrollSensitivity" class="setting-label">
+              <span data-i18n="scrollSensitivity">Scroll Gevoeligheid</span>
+              <span class="setting-description" data-i18n="scrollSensitivityDescription">Controleert hoeveel er wordt gescrolld per gebaar</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="scrollSensitivity" class="slider" min="0.1" max="3.0" step="0.1" value="1.0" 
+                     aria-valuetext="1.0x normal scroll speed" aria-describedby="scrollSensitivityDesc">
+              <span id="scrollSensitivityValue" class="slider-value">1.0x</span>
+            </div>
+            <div id="scrollSensitivityDesc" class="setting-help">Current: 1.0x normal scroll speed</div>
+          </div>
+
+          <div class="setting-item">
+            <label for="minScrollInterval" class="setting-label">
+              <span data-i18n="minScrollInterval">Minimaal Scroll Interval</span>
+              <span class="setting-description" data-i18n="minScrollIntervalDescription">Minimale tijd tussen individuele scroll stappen</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" id="minScrollInterval" class="slider" min="50" max="500" step="25" value="100" 
+                     aria-valuetext="100 milliseconds between scrolls" aria-describedby="minScrollIntervalDesc">
+              <span id="minScrollIntervalValue" class="slider-value">100ms</span>
+            </div>
+            <div id="minScrollIntervalDesc" class="setting-help">Current: 100ms between scroll steps</div>
+          </div>
+        </section>
+
+        <!-- Calibration -->
         <section class="settings-section" aria-labelledby="calibrationTitle">
           <h3 id="calibrationTitle" data-i18n="calibration">Kalibratie</h3>
           

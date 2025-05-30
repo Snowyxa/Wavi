@@ -148,11 +148,18 @@ class SettingsUIManager {
     this.updateSliderUI('smoothingFactor', settings.smoothingFactor, '%', 100);
     this.updateSliderUI('movementThreshold', settings.movementThreshold, 'px', 1000);
     this.updateSliderUI('deadZoneRadius', settings.deadZoneRadius, 'px', 1000);
-    
-    // Gesture detection
+      // Gesture detection
     this.updateSliderUI('fistConfidence', settings.fistConfidenceThreshold, '%', 100);
     this.updateSliderUI('fistFrames', settings.requiredFistFrames, '');
     this.updateSliderUI('fistCooldown', settings.fistCooldown, 'ms');
+    
+    // Peace gesture settings
+    this.updateCheckboxUI('peaceGestureEnabled', settings.peaceGestureEnabled);
+    this.updateSliderUI('peaceConfidenceThreshold', settings.peaceConfidenceThreshold, '%', 100);
+    this.updateSliderUI('peaceRequiredFrames', settings.peaceRequiredFrames, '');
+    this.updateSliderUI('peaceCooldown', settings.peaceCooldown, 'ms');
+    this.updateSliderUI('scrollSensitivity', settings.scrollSensitivity, 'x');
+    this.updateSliderUI('minScrollInterval', settings.minScrollInterval, 'ms');
       // Accessibility options
     this.updateCheckboxUI('audioFeedback', settings.enableAudioFeedback);
     this.updateCheckboxUI('highContrast', settings.highContrast);
@@ -348,15 +355,16 @@ class SettingsUIManager {
     
     if (valueSpan) {
       let displayValue, unit;
-      
-      switch (sliderId) {
+        switch (sliderId) {
         case 'xSensitivity':
         case 'ySensitivity':
+        case 'scrollSensitivity':
           displayValue = value.toFixed(1);
           unit = 'x';
           break;
         case 'smoothingFactor':
         case 'fistConfidence':
+        case 'peaceConfidenceThreshold':
           displayValue = Math.round(value * 100);
           unit = '%';
           break;
@@ -366,10 +374,13 @@ class SettingsUIManager {
           unit = 'px';
           break;
         case 'fistFrames':
+        case 'peaceRequiredFrames':
           displayValue = Math.round(value);
           unit = '';
           break;
         case 'fistCooldown':
+        case 'peaceCooldown':
+        case 'minScrollInterval':
           displayValue = Math.round(value);
           unit = 'ms';
           break;
@@ -413,9 +424,23 @@ class SettingsUIManager {
           break;
         case 'fistFrames':
           updateObject.requiredFistFrames = Math.round(value);
-          break;
-        case 'fistCooldown':
+          break;        case 'fistCooldown':
           updateObject.fistCooldown = Math.round(value);
+          break;
+        case 'peaceConfidenceThreshold':
+          updateObject.peaceConfidenceThreshold = value;
+          break;
+        case 'peaceRequiredFrames':
+          updateObject.peaceRequiredFrames = Math.round(value);
+          break;
+        case 'peaceCooldown':
+          updateObject.peaceCooldown = Math.round(value);
+          break;
+        case 'scrollSensitivity':
+          updateObject.scrollSensitivity = value;
+          break;
+        case 'minScrollInterval':
+          updateObject.minScrollInterval = Math.round(value);
           break;
       }
       
@@ -436,8 +461,7 @@ class SettingsUIManager {
     
     try {
       const updateObject = {};
-      
-      switch (checkboxId) {
+        switch (checkboxId) {
         case 'audioFeedback':
           updateObject.enableAudioFeedback = checked;
           break;
@@ -448,6 +472,9 @@ class SettingsUIManager {
         case 'reducedMotion':
           updateObject.reducedMotion = checked;
           this.applyReducedMotion(checked);
+          break;
+        case 'peaceGestureEnabled':
+          updateObject.peaceGestureEnabled = checked;
           break;
       }
         if (Object.keys(updateObject).length > 0) {
@@ -627,14 +654,19 @@ class SettingsUIManager {
           enabled: true
         });
       }
-      
-      // Apply to gesture detection module
+        // Apply to gesture detection module
       if (typeof window.GestureDetection?.updateGestureSettings === 'function') {
         window.GestureDetection.updateGestureSettings({
           fistConfidenceThreshold: settings.fistConfidenceThreshold,
           requiredFistFrames: settings.requiredFistFrames,
           fistCooldown: settings.fistCooldown,
-          minimumLockDuration: settings.minimumLockDuration || 150
+          minimumLockDuration: settings.minimumLockDuration || 150,
+          peaceGestureEnabled: settings.peaceGestureEnabled,
+          peaceConfidenceThreshold: settings.peaceConfidenceThreshold,
+          peaceRequiredFrames: settings.peaceRequiredFrames,
+          peaceCooldown: settings.peaceCooldown,
+          scrollSensitivity: settings.scrollSensitivity,
+          minScrollInterval: settings.minScrollInterval
         });
       }
       

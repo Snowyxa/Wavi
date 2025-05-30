@@ -113,6 +113,19 @@ function sendCursorRemoval() {
 }
 
 /**
+ * Send scroll event to active tab via service worker
+ * @param {string} direction - Scroll direction ('up' or 'down')
+ */
+function sendScrollEvent(direction) {
+  chrome.runtime.sendMessage({
+    action: 'scroll',
+    direction: direction
+  }).catch(error => {
+    console.log('Service worker communication failed for scroll:', error);
+  });
+}
+
+/**
  * Log debug information about communication
  * @param {string} message - Debug message
  * @param {Object} data - Additional data to log
@@ -128,5 +141,6 @@ window.Communication = {
   getTabDimensions,
   checkContentScriptReady,
   sendCursorRemoval,
+  sendScrollEvent,
   logCommunication
 };

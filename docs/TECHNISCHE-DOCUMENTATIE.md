@@ -109,12 +109,19 @@ Scripts worden geladen in de volgende volgorde in `popup.html` om dependencies c
 - Klik cooldown om accidentele multiple clicks te voorkomen
 - Visuele feedback tijdens klik events
 
-### 4. Adaptief Gedrag
+### 4. Scroll Functionaliteit met Peace-teken
+- Peace-teken (wijs- en middelvinger gestrekt, andere vingers gebogen) detectie voor scrollen.
+- Scrollen omhoog: Rechtopstaand peace-teken, hand significant omhoog gericht.
+- Scrollen omlaag: Omgekeerd (ondersteboven) peace-teken, hand significant omlaag gericht.
+- Continue scrollen mogelijk door het gebaar aan te houden.
+- Configureerbare parameters voor gevoeligheid, detectie-drempels, en cooldowns.
+
+### 5. Adaptief Gedrag
 - Verschillende positionering strategieën voor verschillende websites
 - Resolution-gebaseerde gevoeligheid scaling
 - Dynamische tab dimensie detectie
 
-### 5. Meertalige Ondersteuning
+### 6. Meertalige Ondersteuning
 - Volledige Nederlandse en Engelse interface ondersteuning
 - Real-time taalwisseling zonder herstart
 - Automatische vertaling van alle UI elementen
@@ -145,6 +152,14 @@ Scripts worden geladen in de volgende volgorde in `popup.html` om dependencies c
   action: 'click',
   x: number,           // Klik X coördinaat in pixels
   y: number            // Klik Y coördinaat in pixels
+}
+```
+
+**scroll**
+```javascript
+{
+  action: 'scroll',
+  direction: string // 'up' or 'down'
 }
 ```
 
@@ -212,6 +227,26 @@ function simulateClick(x: number, y: number): void
 ```
 - Genereert mouse events (mousedown, mouseup, click)
 - Gebruikt `document.elementFromPoint(x, y)` voor target detectie
+
+#### modules/gestureDetection.js
+
+**detectPeaceGesture(landmarks)**
+
+```javascript
+function detectPeaceGesture(landmarks: Array): Object
+```
+- Detecteert het peace-teken (wijs- en middelvinger gestrekt, andere vingers gesloten).
+- Bepaalt de scrollrichting ('up', 'down', of null) gebaseerd op de handoriëntatie (rechtop of omgekeerd) en de verticale positie van de vingertoppen t.o.v. de pols.
+- Returns: `{ detected: boolean, direction: string | null, confidence: number }`
+
+**handlePeaceGestureStateChange(gestureResult, onScrollCallback)**
+
+```javascript
+function handlePeaceGestureStateChange(gestureResult: Object, onScrollCallback: Function): void
+```
+- Verwerkt de status van het peace-gebaar voor scrollen.
+- Roept `onScrollCallback` aan met de scrollrichting ('up'/'down') als het gebaar stabiel gedetecteerd is.
+- Beheert cooldowns voor zowel continue scroll-ticks (`minScrollInterval`) als tussen afzonderlijke scroll-sequenties (`peaceCooldown`).
 
 ---
 
@@ -306,6 +341,26 @@ if (fistConfidence > fistConfidenceThreshold) {
 const newFistState = consecutiveFistFrames >= requiredFistFrames;
 ```
 
+### Peace-teken Detectie Algoritme (voor Scrollen)
+
+**1. Vinger Status Analyse (Relatief aan Handoriëntatie)**
+- Controleert of wijs- en middelvinger gestrekt zijn en de duim, ringvinger en pink gesloten/gebogen zijn.
+- De definitie van "gestrekt" en "gesloten" past zich aan aan de algehele verticale oriëntatie van de hand (rechtop of omgekeerd).
+  - Voorbeeld (wijsvinger gestrekt): 
+    - Rechtop hand: `indexTipLandmark.y < indexMCPLandmark.y`
+    - Omgekeerde hand: `indexTipLandmark.y > indexMCPLandmark.y`
+
+**2. Scrollrichting Bepaling**
+- Als een geldig peace-teken is gedetecteerd:
+  - **Rechtopstaand peace-teken**: Scrollrichting is 'up' als `indexTipLandmark.y < wrist.y - scrollDirectionThreshold`.
+  - **Omgekeerd peace-teken**: Scrollrichting is 'down' als `indexTipLandmark.y > wrist.y + scrollDirectionThreshold`.
+- `scrollDirectionThreshold` bepaalt de minimale verticale afwijking die nodig is om een scrollrichting te activeren.
+
+**3. Confidence Scoring en Temporele Consistentie**
+- Vergelijkbaar met vuistdetectie, een `peaceScore` wordt berekend.
+- `consecutivePeaceFrames` en `currentPeaceSettings.requiredPeaceFrames` zorgen voor stabiele detectie voordat scrollen wordt geactiveerd.
+- `currentPeaceSettings.peaceConfidenceThreshold` is de minimale score die nodig is.
+
 ---
 
 ## ⚙️ Configuratie Parameters
@@ -321,6 +376,19 @@ let yAxisSensitivityMultiplier = 1.2; // Y-as boost
 let fistConfidenceThreshold = 0.7; // 70% confidence vereist
 let requiredFistFrames = 3; // Opeenvolgende frames voor detectie
 let fistCooldown = 500; // 500ms tussen clicks
+```
+
+### Peace-teken Detectie (Scrollen)
+```javascript
+let currentPeaceSettings = {
+  peaceGestureEnabled: true,         // Schakelt peace-gebaar voor scrollen aan/uit
+  peaceConfidenceThreshold: 0.7,   // Minimale confidence score voor detectie
+  requiredPeaceFrames: 3,          // Aantal opeenvolgende frames nodig
+  peaceCooldown: 300,              // Cooldown (ms) tussen afzonderlijke scroll-sequenties
+  scrollSensitivity: 1.0,          // Gevoeligheid van scroll-snelheid (nog niet volledig geïmplementeerd voor peace)
+  minScrollInterval: 100,          // Minimale interval (ms) tussen continue scroll-ticks
+  scrollDirectionThreshold: 0.05   // Drempel voor y-verschil voor up/down detectie (genormaliseerd)
+};
 ```
 
 ### Prestatie
@@ -396,10 +464,10 @@ content.js
 ## 🔮 Toekomstige Verbeteringen
 
 ### Geplande Functies
-1. **Scroll Functionaliteit** - Horizontale hand beweging voor scrollen
-2. **Kalibratie Systeem** - Gebruiker-specifieke gevoeligheid aanpassing
-3. **Multi-gebaar Ondersteuning** - Aanvullende hand gebaren
-4. **Settings UI** - Configureerbare parameters
+1. **Uitgebreide Scroll Functionaliteit** - Horizontale scrollen, fijnmazige snelheidscontrole.
+2. **Kalibratie Systeem** - Gebruiker-specifieke gevoeligheid en gebaar aanpassing.
+3. **Multi-gebaar Ondersteuning** - Aanvullende hand gebaren voor andere acties (bv. tab wisselen, terug/vooruit navigeren).
+4. **Verbeterde Settings UI** - Meer visuele feedback en geavanceerde opties.
 
 ### Technische Verbeteringen
 1. **Machine Learning Optimalisatie** - Custom gebaar modellen
@@ -411,7 +479,7 @@ content.js
 
 ## 📝 Conclusie
 
-Deze hand tracking cursor control extensie demonstreert geavanceerde computer vision integratie in web browsers, en biedt een toegankelijk alternatief invoermethode. De implementatie balanceert prestatie, nauwkeurigheid, en gebruikerservaring terwijl het de complexiteit van verschillende website layouts en gebruikersomgevingen afhandelt.
+Deze hand tracking cursor control extensie demonstreert geavanceerde computer vision integratie in web browsers, en biedt een toegankelijk alternatief invoermethode, inclusief klik- en scrollfunctionaliteit. De implementatie balanceert prestatie, nauwkeurigheid, en gebruikerservaring terwijl het de complexiteit van verschillende website layouts en gebruikersomgevingen afhandelt.
 
 ---
 

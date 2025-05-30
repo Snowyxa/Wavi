@@ -7,15 +7,14 @@ console.log('Hand tracking service worker loaded');
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('Service worker received message:', message.action, 'from:', sender.tab ? 'content script' : 'popup');
   // Handle cursor removal with highest priority
-  if (message.action === 'removeCursor') {
-    // Forward remove cursor message to all tabs to ensure it's removed everywhere
+  if (message.action === 'removeCursor') {    // Forward remove cursor message to all tabs to ensure it's removed everywhere
     chrome.tabs.query({}, function(tabs) {
       let successCount = 0;
-      const tabCount = tabs.filter(tab => !tab.url.startsWith('chrome://')).length;
+      const tabCount = tabs.filter(tab => tab.url && !tab.url.startsWith('chrome://')).length;
       
       // For each valid tab, try to remove the cursor
       for (const tab of tabs) {
-        if (!tab.url.startsWith('chrome://')) {
+        if (tab.url && !tab.url.startsWith('chrome://')) {
           try {
             // First try simple message sending
             chrome.tabs.sendMessage(tab.id, message)
@@ -85,7 +84,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   
   // Handle other actions
-  if (message.action === 'moveCursor' || message.action === 'click' || message.action === 'getDimensions' || message.action === 'ping') {
+  if (message.action === 'moveCursor' || message.action === 'click' || message.action === 'scroll' || message.action === 'getDimensions' || message.action === 'ping') {
     // Forward message to active content script
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       if (tabs[0]) {
