@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>  <title>Wavi - Hand Gesture Control</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="theme-additions.css">
-  <link rel="stylesheet" href="button-styles.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/theme-additions.css">
+  <link rel="stylesheet" href="css/button-styles.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Google Fonts commented out due to CSP restrictions - using system fonts instead -->
   <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -253,14 +253,15 @@
       </div>
     </div>
   </div>
-    <!-- Configuration loaded first -->
+  <!-- Configuration loaded first -->
   <script src="config.js"></script>
   
   <!-- MediaPipe libraries in correct loading order -->
   <script src="lib/hands.js"></script>
   <script src="lib/camera_utils.js"></script>
   <script src="lib/drawing_utils.js"></script>
-    <!-- Module scripts -->
+  
+  <!-- Module scripts -->
   <script src="modules/settings.js"></script>
   <script src="modules/smoothing.js"></script>
   <script src="modules/gestureDetection.js"></script>
@@ -268,12 +269,16 @@
   <script src="modules/cameraUtils.js"></script>
   <script src="modules/handTracking.js"></script>
   
-  <!-- Theme manager script -->
-  <script src="theme.js"></script>
+  <!-- UI modules -->
+  <script src="ui/statusManager.js"></script>
+  <script src="ui/themeManager.js"></script>
+  <script src="ui/handVisualization.js"></script>
+  <script src="ui/settingsUI.js"></script>
   
-  <!-- Main popup script -->
-  <script src="popup.js"></script>
+  <!-- Core modules -->
+  <script src="core/trackingManager.js"></script>
   
-  <!-- Settings Panel Script -->
+  <!-- Main popup controller -->
+  <script src="core/popup.js"></script>
 </body>
 </html>
